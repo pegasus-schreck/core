@@ -55,6 +55,13 @@ constexpr uint8 WARRIOR = 4;
 constexpr uint8 QUEEN = 5;
 
 constexpr uint8 VOTE_STATE = 0;
+constexpr uint8 REGISTER_STATE = 1;
+constexpr uint8 INVESTMENT_PHASE_1 = 2;
+constexpr uint8 INVESTMENT_PHASE_2 = 3;
+constexpr uint8 INVESTMENT_PHASE_3 = 4;
+constexpr uint8 CLOSED_FAILED = 5;
+constexpr uint8 CLOSED_SUCCESS = 6;
+constexpr uint8 BLOCKED = 7;
 
 struct NOST2
 {
