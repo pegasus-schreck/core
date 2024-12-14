@@ -52,7 +52,7 @@ private:
 	_
 
 	INITIALIZE
-		//state.wallet = qpi.invocator();
+		state.wallet = qpi.invocator();
 	_
 
 };
