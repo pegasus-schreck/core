@@ -264,7 +264,7 @@ protected:
         }
     _
     */
-    
+
     struct getUserLockedInfo_locals {
         uint32 _t;
         uint32 startIndex;
@@ -683,11 +683,11 @@ protected:
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
     
-        REGISTER_USER_FUNCTION(getLockInfoPerEpoch, 1);
-        REGISTER_USER_FUNCTION(getUserLockedInfo, 2);
-        REGISTER_USER_FUNCTION(getStateOfRound, 3);
-        REGISTER_USER_FUNCTION(getUserLockStatus, 4);
-        REGISTER_USER_FUNCTION(getEndedStatus, 5);
+        //REGISTER_USER_FUNCTION(getLockInfoPerEpoch, 1);
+        REGISTER_USER_FUNCTION(getUserLockedInfo, 1);
+        REGISTER_USER_FUNCTION(getStateOfRound, 2);
+        REGISTER_USER_FUNCTION(getUserLockStatus, 3);
+        REGISTER_USER_FUNCTION(getEndedStatus, 4);
 
         REGISTER_USER_PROCEDURE(lock, 1);
 		REGISTER_USER_PROCEDURE(unlock, 2);
