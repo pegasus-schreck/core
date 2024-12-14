@@ -46,6 +46,8 @@ constexpr sint32 QEARN_UNLOCK_SUCCESS = 5;
 constexpr sint32 QEARN_OVERFLOW_USER = 6;
 constexpr sint32 QEARN_LIMIT_LOCK = 7;
 */
+constexpr uint64 NOSTROMO_MAX_USERS = 131072;
+constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 
 constexpr uint8 NONE = 0;
 constexpr uint8 EGG = 1;
