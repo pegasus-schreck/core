@@ -50,9 +50,9 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        //QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
 
     // Input and Output Structs
@@ -126,17 +126,21 @@ public:
         ProjectResponse project;
     };
 
-    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
-    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
-    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+    //QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
+    //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
 
 protected:
 
     uint64 stakedQubicsInContract;
 
+    struct addUserTier_locals{
+        uint8 userTier;
+    };
+
     // To stake Qubic tokens and get a tier for an user
-    PUBLIC_PROCEDURE(addUserTier)
+    PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
         // Validate the input
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1; // Error
@@ -165,8 +169,8 @@ protected:
         }
 
         // Validate if the user has a tier
-        uint8 userTier = userTiers.get(qpi.invocator());
-        if (userTier != NONE) {
+        locals.userTier = userTiers.get(qpi.invocator());
+        if (locals.userTier != NONE) {
             output.status = 2; // Error
             copyMemory(output.message, "Tier found");
             
@@ -180,7 +184,7 @@ protected:
         }
 
         // Stake the QUBIC tokens
-        uint64 stakedQubics = tiers.get(input.tier);
+        //uint64 stakedQubics = tiers.get(input.tier);
 
         if (stakedQubics + state.transactionFee != qpi.invocationReward())
         {
@@ -242,10 +246,10 @@ protected:
         }
 
         // Remove the tier
-        userTiers.set(qpi.invocator(), NONE);
+        //userTiers.set(qpi.invocator(), NONE);
 
         // Return the staked qubics
-        uint64 stakedQubics = tiers.get(userTier);
+        //uint64 stakedQubics = tiers.get(userTier);
         qpi.transfer(qpi.invocator(), stakedQubics);
 
         // Update the staked qubics amount
@@ -283,12 +287,12 @@ protected:
             tokensInSale : tokensInSale
         };
 
-        locals.project.votes.reset();
-        locals.project.registeredUsers.reset();
-        locals.project.investments.reset();
+        //locals.project.votes.reset();
+        //locals.project.registeredUsers.reset();
+        //locals.project.investments.reset();
 
         // Add the project
-        projects.set(projectNextId++, );
+        //projects.set(projectNextId++, );
 
         output.status = 0; // Success
         copyMemory(output.message, "");
@@ -303,12 +307,14 @@ protected:
     PUBLIC_FUNCTION_WITH_LOCALS(getProject)
 
         // If project doesn't exist, return an error
+        /*
         if (!state.projects.get(input.projectId, locals.localProject)) {
             output.status = 1;
             copyMemory(output.message, "Project not found");
             return;
         }
-
+        */
+        
         // Build the response object
         locals.projectResponse.owner = locals.localProject.owner;
         locals.projectResponse.state = locals.localProject.state;
@@ -482,13 +488,13 @@ private:
         state.transactionFee = 1000;
         state.projectFee = 10000;
         state.projectNextId = 1;
-        state.tiers.reset();
+        //state.tiers.reset();
         //state.tiers.set(EGG, NOSTROMOTier{ 1, 55 });
         //state.tiers.set(DOG, NOSTROMOTier{ 5, 300 });
         //state.tiers.set(ALIEN, NOSTROMOTier{ 10, 75 });
         //state.tiers.set(WARRIOR, NOSTROMOTier{ 30, 305 });
         //state.tiers.set(QUEEN, NOSTROMOTier{ 100, 1375 });
-        state.userTiers.reset();
-        state.projects.reset();
+        //state.userTiers.reset();
+        //state.projects.reset();
 
 };
