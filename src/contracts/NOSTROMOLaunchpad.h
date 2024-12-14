@@ -28,6 +28,8 @@ struct NOSTROMO2
 
 struct NOSTROMO : public ContractBase
 {
+
+public:
     struct addUserTier_input {
         
     };
@@ -36,17 +38,21 @@ struct NOSTROMO : public ContractBase
 
     };
 
+protected:
+
 	PUBLIC_PROCEDURE(addUserTier)
         qpi.transfer(qpi.invocator(), qpi.invocationReward());
         return;
     -
-    
+
+private:
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 		REGISTER_USER_PROCEDURE(addUserTier, 1);
 	_
 
 	INITIALIZE
-		state.wallet = qpi.invocator();
+		//state.wallet = qpi.invocator();
 	_
 
 };
