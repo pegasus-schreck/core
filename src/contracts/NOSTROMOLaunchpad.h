@@ -28,6 +28,9 @@ struct NOSTROMO2
 
 struct NOSTROMO : public ContractBase
 {
+    struct addUserTier_input {
+
+    };
 
 	PUBLIC_PROCEDURE(addUserTier)
         qpi.transfer(qpi.invocator(), qpi.invocationReward());
