@@ -29,5 +29,16 @@ struct NOSTROMO2
 struct NOSTROMO : public ContractBase
 {
 
+	PUBLIC_PROCEDURE(addUserTier)
+        qpi.transfer(qpi.invocator(), qpi.invocationReward());
+        return;
+
+	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
+		REGISTER_USER_PROCEDURE(addUserTier, 1);
+	_
+
+	INITIALIZE
+		state.wallet = qpi.invocator();
+	_
 
 };
