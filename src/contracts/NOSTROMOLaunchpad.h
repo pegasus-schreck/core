@@ -90,8 +90,8 @@ public:
     };
 
     struct voteProject_input {
-        projectId: uint64,
-        vote: uint8
+        uint64 projectId;
+        uint8 vote;
     };
 
     struct voteProject_output{
