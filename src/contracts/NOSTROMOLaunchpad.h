@@ -137,16 +137,12 @@ public:
 protected:
 
 	PUBLIC_FUNCTION(addUserTier)
-        qpi.transfer(qpi.invocator(), qpi.invocationReward());
+        output.inovkeAmount = qpi.transfer(qpi.invocator(), qpi.invocationReward());
         return;
     -
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 		REGISTER_USER_FUNCTION(addUserTier, 1);
-	_
-
-	INITIALIZE
-		state.wallet = qpi.invocator();
 	_
 
 };
