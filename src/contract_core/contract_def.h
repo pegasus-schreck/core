@@ -29,7 +29,7 @@ constexpr unsigned long long MAX_CONTRACT_STATE_SIZE = 1073741824;
 constexpr unsigned int MAX_SIZE_OF_CONTRACT_LOCALS = 32 * 1024;
 
 // TODO: make sure the limit of nested calls is not violated
-constexpr unsigned short MAX_NESTED_CONTRACT_CALLS = 10;
+constexpr unsigned short MAX_NESTED_CONTRACT_CALLS = 11;
 
 
 static void __beginFunctionOrProcedure(const unsigned int); // TODO: more human-readable form of function ID?
@@ -167,8 +167,8 @@ struct __FunctionOrProcedureBeginEndGuard
 
 #define NOSTROMO_CONTRACT_INDEX 11
 #define CONTRACT_INDEX NOSTROMO_CONTRACT_INDEX
-#define CONTRACT_STATE_TYPE NOSTROMO
-#define CONTRACT_STATE2_TYPE NOSTROMO2
+#define CONTRACT_STATE_TYPE NOST
+#define CONTRACT_STATE2_TYPE NOST2
 #include "contracts/NOSTROMOLaunchpad.h"
 
 #define MAX_CONTRACT_ITERATION_DURATION 0 // In milliseconds, must be above 0; for now set to 0 to disable timeout, because a rollback mechanism needs to be implemented to properly handle timeout
@@ -208,7 +208,7 @@ static_assert(sizeof(IPO) == 32 * NUMBER_OF_COMPUTORS + 8 * NUMBER_OF_COMPUTORS,
 
 constexpr struct ContractDescription
 {
-    char assetName[9];
+    char assetName[8];
     // constructionEpoch needs to be set to after IPO (IPO is before construction)
     unsigned short constructionEpoch, destructionEpoch;
     unsigned long long stateSize;
@@ -224,7 +224,7 @@ constexpr struct ContractDescription
     {"CCF", 127, 10000, sizeof(CCF)}, // proposal in epoch 125, IPO in 126, construction and first use in 127
     {"QEARN", 137, 10000, sizeof(QEARN)}, // proposal in epoch 135, IPO in 136, construction in 137 / first donation after END_EPOCH, first round in epoch 138
     {"QVAULT", 138, 10000, sizeof(IPO)}, // proposal in epoch 136, IPO in 137, construction and first use in 138
-    {"NOSTROMO", 139, 10000, sizeof(NOSTROMO)},
+    {"NOST", 139, 10000, sizeof(NOST)},
 };
 
 constexpr unsigned int contractCount = sizeof(contractDescriptions) / sizeof(contractDescriptions[0]);
@@ -311,5 +311,5 @@ static void initializeContracts()
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(CCF);
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(QEARN);
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(QVAULT);
-    REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(NOSTROMO);
+    REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(NOST);
 }
