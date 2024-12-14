@@ -161,6 +161,12 @@ struct __FunctionOrProcedureBeginEndGuard
 #define CONTRACT_STATE2_TYPE QVAULT2
 #include "contracts/QVAULT.h"
 
+#define NOSTROMO_CONTRACT_INDEX 11
+#define CONTRACT_INDEX NOSTROMO_CONTRACT_INDEX
+#define CONTRACT_STATE_TYPE NOSTROMO
+#define CONTRACT_STATE2_TYPE NOSTROMO2
+#include "contracts/NOSTROMOLaunchpad.h"
+
 #define MAX_CONTRACT_ITERATION_DURATION 0 // In milliseconds, must be above 0; for now set to 0 to disable timeout, because a rollback mechanism needs to be implemented to properly handle timeout
 
 #undef INITIALIZE
@@ -214,6 +220,7 @@ constexpr struct ContractDescription
     {"CCF", 127, 10000, sizeof(CCF)}, // proposal in epoch 125, IPO in 126, construction and first use in 127
     {"QEARN", 137, 10000, sizeof(QEARN)}, // proposal in epoch 135, IPO in 136, construction in 137 / first donation after END_EPOCH, first round in epoch 138
     {"QVAULT", 138, 10000, sizeof(IPO)}, // proposal in epoch 136, IPO in 137, construction and first use in 138
+    {"NOSTROMO", 999, 10000, sizeof(NOSTROMO)},
 };
 
 constexpr unsigned int contractCount = sizeof(contractDescriptions) / sizeof(contractDescriptions[0]);
@@ -300,4 +307,5 @@ static void initializeContracts()
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(CCF);
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(QEARN);
     REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(QVAULT);
+    REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(NOSTROMO);
 }
