@@ -47,12 +47,12 @@ constexpr sint32 QEARN_OVERFLOW_USER = 6;
 constexpr sint32 QEARN_LIMIT_LOCK = 7;
 */
 
-constexpr uint8 NOST_NONE = 0;
-constexpr uint8 NOST_EGG = 1;
-constexpr uint8 NOST_DOG = 2;
-constexpr uint8 NOST_ALIEN = 3;
-constexpr uint8 NOST_WARRIOR = 4;
-constexpr uint8 NOST_QUEEN = 5;
+constexpr uint8 NONE = 0;
+constexpr uint8 EGG = 1;
+constexpr uint8 DOG = 2;
+constexpr uint8 ALIEN = 3;
+constexpr uint8 WARRIOR = 4;
+constexpr uint8 QUEEN = 5;
 
 constexpr uint8 VOTE_STATE = 0;
 
