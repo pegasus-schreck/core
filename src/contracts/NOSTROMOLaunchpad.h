@@ -201,7 +201,7 @@ protected:
     _
 
     // To unstake Qubic tokens and clear the user tier
-    PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
+    PUBLIC_PROCEDURE(removeUserTier)
         // Validate the fee
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 1; // Error
