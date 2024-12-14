@@ -5,22 +5,22 @@ constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 
 
 // Tier enumerations
-#define NONE 0
-#define EGG 1
-#define DOG 2
-#define ALIEN 3
-#define WARRIOR 4
-#define QUEEN 5
+constexpr uint8 NONE = 0;
+constexpr uint8 EGG = 1;
+constexpr uint8 DOG = 2;
+constexpr uint8 ALIEN = 3;
+constexpr uint8 WARRIOR = 4;
+constexpr uint8 QUEEN = 5;
 
 // State enumerations
-#define VOTE_STATE 0
-#define REGISTER_STATE 1
-#define INVESTMENT_PHASE_1 2
-#define INVESTMENT_PHASE_2 3
-#define INVESTMENT_PHASE_3 4
-#define CLOSED_FAILED 5
-#define CLOSED_SUCCESS 6
-#define BLOCKED 7
+constexpr uint8 VOTE_STATE = 0;
+constexpr uint8 REGISTER_STATE = 1;
+constexpr uint8 INVESTMENT_PHASE_1 = 2;
+constexpr uint8 INVESTMENT_PHASE_2 = 3;
+constexpr uint8 INVESTMENT_PHASE_3 = 4;
+constexpr uint8 CLOSED_FAILED = 5;
+constexpr uint8 CLOSED_SUCCESS = 6;
+constexpr uint8 BLOCKED = 7;
 
 struct NOSTROMO2
 {
@@ -314,7 +314,7 @@ protected:
             return;
         }
         */
-        
+
         // Build the response object
         locals.projectResponse.owner = locals.localProject.owner;
         locals.projectResponse.state = locals.localProject.state;
