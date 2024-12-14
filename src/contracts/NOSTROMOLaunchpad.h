@@ -70,18 +70,20 @@ struct NOST2
 struct NOST : public ContractBase
 {
 public:
-    struct getLockInfoPerEpoch_input {
-		uint32 Epoch;                             /* epoch number to get information */
-    };
 
-    struct getLockInfoPerEpoch_output {
-        uint64 lockedAmount;                      /* initial total locked amount in epoch */
-        uint64 bonusAmount;                       /* initial bonus amount in epoch*/
-        uint64 currentLockedAmount;               /* total locked amount in epoch. exactly the amount excluding the amount unlocked early*/
-        uint64 currentBonusAmount;                /* bonus amount in epoch excluding the early unlocking */
-        uint64 yield;                             /* Yield calculated by 10000000 multiple*/
-    };
+    
+    //struct getLockInfoPerEpoch_input {
+	//	uint32 Epoch;                             /* epoch number to get information */
+    //};
 
+    //struct getLockInfoPerEpoch_output {
+    //    uint64 lockedAmount;                      /* initial total locked amount in epoch */
+    //    uint64 bonusAmount;                       /* initial bonus amount in epoch*/
+    //    uint64 currentLockedAmount;               /* total locked amount in epoch. exactly the amount excluding the amount unlocked early*/
+    //    uint64 currentBonusAmount;                /* bonus amount in epoch excluding the early unlocking */
+    //    uint64 yield;                             /* Yield calculated by 10000000 multiple*/
+    //};
+    
     struct getUserLockedInfo_input {
         id user;
         uint32 epoch;
@@ -245,6 +247,7 @@ protected:
         }
     _
 
+    /*
     PUBLIC_FUNCTION(getLockInfoPerEpoch)
 
         output.bonusAmount = state._initialRoundInfo.get(input.Epoch)._epochBonusAmount;
@@ -260,7 +263,8 @@ protected:
             output.yield = 0ULL;
         }
     _
-
+    */
+    
     struct getUserLockedInfo_locals {
         uint32 _t;
         uint32 startIndex;
