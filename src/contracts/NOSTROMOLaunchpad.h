@@ -30,7 +30,7 @@ struct NOSTROMO : public ContractBase
 {
 
 public:
-
+/*
     struct NOSTROMOTier {
         uint64 stakeAmount;
         uint64 poolWeight;
@@ -125,7 +125,7 @@ public:
         array<uint8, 32> message;
         ProjectResponse project;
     };
-
+*/
     struct addUserTier_input {
 
     };
