@@ -202,7 +202,7 @@ protected:
 
     struct removeUserTier_locals {
         uint8 userTier;
-    }
+    };
 
     // To unstake Qubic tokens and clear the user tier
     PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
