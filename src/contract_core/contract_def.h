@@ -29,7 +29,7 @@ constexpr unsigned long long MAX_CONTRACT_STATE_SIZE = 1073741824;
 constexpr unsigned int MAX_SIZE_OF_CONTRACT_LOCALS = 32 * 1024;
 
 // TODO: make sure the limit of nested calls is not violated
-constexpr unsigned short MAX_NESTED_CONTRACT_CALLS = 11;
+constexpr unsigned short MAX_NESTED_CONTRACT_CALLS = 10;
 
 
 static void __beginFunctionOrProcedure(const unsigned int); // TODO: more human-readable form of function ID?
