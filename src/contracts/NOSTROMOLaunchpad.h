@@ -249,18 +249,26 @@ protected:
         copyMemory(output.message, "");
     _
 
+    struct createProject_locals {
+        NOSTROMOProject project;
+    }
+
     // To create a new project
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
         // Validate the fee
         if (qpi.invocationReward() < state.transactionFee + state.projectFee) {
             output.status = 1; // Error
             copyMemory(output.message, "Insufficient transaction fee");
-            // WFS: error condition but still invoke transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
-        NOSTROMOProject project = NOSTROMOProject{
+        locals.project = NOSTROMOProject{
             owner: qpi.invocator(),
             state : VOTE_PHASE,
             totalAmount : input.totalAmount,
@@ -269,9 +277,9 @@ protected:
             tokensInSale : tokensInSale
         };
 
-        project.votes.reset();
-        project.registeredUsers.reset();
-        project.investments.reset();
+        locals.project.votes.reset();
+        locals.project.registeredUsers.reset();
+        locals.project.investments.reset();
 
         // Add the project
         projects.set(projectNextId++, );
@@ -280,30 +288,33 @@ protected:
         copyMemory(output.message, "");
     _
 
+    struct getProject_locals {
+        Project project;
+        ProjectResponse projectResponse;
+    }
+
     // To get the project information
     PUBLIC_FUNCTION_WITH_LOCALS(getProject)
 
         // If project doesn't exist, return an error
-        Project project;
-        if (!state.projects.get(input.projectId, project)) {
+        if (!state.projects.get(input.projectId, locals.project)) {
             output.status = 1;
             copyMemory(output.message, "Project not found");
             return;
         }
 
         // Build the response object
-        ProjectResponse projectResponse;
-        projectResponse.owner = project.owner;
-        projectResponse.state = project.state;
-        projectResponse.totalAmount = project.totalAmount;
-        projectResponse.threeshold = project.threeshold;
-        projectResponse.tokenPrice = project.tokenPrice;
-        projectResponse.raisedAmount = project.raisedAmount;
-        projectResponse.raiseInQubics = project.raiseInQubics;
-        projectResponse.tokensInSale = project.tokensInSale;
+        locals.projectResponse.owner = locals.project.owner;
+        locals.projectResponse.state = locals.project.state;
+        locals.projectResponse.totalAmount = locals.project.totalAmount;
+        locals.projectResponse.threeshold = locals.project.threeshold;
+        locals.projectResponse.tokenPrice = locals.project.tokenPrice;
+        locals.projectResponse.raisedAmount = locals.project.raisedAmount;
+        locals.projectResponse.raiseInQubics = locals.project.raiseInQubics;
+        locals.projectResponse.tokensInSale = locals.project.tokensInSale;
 
         output.status = 0; // Success
-        output.project = projectResponse;
+        output.project = locals.projectResponse;
         copyMemory(output.message, "Order retrieved successfully");
     _
 
@@ -312,8 +323,12 @@ protected:
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 1;
             copyMemory(output.message, "Insufficient transaction fee");
-            // WFS: do we still wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
@@ -322,8 +337,12 @@ protected:
         if (!state.users.get(qpi.invocator(), tier)) {
             output.status = 2;
             copyMemory(output.message, "No tier"); 
-            // WFS: error, do we wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
@@ -331,8 +350,12 @@ protected:
         if (tier == NONE) {
             output.status = 3;
             copyMemory(output.message, "No tier");
-            // WFS: error, do we wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
@@ -341,8 +364,12 @@ protected:
         if (!state.projects.get(input.projectId, project)) {
             output.status = 4;
             copyMemory(output.message, "Project not found");
-            // WFS: error, do we still wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }            
             return;
         }
 
@@ -350,8 +377,11 @@ protected:
         if (project.state != VOTE_STATE) {
             output.status = 5;
             copyMemory(output.message, "NO_VOTE_STATE");
-            // WFS: error, do we still wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
@@ -360,8 +390,11 @@ protected:
         if (project.votes.get(qpi.invocator(), vote)) {
             output.status = 6;
             copyMemory(output.message, "Voted");
-            // WFS: do we still wish to transfer?
-            //qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            // WFS: add reward check
+            if(qpi.invocationReward() > 0)
+            {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
             return;
         }
 
