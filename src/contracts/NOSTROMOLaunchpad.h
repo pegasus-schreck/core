@@ -251,7 +251,7 @@ protected:
 
     struct createProject_locals {
         NOSTROMOProject project;
-    }
+    };
 
     // To create a new project
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -291,7 +291,7 @@ protected:
     struct getProject_locals {
         Project project;
         ProjectResponse projectResponse;
-    }
+    };
 
     // To get the project information
     PUBLIC_FUNCTION_WITH_LOCALS(getProject)
