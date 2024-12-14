@@ -40,7 +40,7 @@ public:
 
 protected:
 
-	PUBLIC_PROCEDURE(addUserTier)
+	PUBLIC_FUNCTION(addUserTier)
         qpi.transfer(qpi.invocator(), qpi.invocationReward());
         return;
     -
@@ -48,7 +48,7 @@ protected:
 private:
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
-		REGISTER_USER_PROCEDURE(addUserTier, 1);
+		REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
 	INITIALIZE
