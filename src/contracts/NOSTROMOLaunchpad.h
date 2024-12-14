@@ -30,6 +30,7 @@ struct NOSTROMO : public ContractBase
 {
 
 public:
+
     struct NOSTROMOTier {
         uint64 stakeAmount;
         uint64 poolWeight;
@@ -477,11 +478,12 @@ private:
         state.projectFee = 10000;
         state.projectNextId = 1;
         state.tiers.reset();
-        state.tiers.set(EGG, NOSTROMOTier{ 1, 55 });
-        state.tiers.set(DOG, NOSTROMOTier{ 5, 300 });
-        state.tiers.set(ALIEN, NOSTROMOTier{ 10, 75 });
-        state.tiers.set(WARRIOR, NOSTROMOTier{ 30, 305 });
-        state.tiers.set(QUEEN, NOSTROMOTier{ 100, 1375 });
+        //state.tiers.set(EGG, NOSTROMOTier{ 1, 55 });
+        //state.tiers.set(DOG, NOSTROMOTier{ 5, 300 });
+        //state.tiers.set(ALIEN, NOSTROMOTier{ 10, 75 });
+        //state.tiers.set(WARRIOR, NOSTROMOTier{ 30, 305 });
+        //state.tiers.set(QUEEN, NOSTROMOTier{ 100, 1375 });
         state.userTiers.reset();
         state.projects.reset();
+
 };
