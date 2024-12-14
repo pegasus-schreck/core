@@ -29,10 +29,10 @@ struct NOSTROMO2
 struct NOSTROMO : public ContractBase
 {
     struct addUserTier_input {
-
+        
     };
 
-    struct addUserTier_input {
+    struct addUserTier_output {
 
     };
 
