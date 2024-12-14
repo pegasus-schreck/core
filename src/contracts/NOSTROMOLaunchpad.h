@@ -1,7 +1,3 @@
-#pragma once
-
-//#include "../core/src/contracts/qpi.h"
-
 using namespace QPI;
 
 constexpr uint64 NOSTROMO_MAX_USERS = 131072;
