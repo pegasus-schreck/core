@@ -130,7 +130,7 @@ protected:
     uint64 stakedQubicsInContract;
 
     // To stake Qubic tokens and get a tier for an user
-    PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
+    PUBLIC_PROCEDURE(addUserTier)
         // Validate the input
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1; // Error
