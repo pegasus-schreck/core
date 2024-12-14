@@ -30,8 +30,104 @@ struct NOSTROMO : public ContractBase
 {
 
 public:
+
+    struct NOSTROMOTier {
+        uint64 stakeAmount;
+        uint64 poolWeight;
+    };
+
+    struct NOSTROMOInvestment {
+        id user;
+        uint64 amount;
+    };
+
+    struct NOSTROMOProject {
+        id owner;
+        ProjectStates state;
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint64 raisedAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+    };
+
+    // Input and Output Structs
     struct addUserTier_input {
-        
+        uint8 tier;
+    };
+
+    struct addUserTier_output {
+        uint8 status;
+        array<uint8, 32> message;
+    };
+
+    struct removeTier_input {
+    };
+
+    struct removeTier_output {
+        uint8 status;
+        array<uint8, 32> message;
+    };
+
+    struct createProject_input {
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
+    struct createProject_output {
+        uint8 status;
+        array<uint8, 32> message;
+    };
+
+    struct voteProject_input {
+        projectId: uint64,
+        vote: uint8
+    };
+
+    struct voteProject_output {
+        uint8 status;
+        array<uint8, 32> message;
+    };
+
+    struct registerUserForProject_input {
+        projectId: uint64;
+    };
+
+    struct registerUserForProject_output {
+        uint8 status;
+        array<uint8, 32> message;
+    };
+
+    struct ProjectResponse {
+        id owner;
+        ProjectStates state;
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint64 raisedAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
+    struct getProject_input {
+        uint64 projectId;
+    };
+
+    struct getProject_output {
+        uint8 status;
+        array<uint8, 32> message;
+        ProjectResponse project;
+    };
+
+    struct addUserTier_input {
+
     };
 
     struct addUserTier_output {

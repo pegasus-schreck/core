@@ -208,7 +208,7 @@ static_assert(sizeof(IPO) == 32 * NUMBER_OF_COMPUTORS + 8 * NUMBER_OF_COMPUTORS,
 
 constexpr struct ContractDescription
 {
-    char assetName[8];
+    char assetName[9];
     // constructionEpoch needs to be set to after IPO (IPO is before construction)
     unsigned short constructionEpoch, destructionEpoch;
     unsigned long long stateSize;
