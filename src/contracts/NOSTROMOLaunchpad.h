@@ -92,9 +92,9 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        //QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
 
     // Input and Output Structs
@@ -129,8 +129,8 @@ public:
     };
 
     struct voteProject_input {
-        projectId: uint64,
-        vote: uint8
+        uint64 projectId;
+        uint8 vote;
     };
 
     struct voteProject_output {
@@ -139,7 +139,7 @@ public:
     };
 
     struct registerUserForProject_input {
-        projectId: uint64;
+        uint64 projectId;
     };
 
     struct registerUserForProject_output {
