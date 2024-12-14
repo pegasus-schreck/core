@@ -85,7 +85,7 @@ public:
 
     struct NOSTROMOProject {
         id owner;
-        ProjectStates state;
+        uint8 state;
         uint64 totalAmount;
         uint8 threeshold;
         uint64 tokenPrice;
@@ -149,7 +149,7 @@ public:
 
     struct ProjectResponse {
         id owner;
-        ProjectStates state;
+        uint8 state;
         uint64 totalAmount;
         uint8 threeshold;
         uint64 tokenPrice;
