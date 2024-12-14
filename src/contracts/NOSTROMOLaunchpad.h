@@ -141,8 +141,6 @@ protected:
         return;
     -
 
-private:
-
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 		REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
