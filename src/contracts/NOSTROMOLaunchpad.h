@@ -200,8 +200,12 @@ protected:
         copyMemory(output.message, "");
     _
 
+    struct removeUserTier_locals {
+        uint8 userTier;
+    }
+
     // To unstake Qubic tokens and clear the user tier
-    PUBLIC_PROCEDURE(removeUserTier)
+    PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
         // Validate the fee
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 1; // Error
@@ -217,8 +221,8 @@ protected:
         }
 
         // Validate if the user has a tier
-        uint8 userTier = userTiers.get(qpi.invocator());
-        if (userTier == NONE) {
+        locals.userTier = userTiers.get(qpi.invocator());
+        if (locals.userTier == NONE) {
             output.status = 2; // Error
             copyMemory(output.message, "No tier found");
 
