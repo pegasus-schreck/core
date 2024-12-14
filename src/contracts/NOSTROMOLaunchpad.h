@@ -289,7 +289,7 @@ protected:
     _
 
     struct getProject_locals {
-        Project project;
+        Project localProject;
         ProjectResponse projectResponse;
     };
 
@@ -297,21 +297,21 @@ protected:
     PUBLIC_FUNCTION_WITH_LOCALS(getProject)
 
         // If project doesn't exist, return an error
-        if (!state.projects.get(input.projectId, locals.project)) {
+        if (!state.projects.get(input.projectId, locals.localProject)) {
             output.status = 1;
             copyMemory(output.message, "Project not found");
             return;
         }
 
         // Build the response object
-        locals.projectResponse.owner = locals.project.owner;
-        locals.projectResponse.state = locals.project.state;
-        locals.projectResponse.totalAmount = locals.project.totalAmount;
-        locals.projectResponse.threeshold = locals.project.threeshold;
-        locals.projectResponse.tokenPrice = locals.project.tokenPrice;
-        locals.projectResponse.raisedAmount = locals.project.raisedAmount;
-        locals.projectResponse.raiseInQubics = locals.project.raiseInQubics;
-        locals.projectResponse.tokensInSale = locals.project.tokensInSale;
+        locals.projectResponse.owner = locals.localProject.owner;
+        locals.projectResponse.state = locals.localProject.state;
+        locals.projectResponse.totalAmount = locals.localProject.totalAmount;
+        locals.projectResponse.threeshold = locals.localProject.threeshold;
+        locals.projectResponse.tokenPrice = locals.localProject.tokenPrice;
+        locals.projectResponse.raisedAmount = locals.localProject.raisedAmount;
+        locals.projectResponse.raiseInQubics = locals.localProject.raiseInQubics;
+        locals.projectResponse.tokensInSale = locals.localProject.tokensInSale;
 
         output.status = 0; // Success
         output.project = locals.projectResponse;
