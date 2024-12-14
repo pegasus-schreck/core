@@ -131,6 +131,8 @@ public:
 
 protected:
 
+    uint64 stakedQubicsInContract;
+
     // To stake Qubic tokens and get a tier for an user
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
         // Validate the input
@@ -161,7 +163,7 @@ protected:
         }
 
         // Validate if the user has a tier
-        Tiers userTier = userTiers.get(qpi.invocator());
+        uint8 userTier = userTiers.get(qpi.invocator());
         if (userTier != NONE) {
             output.status = 2; // Error
             copyMemory(output.message, "Tier found");
@@ -219,7 +221,7 @@ protected:
         }
 
         // Validate if the user has a tier
-        Tiers userTier = userTiers.get(qpi.invocator());
+        uint8 userTier = userTiers.get(qpi.invocator());
         if (userTier == NONE) {
             output.status = 2; // Error
             copyMemory(output.message, "No tier found");
@@ -373,7 +375,7 @@ private:
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
-    uint64 stakedQubicsInContract;
+
     uint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
