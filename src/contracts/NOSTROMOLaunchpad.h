@@ -289,7 +289,7 @@ protected:
     _
 
     struct getProject_locals {
-        Project localProject;
+        NOSTROMOProject localProject;
         ProjectResponse projectResponse;
     };
 
@@ -318,6 +318,11 @@ protected:
         copyMemory(output.message, "Order retrieved successfully");
     _
 
+    struct voteProject_locals {
+        uint8 tier;
+        uint8 vote;
+    };
+
     // To vote for a project
     PUBLIC_PROCEDURE_WITH_LOCALS(voteProject)
         if (qpi.invocationReward() < state.transactionFee) {
@@ -333,8 +338,7 @@ protected:
         }
 
         // Check the user tier.
-        uint8 tier;
-        if (!state.users.get(qpi.invocator(), tier)) {
+        if (!state.users.get(qpi.invocator(), locals.tier)) {
             output.status = 2;
             copyMemory(output.message, "No tier"); 
             
@@ -386,10 +390,10 @@ protected:
         }
 
         // Check user hasn't voted yet
-        uint8 vote;
-        if (project.votes.get(qpi.invocator(), vote)) {
+        if (project.votes.get(qpi.invocator(), locals.vote)) {
             output.status = 6;
             copyMemory(output.message, "Voted");
+
             // WFS: add reward check
             if(qpi.invocationReward() > 0)
             {
