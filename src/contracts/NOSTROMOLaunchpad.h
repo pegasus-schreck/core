@@ -26,7 +26,9 @@ constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 #define CLOSED_SUCCESS 6
 #define BLOCKED 7
 
-struct NOSTROMOLaunchpad : public ContractBase
+struct NOSTROMO2
+
+struct NOSTROMO : public ContractBase
 {
 
 public:
