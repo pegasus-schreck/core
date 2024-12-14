@@ -56,11 +56,11 @@ constexpr uint8 NOST_QUEEN = 5;
 
 constexpr uint8 VOTE_STATE = 0;
 
-struct QEARN2
+struct NOST2
 {
 };
 
-struct QEARN : public ContractBase
+struct NOST : public ContractBase
 {
 public:
     struct getLockInfoPerEpoch_input {
