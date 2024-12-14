@@ -27,6 +27,8 @@ constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 #define BLOCKED 7
 
 struct NOSTROMO2
+{
+};
 
 struct NOSTROMO : public ContractBase
 {
