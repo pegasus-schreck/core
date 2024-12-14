@@ -92,7 +92,7 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
         //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
         //QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
