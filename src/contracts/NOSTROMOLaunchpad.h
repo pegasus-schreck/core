@@ -425,6 +425,7 @@ private:
     _
 
     // To update the project state
+/*
     PUBLIC_PROCEDURE_WITH_LOCALS(updateProjectState)
         // We don't know if its possible to update automatically the project state when the time of each phase ends or
         // if we need a function (or several) to call it and change manully the state. OnlyOwner function
@@ -452,7 +453,7 @@ private:
     PUBLIC_PROCEDURE_WITH_LOCALS(claimProjectTokens)
 
     _
-
+*/
     // Register Functions and Procedures
     REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(addUserTier, 1);
