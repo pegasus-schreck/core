@@ -424,10 +424,6 @@ private:
         output = (qpi.invocator() == state.admin);
     _
 
-    struct addUserTier_locals {
-        // TODO...
-    };
-
     // To update the project state
     PUBLIC_PROCEDURE_WITH_LOCALS(updateProjectState)
         // We don't know if its possible to update automatically the project state when the time of each phase ends or
