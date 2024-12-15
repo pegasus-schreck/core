@@ -3,26 +3,6 @@
 
 using namespace QPI;
 
-constexpr uint64 NOSTROMO_MAX_USERS = 8192;
-constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
-constexpr uint64 NOSTROMO_MAX_TIERS = 8;
-
-constexpr uint8 NONE = 0;
-constexpr uint8 EGG = 1;
-constexpr uint8 DOG = 2;
-constexpr uint8 ALIEN = 3;
-constexpr uint8 WARRIOR = 4;
-constexpr uint8 QUEEN = 5;
-
-constexpr uint8 VOTE_STATE = 0;
-constexpr uint8 REGISTER_STATE = 1;
-constexpr uint8 INVESTMENT_PHASE_1 = 2;
-constexpr uint8 INVESTMENT_PHASE_2 = 3;
-constexpr uint8 INVESTMENT_PHASE_3 = 4;
-constexpr uint8 CLOSED_FAILED = 5;
-constexpr uint8 CLOSED_SUCCESS = 6;
-constexpr uint8 BLOCKED = 7;
-
 struct NOST : public ContractBase
 {
 
@@ -47,7 +27,6 @@ public:
         uint8 foundTier;
     };
 
-    // To stake Qubic tokens and get a tier for an user
     PUBLIC_FUNCTION_WITH_LOCALS(addUserTier)
 
         if (input.tier <= 0 || input.tier > 5) {
