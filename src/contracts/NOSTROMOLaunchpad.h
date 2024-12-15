@@ -173,13 +173,17 @@ public:
         sint32 returnCode;
     };
 
+    QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;                         
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+
 protected:
 
     id admin;
     id wallet;
-    QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;                         
-    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
-    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+    //QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;                         
+    //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
     uint64 stakedQubicsInContract;
     uint64 transactionFee;
