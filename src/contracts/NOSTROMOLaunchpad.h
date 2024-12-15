@@ -3,9 +3,9 @@
 
 using namespace QPI;
 
-constexpr uint32 NOSTROMO_MAX_USERS = 8192;
-constexpr uint32 NOSTROMO_MAX_PROJECTS = 1024;
-constexpr uint32 NOSTROMO_MAX_TIERS = 8;
+constexpr uint64 NOSTROMO_MAX_USERS = 8192;
+constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
+constexpr uint64 NOSTROMO_MAX_TIERS = 8;
 
 constexpr uint8 NONE = 0;
 constexpr uint8 EGG = 1;
@@ -182,7 +182,7 @@ public:
         output.status = 0; 
     _
 
-public: 
+private: 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_FUNCTION(addUserTier, 1);
@@ -190,4 +190,5 @@ public:
 
     INITIALIZE
         state.userTiers.reset();
+
 };
