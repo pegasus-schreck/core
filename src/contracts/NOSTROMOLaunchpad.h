@@ -277,7 +277,7 @@ protected:
         }
 
         // Set the user tier
-        state.userTiers.set(qpi.invocator(), input.tier);
+        //state.userTiers.set(qpi.invocator(), input.tier);
 
         // Update the staked qubics amount
         state.stakedQubicsInContract += locals.stakedQubics;
