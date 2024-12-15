@@ -184,7 +184,7 @@ public:
             return;
         }
 
-        state.stakedQubicsInContract += locals.stakedQubics;
+        //state.stakedQubicsInContract += locals.stakedQubics;
 
         output.status = 0; 
     _
