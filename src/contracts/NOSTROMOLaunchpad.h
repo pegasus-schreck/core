@@ -258,8 +258,8 @@ protected:
             return;
         }
 
-        locals.invocatorId = qpi.invocator();
-        state.userTiers.get(state.wallet, state.userTier);
+        //locals.invocatorId = qpi.invocator();
+        //state.userTiers.get(state.wallet, state.userTier);
 
         if(!state.userTiers.get(qpi.invocator(), locals.userTier)) {
             output.status = 4;
