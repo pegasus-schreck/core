@@ -157,11 +157,11 @@ public:
             return;
         }
 
-        //if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-        //    output.status = 4;
-        //    return;
-        //}
-        state.userTiers.get(qpi.invocator(), locals.foundTier);
+        if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            output.status = 4;
+            return;
+        }
+        
         //if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
         //    output.status = 4;
         //    return;
@@ -181,7 +181,7 @@ public:
         output.status = 0; 
     _
 
-private: 
+public: 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_FUNCTION(addUserTier, 1);
