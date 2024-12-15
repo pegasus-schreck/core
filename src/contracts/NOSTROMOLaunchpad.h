@@ -245,13 +245,13 @@ protected:
         }
 
         //Tiers userTier = userTiers.get(qpi.invocator());
-        if (userTier != Tiers.NONE) {
-            output.status = 3;
-            if (qpi.invocationReward() > 0) {
-                qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            }
-            return;
-        }
+        //if (userTier != Tiers.NONE) {
+        //    output.status = 3;
+        //    if (qpi.invocationReward() > 0) {
+        //        qpi.transfer(qpi.invocator(), qpi.invocationReward());
+        //    }
+        //    return;
+        //}
 
         //locals.stakedQubics = tiers.get(input.tier);
         if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
