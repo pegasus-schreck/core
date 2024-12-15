@@ -137,7 +137,7 @@ private:
 public:
 
     struct addUserTier_locals {
-        uint8 userTier;
+        NOSTROMOTier userTier;
         uint64 stakedQubics;
         id userAddress;
     };
