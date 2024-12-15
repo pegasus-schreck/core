@@ -233,6 +233,7 @@ protected:
 
     struct addUserTier_locals {
         uint64 stakedQubics;
+        uint8 userTier;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -254,16 +255,16 @@ protected:
             return;
         }
 
-        //Tiers userTier = userTiers.get(qpi.invocator());
-        //if (userTier != Tiers.NONE) {
-        //    output.status = 3;
-        //    if (qpi.invocationReward() > 0) {
-        //        qpi.transfer(qpi.invocator(), qpi.invocationReward());
-        //    }
-        //    return;
-        //}
+        locals.userTier = state.userTiers.get(qpi.invocator());
+        if (userTier != NONE) {
+            output.status = 3;
+            if (qpi.invocationReward() > 0) {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
+            return;
+        }
 
-        //locals.stakedQubics = tiers.get(input.tier);
+        locals.stakedQubics = state.tiers.get(input.tier);
         if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
         {
             output.status = 3; 
@@ -274,10 +275,10 @@ protected:
         }
 
         // Set the user tier
-        //userTiers.set(qpi.invocator(), input.tier);
+        state.userTiers.set(qpi.invocator(), input.tier);
 
         // Update the staked qubics amount
-        //stakedQubicsInContract += stakedQubics;
+        state.stakedQubicsInContract += locals.stakedQubics;
 
         output.status = 0; 
     _
