@@ -260,8 +260,8 @@ protected:
         }
 
         locals.invocatorId = qpi.invocator();
-        state.userTiers.get(locals.invocatorId, state.userTier);
-        
+        state.userTiers.get(state.wallet, state.userTier);
+
         //state.userTiers.get(qpi.invocator(), state.userTier, id)
         //locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
 
