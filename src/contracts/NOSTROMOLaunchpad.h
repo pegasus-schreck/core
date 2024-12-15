@@ -127,7 +127,7 @@ public:
 
     struct returnedTier {
         uint8 userTier;
-    }
+    };
 
 private:
 
