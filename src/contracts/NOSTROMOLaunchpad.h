@@ -18,7 +18,7 @@ public:
 
 private:
     QPI::HashMap<id, uint8, 8192> userTiers;              
-    suint64 transactionFee;
+    sint64 transactionFee;
 
 public:
 
