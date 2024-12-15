@@ -162,6 +162,11 @@ public:
             return;
         }
 
+        if(!state.projects.get(locals.stakedQubics, state.projectTemp) {
+            output.status =4;
+            return;
+        }
+        
         //if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
         //    output.status = 4;
         //    return;
