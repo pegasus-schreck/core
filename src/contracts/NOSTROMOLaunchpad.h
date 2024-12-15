@@ -259,7 +259,7 @@ protected:
 
         state.userTiers.get(qpi.invocator(), state.userTier);
 
-        if (locals.userTier != NONE) {
+        if (state.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
