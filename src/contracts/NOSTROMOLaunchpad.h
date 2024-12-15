@@ -39,7 +39,7 @@ public:
 private:
     QPI::HashMap<id, uint8, 8192> userTiers;              
     uint64 transactionFee;
-    
+
 public:
 
     struct addUserTier_locals {
@@ -74,17 +74,9 @@ public:
         REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
-/*
+
     INITIALIZE
         state.userTiers.reset();
-        state.wallet = qpi.invocator();
-        state.admin = qpi.invocator();
-        state.tiers.reset();
-        state.projects.reset();
-        state.stakedQubicsInContract = 0;
         state.transactionFee = 0;
-        state.projectFee = 0;
-        state.projectNextId = 0;
     -
-*/
 };
