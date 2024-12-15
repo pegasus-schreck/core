@@ -256,7 +256,7 @@ protected:
             return;
         }
 
-        userTiers.get(qpi.invocator(), locals.userTier);
+        state.userTiers.get(qpi.invocator(), locals.userTier);
 
         if (locals.userTier != NONE) {
             output.status = 3;
