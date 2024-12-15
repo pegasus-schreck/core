@@ -187,7 +187,7 @@ struct __FunctionOrProcedureBeginEndGuard
 // inaccessible for contracts
 #include "qpi_collection_impl.h"
 #include "qpi_trivial_impl.h"
-
+#include "qpi_hash_map_impl.h"
 #include "platform/global_var.h"
 
 #include "network_messages/common_def.h"

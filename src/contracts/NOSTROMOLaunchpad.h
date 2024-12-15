@@ -39,10 +39,10 @@ public:
             return;
         }
 
-        //if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-        //    output.status = 4;
-        //    return;
-        //}
+        if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            output.status = 4;
+            return;
+        }
         
         output.status = 0; 
     _
