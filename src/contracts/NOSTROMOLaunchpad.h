@@ -146,7 +146,7 @@ public:
     struct addUserTier_locals {
         uint8 userTier;
         uint64 stakedQubics;
-        returnedTier userTier; 
+        returnedTier usedTier; 
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -162,7 +162,7 @@ public:
             return;
         }
 
-        if(!state.userTiers.get(qpi.invocator(), locals.returnedTier)) {
+        if(!state.userTiers.get(qpi.invocator(), locals.usedTier)) {
             output.status = 4;
             return;
         }
