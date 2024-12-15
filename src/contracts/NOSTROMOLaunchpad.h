@@ -1,6 +1,6 @@
 using namespace QPI;
 
-constexpr uint32 NOSTROMO_MAX_USERS = 32768;
+constexpr uint32 NOSTROMO_MAX_USERS = 16384;
 constexpr uint32 NOSTROMO_MAX_PROJECTS = 1024;
 
 constexpr uint8 NONE = 0;
