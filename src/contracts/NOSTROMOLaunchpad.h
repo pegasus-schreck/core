@@ -144,7 +144,7 @@ private:
 public:
 
     struct addUserTier_locals {
-        uint64 stakedQubics;
+        //uint64 stakedQubics;
         NOSTROMOProject tempProject;
     };
 
@@ -166,16 +166,16 @@ public:
             return;
         }
 
-        if (locals.userTier != NONE) {
-            output.status = 3;
-            return;
-        }
+        //if (locals.userTier != NONE) {
+        //    output.status = 3;
+        //    return;
+        //}
 
-        if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
-        {
-            output.status = 3; 
-            return;
-        }
+        //if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
+        //{
+        //    output.status = 3; 
+        //    return;
+        //}
 
         output.status = 0; 
     _
