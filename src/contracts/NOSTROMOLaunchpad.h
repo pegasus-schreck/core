@@ -131,6 +131,10 @@ public:
     uint64 projectFee;
     uint64 projectNextId;
 
+    struct addUserTier_locals {
+        uint8 userTier;
+    };
+
     // To stake Qubic tokens and get a tier for an user
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
 
