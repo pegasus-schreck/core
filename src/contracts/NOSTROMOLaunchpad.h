@@ -244,7 +244,7 @@ protected:
             return;
         }
 
-        Tiers userTier = userTiers.get(qpi.invocator());
+        //Tiers userTier = userTiers.get(qpi.invocator());
         if (userTier != Tiers.NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
