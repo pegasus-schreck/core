@@ -26,6 +26,7 @@ struct NOST2
 
 struct NOST : public ContractBase
 {
+
 public:
 
     struct NOSTROMOTier {
@@ -121,6 +122,8 @@ public:
         ProjectResponse project;
     };
 
+private:
+
     id admin;
     id wallet;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
@@ -130,6 +133,8 @@ public:
     sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
+
+public:
 
     struct addUserTier_locals {
         uint8 userTier;
