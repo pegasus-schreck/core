@@ -125,16 +125,12 @@ public:
         ProjectResponse project;
     };
 
-    struct returnedTier {
-        uint8 userTier;
-    };
-
 private:
 
     id admin;
     id wallet;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
-    QPI::HashMap<id, returnedTier, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
@@ -146,6 +142,7 @@ public:
 
     struct addUserTier_locals {
         uint64 stakedQubics;
+        uint8 foundTier;
         //NOSTROMOProject tempProject;
     };
 
@@ -162,8 +159,8 @@ public:
             return;
         }
 
-        if(!state.projects.get(locals.stakedQubics, state.projectTemp)) {
-            output.status =4;
+        if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            output.status = 4;
             return;
         }
 
@@ -192,4 +189,7 @@ private:
         REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
+    INITIALIZE
+        state.userTiers.reset();
+    -
 };
