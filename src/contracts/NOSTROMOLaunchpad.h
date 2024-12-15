@@ -182,13 +182,12 @@ public:
         output.status = 0; 
     _
 
-private: 
+public: 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
-//    INITIALIZE
-//        state.userTiers.reset();
-//    -
+    INITIALIZE
+        state.userTiers.reset();
 };
