@@ -237,6 +237,7 @@ protected:
         uint64 stakedQubics;
         uint8 userTier;
         //NOSTROMOTier rewardTier;
+        id invocatorId;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -258,10 +259,12 @@ protected:
             return;
         }
 
-        //state.userTiers.get(qpi.invocator(), state.userTier);
-        //state.userTiers.get(qpi.invocator(), state.userTier, id)
-        locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
+        locals.invocatorId = qpi.invocator();
+        state.userTiers.get(locals.invocatorId, state.userTier);
         
+        //state.userTiers.get(qpi.invocator(), state.userTier, id)
+        //locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
+
         if (state.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
