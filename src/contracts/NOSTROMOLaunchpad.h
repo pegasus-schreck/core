@@ -23,9 +23,10 @@ constexpr uint8 CLOSED_FAILED = 5;
 constexpr uint8 CLOSED_SUCCESS = 6;
 constexpr uint8 BLOCKED = 7;
 
-struct NOST2
+/*struct NOST2
 {
 };
+*/
 
 struct NOST : public ContractBase
 {
