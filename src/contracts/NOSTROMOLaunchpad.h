@@ -269,7 +269,7 @@ protected:
         //state.userTiers.get(qpi.invocator(), state.userTier, id)
         //locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
 
-        if (state.userTier != NONE) {
+        if (locals.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
