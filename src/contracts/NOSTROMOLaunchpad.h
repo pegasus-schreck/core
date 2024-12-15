@@ -234,7 +234,7 @@ protected:
     struct addUserTier_locals {
         uint64 stakedQubics;
         uint8 userTier;
-        NOSTROMOTier rewardTier;
+        //NOSTROMOTier rewardTier;
     };
 
     // To stake Qubic tokens and get a tier for an user
