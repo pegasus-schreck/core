@@ -147,17 +147,11 @@ public:
 
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
-            if (qpi.invocationReward() > 0) {
-                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            }
             return;
         }
 
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 2;
-            if (qpi.invocationReward() > 0) {
-                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            }
             return;
         }
 
@@ -169,22 +163,14 @@ public:
 
         if (locals.userTier != NONE) {
             output.status = 3;
-            if (qpi.invocationReward() > 0) {
-                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            }
             return;
         }
 
         if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
         {
             output.status = 3; 
-            if (qpi.invocationReward() > 0) {
-                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            }
             return;
         }
-
-        //state.stakedQubicsInContract += locals.stakedQubics;
 
         output.status = 0; 
     _
