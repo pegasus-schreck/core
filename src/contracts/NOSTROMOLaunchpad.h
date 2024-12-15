@@ -53,4 +53,6 @@ public:
         REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
+    INITIALIZE
+        state.userTiers.reset()
 };
