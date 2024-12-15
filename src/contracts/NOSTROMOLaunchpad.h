@@ -143,7 +143,7 @@ public:
     };
 
     // To stake Qubic tokens and get a tier for an user
-    PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
+    PUBLIC_FUNCTION_WITH_LOCALS(addUserTier)
 
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
@@ -192,7 +192,7 @@ public:
 private: 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
-        REGISTER_USER_PROCEDURE(addUserTier, 1);
+        REGISTER_USER_FUNCTION(addUserTier, 1);
 	_
 
 };
