@@ -235,7 +235,7 @@ protected:
 
     struct addUserTier_locals {
         uint64 stakedQubics;
-        //uint8 userTier;
+        uint8 userTier;
         //NOSTROMOTier rewardTier;
     };
 
@@ -259,7 +259,8 @@ protected:
         }
 
         //state.userTiers.get(qpi.invocator(), state.userTier);
-        state.userTiers.get(qpi.invocator(), state.userTier, id)
+        //state.userTiers.get(qpi.invocator(), state.userTier, id)
+        locals.userTier = state.userTiers.getElementIndex(qpi.invocator())
         if (state.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
