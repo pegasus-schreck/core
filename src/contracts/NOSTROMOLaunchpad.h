@@ -185,7 +185,6 @@ protected:
     sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
-    uint8 userTier;
 
     struct RoundInfo {
 
@@ -236,7 +235,7 @@ protected:
     struct addUserTier_locals {
         uint64 stakedQubics;
         uint8 userTier;
-        //NOSTROMOTier rewardTier;
+        NOSTROMOTier rewardTier;
         id invocatorId;
     };
 
@@ -261,6 +260,11 @@ protected:
 
         locals.invocatorId = qpi.invocator();
         state.userTiers.get(state.wallet, state.userTier);
+
+        if(!state.userTiers.get(qpi.invocator(), locals.userTier)) {
+            output.status = 4;
+            return;
+        }
 
         //state.userTiers.get(qpi.invocator(), state.userTier, id)
         //locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
