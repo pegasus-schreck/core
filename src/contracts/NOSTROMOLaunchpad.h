@@ -175,6 +175,17 @@ public:
 
 protected:
 
+    id admin;
+    id: wallet;
+    QPI::HashMap<Tiers, NOSTROMOTier, 5> tiers;                         
+    QPI::HashMap<id, Tiers, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+
+    uint64 stakedQubicsInContract;
+    uint64 transactionFee;
+    uint64 projectFee;
+    uint64 projectNextId;
+
     struct RoundInfo {
 
         uint64 _totalLockedAmount;            
@@ -223,7 +234,7 @@ protected:
 
     struct addUserTier_locals {
         uint64 stakedQubics;
-    }
+    };
 
     // To stake Qubic tokens and get a tier for an user
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
