@@ -94,10 +94,9 @@ public:
         uint64 tokensInSale;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
         //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        //QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
 
-    // Input and Output Structs
     struct addUserTier_input {
         uint8 tier;
     };
@@ -168,19 +167,7 @@ public:
         ProjectResponse project;
     };
 
-    
-    //struct getLockInfoPerEpoch_input {
-	//	uint32 Epoch;                             /* epoch number to get information */
-    //};
-
-    //struct getLockInfoPerEpoch_output {
-    //    uint64 lockedAmount;                      /* initial total locked amount in epoch */
-    //    uint64 bonusAmount;                       /* initial bonus amount in epoch*/
-    //    uint64 currentLockedAmount;               /* total locked amount in epoch. exactly the amount excluding the amount unlocked early*/
-    //    uint64 currentBonusAmount;                /* bonus amount in epoch excluding the early unlocking */
-    //    uint64 yield;                             /* Yield calculated by 10000000 multiple*/
-    //};
-    
+        
     struct getUserLockedInfo_input {
         id user;
         uint32 epoch;
