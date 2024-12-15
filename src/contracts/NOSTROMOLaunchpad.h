@@ -1,7 +1,7 @@
 using namespace QPI;
 
-constexpr uint64 NOSTROMO_MAX_USERS = 131072;
-constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
+constexpr uint32 NOSTROMO_MAX_USERS = 131072;
+constexpr uint32 NOSTROMO_MAX_PROJECTS = 1024;
 
 constexpr uint8 NONE = 0;
 constexpr uint8 EGG = 1;
