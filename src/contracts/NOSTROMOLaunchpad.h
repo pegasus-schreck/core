@@ -1,51 +1,5 @@
 using namespace QPI;
 
-/*
-constexpr uint64 QEARN_MINIMUM_LOCKING_AMOUNT = 10000000;
-constexpr uint64 QEARN_MAX_LOCKS = 4194304;
-constexpr uint64 QEARN_MAX_EPOCHS = 4096;
-constexpr uint64 QEARN_MAX_USERS = 131072;
-constexpr uint64 QEARN_MAX_LOCK_AMOUNT = 1000000000000ULL;
-constexpr uint64 QEARN_MAX_BONUS_AMOUNT = 1000000000000ULL;
-constexpr uint64 QEARN_INITIAL_EPOCH = 138;
-
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_0_3 = 0;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_4_7 = 5;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_8_11 = 5;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_12_15 = 10;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_16_19 = 15;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_20_23 = 20;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_24_27 = 25;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_28_31 = 30;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_32_35 = 35;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_36_39 = 40;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_40_43 = 45;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_44_47 = 50;
-constexpr uint64 QEARN_EARLY_UNLOCKING_PERCENT_48_51 = 55;
-
-constexpr uint64 QEARN_BURN_PERCENT_0_3 = 0;
-constexpr uint64 QEARN_BURN_PERCENT_4_7 = 45;
-constexpr uint64 QEARN_BURN_PERCENT_8_11 = 45;
-constexpr uint64 QEARN_BURN_PERCENT_12_15 = 45;
-constexpr uint64 QEARN_BURN_PERCENT_16_19 = 40;
-constexpr uint64 QEARN_BURN_PERCENT_20_23 = 40;
-constexpr uint64 QEARN_BURN_PERCENT_24_27 = 35;
-constexpr uint64 QEARN_BURN_PERCENT_28_31 = 35;
-constexpr uint64 QEARN_BURN_PERCENT_32_35 = 35;
-constexpr uint64 QEARN_BURN_PERCENT_36_39 = 30;
-constexpr uint64 QEARN_BURN_PERCENT_40_43 = 30;
-constexpr uint64 QEARN_BURN_PERCENT_44_47 = 30;
-constexpr uint64 QEARN_BURN_PERCENT_48_51 = 25;
-
-constexpr sint32 QEARN_INVALID_INPUT_AMOUNT = 0;
-constexpr sint32 QEARN_LOCK_SUCCESS = 1;
-constexpr sint32 QEARN_INVALID_INPUT_LOCKED_EPOCH = 2;
-constexpr sint32 QEARN_INVALID_INPUT_UNLOCK_AMOUNT = 3;
-constexpr sint32 QEARN_EMPTY_LOCKED = 4;
-constexpr sint32 QEARN_UNLOCK_SUCCESS = 5;
-constexpr sint32 QEARN_OVERFLOW_USER = 6;
-constexpr sint32 QEARN_LIMIT_LOCK = 7;
-*/
 constexpr uint64 NOSTROMO_MAX_USERS = 131072;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 
@@ -93,7 +47,7 @@ public:
         uint8 raiseInQubics;
         uint64 tokensInSale;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
-        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
         QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
 
@@ -103,7 +57,6 @@ public:
 
     struct addUserTier_output {
         uint8 status;
-        array<uint8, 32> message;
     };
 
     struct removeTier_input {
@@ -167,25 +120,16 @@ public:
         ProjectResponse project;
     };
 
-        
+////////////////////////////////////////////////////////////////////////////////////////        
     struct getUserLockedInfo_input {
         id user;
         uint32 epoch;
     };
 
     struct getUserLockedInfo_output {
-        uint64 lockedAmount;                   /* the amount user locked at input.epoch */
+        uint64 lockedAmount;                   
     };
 
-    /*
-        getStateOfRound FUNCTION
-
-        getStateOfRound function returns following.
-
-        0 = open epoch,not started yet
-        1 = running epoch
-        2 = ended epoch(>52weeks)
-    */
     struct getStateOfRound_input {
         uint32 epoch;
     };
@@ -194,16 +138,6 @@ public:
         uint32 state;
     };
     
-    /*
-        getUserLockStatus FUNCTION
-
-        the status will return the binary status.
-        1101010010110101001011010100101101010010110101001001
-
-        1 means locked in [index of 1] weeks ago. 0 means unlocked in [index of zero] weeks ago.
-        The frontend can get the status of locked in 52 epochs. in above binary status, 
-        the frontend can know that user locked 0 week ago, 1 week ago, 3 weeks ago, 5, 8,10,11,13 weeks ago.
-    */
     struct getUserLockStatus_input {
         id user;
     };
@@ -211,29 +145,6 @@ public:
     struct getUserLockStatus_output {
         uint64 status;
     };
-
-    /*
-        getEndedStatus FUNCTION
-
-        output.earlyRewardedAmount returns the amount rewarded by unlocking early at current epoch
-        output.earlyUnlockedAmount returns the amount unlocked by unlocking early at current epoch
-        output.fullyRewardedAmount returns the amount rewarded by unlocking fully at the end of previous epoch
-        output.fullyUnlockedAmount returns the amount unlocked by unlocking fully at the end of previous epoch
-
-        let's assume that current epoch is 170, user unlocked the 15B qu totally at this epoch and he got the 30B qu of reward.
-        in this case, output.earlyUnlockedAmount = 15B qu, output.earlyRewardedAmount = 30B qu
-        if this user unlocks 3B qu additionally at this epoch and rewarded 6B qu, 
-        in this case, output.earlyUnlockedAmount = 18B qu, output.earlyRewardedAmount = 36B qu
-        state.earlyUnlocker array would be initialized at the end of every epoch
-
-        let's assume also that current epoch is 170, user got the 15B(locked amount for 52 weeks) + 10B(rewarded amount for 52 weeks) at the end of epoch 169.
-        in this case, output.fullyRewardedAmount = 10B, output.fullyUnlockedAmount = 15B
-        state.fullyUnlocker array would be decided with distributions at the end of every epoch
-
-        state.earlyUnlocker, state.fullyUnlocker arrays would be initialized and decided by following expression at the END_EPOCH_WITH_LOCALS function.
-        state._earlyUnlockedCnt = 0;
-        state._fullyUnlockedCnt = 0;
-    */
 
     struct getEndedStatus_input {
         id user;
@@ -254,8 +165,8 @@ public:
     };
 
     struct unlock_input {
-        uint64 amount;                            /* unlocking amount */	
-        uint32 lockedEpoch;                      /* locked epoch */
+        uint64 amount;                           	
+        uint32 lockedEpoch;                      
     };
 
     struct unlock_output {
@@ -266,8 +177,8 @@ protected:
 
     struct RoundInfo {
 
-        uint64 _totalLockedAmount;            // The initial total locked amount in any epoch.  Max Epoch is 65535
-        uint64 _epochBonusAmount;             // The initial bonus amount per an epoch.         Max Epoch is 65535 
+        uint64 _totalLockedAmount;            
+        uint64 _epochBonusAmount;             
 
     };
 
@@ -310,44 +221,79 @@ protected:
         uint32 firstEpoch;
     };
 
+    struct addUserTier_locals {
+        uint64 stakedQubics;
+    }
+
+    // To stake Qubic tokens and get a tier for an user
+    PUBLIC_FUNCTION_WITH_LOCALS(addUserTier)
+
+        if (input.tier <= 0 || input.tier > 5) {
+            output.status = 1;
+            if (qpi.invocationReward() > 0) {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
+            return;
+        }
+
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = 2;
+            if (qpi.invocationReward() > 0) {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
+            return;
+        }
+
+        Tiers userTier = userTiers.get(qpi.invocator());
+        if (userTier != Tiers.NONE) {
+            output.status = 3;
+            if (qpi.invocationReward() > 0) {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
+            return;
+        }
+
+        locals.stakedQubics = tiers.get(input.tier);
+        if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
+        {
+            output.status = 3; 
+            if (qpi.invocationReward() > 0) {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            }
+            return;
+        }
+
+        // Set the user tier
+        //userTiers.set(qpi.invocator(), input.tier);
+
+        // Update the staked qubics amount
+        //stakedQubicsInContract += stakedQubics;
+
+        output.status = 0; 
+    _
+
     PUBLIC_FUNCTION_WITH_LOCALS(getStateOfRound)
         if(input.epoch < QEARN_INITIAL_EPOCH) 
-        {                                                            // non staking
+        {                                                           
             output.state = 2; 
             return ;
         }
         if(input.epoch > qpi.epoch()) 
         {
-            output.state = 0;                                     // opening round, not started yet
+            output.state = 0;                                     
         }
         locals.firstEpoch = qpi.epoch() - 52;
         if(input.epoch <= qpi.epoch() && input.epoch >= locals.firstEpoch) 
         {
-            output.state = 1;       // running round, available unlocking early
+            output.state = 1;       
         }
         if(input.epoch < locals.firstEpoch) 
         {
-            output.state = 2;       // ended round
+            output.state = 2;      
         }
     _
 
-    /*
-    PUBLIC_FUNCTION(getLockInfoPerEpoch)
-
-        output.bonusAmount = state._initialRoundInfo.get(input.Epoch)._epochBonusAmount;
-        output.lockedAmount = state._initialRoundInfo.get(input.Epoch)._totalLockedAmount;
-        output.currentBonusAmount = state._currentRoundInfo.get(input.Epoch)._epochBonusAmount;
-        output.currentLockedAmount = state._currentRoundInfo.get(input.Epoch)._totalLockedAmount;
-        if(state._currentRoundInfo.get(input.Epoch)._totalLockedAmount) 
-        {
-            output.yield = state._currentRoundInfo.get(input.Epoch)._epochBonusAmount * 10000000ULL / state._currentRoundInfo.get(input.Epoch)._totalLockedAmount;
-        }
-        else 
-        {
-            output.yield = 0ULL;
-        }
-    _
-    */
+   
 
     struct getUserLockedInfo_locals {
         uint32 _t;
@@ -604,7 +550,7 @@ protected:
             return ;  
         }
 
-        /* the rest amount after unlocking should be more than MINIMUM_LOCKING_AMOUNT */
+
         if(state.locker.get(locals.indexOfinvocator)._lockedAmount - input.amount < QEARN_MINIMUM_LOCKING_AMOUNT) 
         {
             locals.amountOfUnlocking = state.locker.get(locals.indexOfinvocator)._lockedAmount;
