@@ -136,7 +136,6 @@ private:
     sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
-    NOSTROMOProject projectTemp;
 
 public:
 
@@ -183,7 +182,7 @@ public:
         output.status = 0; 
     _
 
-private: 
+public: 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_FUNCTION(addUserTier, 1);
