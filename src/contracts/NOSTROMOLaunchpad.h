@@ -1,3 +1,6 @@
+#pragma once
+#include "qpi.h"
+
 using namespace QPI;
 
 constexpr uint32 NOSTROMO_MAX_USERS = 8192;
