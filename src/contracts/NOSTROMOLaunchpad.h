@@ -147,6 +147,7 @@ public:
         uint8 userTier;
         uint64 stakedQubics;
         returnedTier usedTier; 
+        NOSTROMOProject tempProject;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -162,7 +163,7 @@ public:
             return;
         }
 
-        if(!state.userTiers.get(qpi.invocator(), locals.usedTier)) {
+        if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
             output.status = 4;
             return;
         }
