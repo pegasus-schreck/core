@@ -184,6 +184,7 @@ protected:
     uint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
+    uint8 userTier;
 
     struct RoundInfo {
 
@@ -233,7 +234,7 @@ protected:
 
     struct addUserTier_locals {
         uint64 stakedQubics;
-        uint8 userTier;
+        //uint8 userTier;
         //NOSTROMOTier rewardTier;
     };
 
@@ -256,7 +257,7 @@ protected:
             return;
         }
 
-        state.userTiers.get(qpi.invocator(), locals.userTier);
+        state.userTiers.get(qpi.invocator(), state.userTier);
 
         if (locals.userTier != NONE) {
             output.status = 3;
