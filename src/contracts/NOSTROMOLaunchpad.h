@@ -38,7 +38,8 @@ public:
 
 private:
     QPI::HashMap<id, uint8, 8192> userTiers;              
-
+    uint64 transactionFee;
+    
 public:
 
     struct addUserTier_locals {
