@@ -144,9 +144,7 @@ private:
 public:
 
     struct addUserTier_locals {
-        uint8 userTier;
         uint64 stakedQubics;
-        returnedTier usedTier; 
         NOSTROMOProject tempProject;
     };
 
