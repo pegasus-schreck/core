@@ -140,12 +140,13 @@ private:
     sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
+    NOSTROMOProject projectTemp;
 
 public:
 
     struct addUserTier_locals {
-        //uint64 stakedQubics;
-        NOSTROMOProject tempProject;
+        uint64 stakedQubics;
+        //NOSTROMOProject tempProject;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -161,10 +162,10 @@ public:
             return;
         }
 
-        if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
-            output.status = 4;
-            return;
-        }
+        //if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
+        //    output.status = 4;
+        //    return;
+        //}
 
         //if (locals.userTier != NONE) {
         //    output.status = 3;
