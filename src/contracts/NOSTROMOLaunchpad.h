@@ -732,7 +732,7 @@ protected:
 
         REGISTER_USER_PROCEDURE(lock, 1);
 		REGISTER_USER_PROCEDURE(unlock, 2);
-
+        REGISTER_USER_PROCEDURE(addUserTier, 3);
 	_
 
     struct BEGIN_EPOCH_locals
