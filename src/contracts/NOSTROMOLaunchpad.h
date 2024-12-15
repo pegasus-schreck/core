@@ -2,6 +2,7 @@ using namespace QPI;
 
 constexpr uint32 NOSTROMO_MAX_USERS = 8192;
 constexpr uint32 NOSTROMO_MAX_PROJECTS = 1024;
+constexpr uint32 NOSTROMO_MAX_TIERS = 8;
 
 constexpr uint8 NONE = 0;
 constexpr uint8 EGG = 1;
@@ -177,7 +178,7 @@ protected:
 
     id admin;
     id wallet;
-    QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;                         
+    QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
     uint64 stakedQubicsInContract;
@@ -257,7 +258,7 @@ protected:
             return;
         }
 
-        //state.userTiers.get(qpi.invocator(), state.userTier);
+        state.userTiers.get(qpi.invocator(), state.userTier);
 
         if (state.userTier != NONE) {
             output.status = 3;
