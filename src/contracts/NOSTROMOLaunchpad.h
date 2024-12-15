@@ -148,7 +148,7 @@ public:
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
             if (qpi.invocationReward() > 0) {
-                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
             }
             return;
         }
@@ -156,7 +156,7 @@ public:
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 2;
             if (qpi.invocationReward() > 0) {
-                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
             }
             return;
         }
@@ -170,7 +170,7 @@ public:
         if (locals.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
-                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
             }
             return;
         }
@@ -179,7 +179,7 @@ public:
         {
             output.status = 3; 
             if (qpi.invocationReward() > 0) {
-                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                //qpi.transfer(qpi.invocator(), qpi.invocationReward());
             }
             return;
         }
