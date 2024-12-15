@@ -126,7 +126,7 @@ private:
     id admin;
     id wallet;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
-    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<id, uint8, 8192> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
