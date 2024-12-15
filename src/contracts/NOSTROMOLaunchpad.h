@@ -177,8 +177,8 @@ protected:
 
     id admin;
     id wallet;
-    QPI::HashMap<Tiers, NOSTROMOTier, 5> tiers;                         
-    QPI::HashMap<id, Tiers, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
     uint64 stakedQubicsInContract;
