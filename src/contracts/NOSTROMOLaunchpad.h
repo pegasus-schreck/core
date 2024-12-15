@@ -130,7 +130,7 @@ private:
     id admin;
     id wallet;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
-    QPI::HashMap<uint64, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
@@ -142,8 +142,7 @@ public:
     struct addUserTier_locals {
         uint8 userTier;
         uint64 stakedQubics;
-        id userAddress;
-        uint64 index;
+        uint64 userAddress;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -160,7 +159,7 @@ public:
         }
 
         locals.userAddress = qpi.invocator();
-        if(!state.userTiers.get(locals.index, locals.userTier)) {
+        if(!state.userTiers.get(locals.userAddress, locals.userTier)) {
             output.status = 4;
             return;
         }
