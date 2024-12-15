@@ -142,7 +142,6 @@ public:
     struct addUserTier_locals {
         uint64 stakedQubics;
         uint8 foundTier;
-        //NOSTROMOProject tempProject;
     };
 
     // To stake Qubic tokens and get a tier for an user
@@ -158,11 +157,11 @@ public:
             return;
         }
 
-        if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-            output.status = 4;
-            return;
-        }
-
+        //if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+        //    output.status = 4;
+        //    return;
+        //}
+        state.userTiers.get(qpi.invocator(), locals.foundTier);
         //if(!state.userTiers.get(locals.stakedQubics, locals.tempProject)) {
         //    output.status = 4;
         //    return;
