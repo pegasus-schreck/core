@@ -1,6 +1,6 @@
 using namespace QPI;
 
-constexpr uint32 NOSTROMO_MAX_USERS = 65536;
+constexpr uint32 NOSTROMO_MAX_USERS = 131072;
 constexpr uint32 NOSTROMO_MAX_PROJECTS = 1024;
 
 constexpr uint8 NONE = 0;
@@ -173,7 +173,7 @@ public:
         sint32 returnCode;
     };
 
-    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
+    QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;                         
     //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
