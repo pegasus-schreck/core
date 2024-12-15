@@ -260,7 +260,8 @@ protected:
 
         //state.userTiers.get(qpi.invocator(), state.userTier);
         //state.userTiers.get(qpi.invocator(), state.userTier, id)
-        locals.userTier = state.userTiers.getElementIndex(qpi.invocator())
+        locals.userTier = state.userTiers.getElementIndex(qpi.invocator());
+        
         if (state.userTier != NONE) {
             output.status = 3;
             if (qpi.invocationReward() > 0) {
