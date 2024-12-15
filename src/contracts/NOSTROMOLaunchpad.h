@@ -133,6 +133,7 @@ public:
 
     struct addUserTier_locals {
         uint8 userTier;
+        uint64 stakedQubics;
     };
 
     // To stake Qubic tokens and get a tier for an user
