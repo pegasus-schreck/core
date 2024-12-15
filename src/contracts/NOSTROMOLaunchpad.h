@@ -182,7 +182,7 @@ protected:
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
     uint64 stakedQubicsInContract;
-    uint64 transactionFee;
+    sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
     uint8 userTier;
