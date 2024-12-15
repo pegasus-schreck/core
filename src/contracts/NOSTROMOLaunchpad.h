@@ -174,8 +174,6 @@ public:
         sint32 returnCode;
     };
 
-protected:
-
     id admin;
     id wallet;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_TIERS> tiers;                         
