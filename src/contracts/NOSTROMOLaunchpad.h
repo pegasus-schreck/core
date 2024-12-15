@@ -27,10 +27,6 @@ struct NOST : public ContractBase
 {
 public:
 
-    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
-    //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
-    //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
-
     struct NOSTROMOTier {
         uint64 stakeAmount;
         uint64 poolWeight;
@@ -176,6 +172,10 @@ public:
     struct unlock_output {
         sint32 returnCode;
     };
+
+    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;                         
+    //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
 protected:
 
