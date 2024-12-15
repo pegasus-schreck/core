@@ -253,7 +253,7 @@ protected:
             return;
         }
 
-        locals.stakedQubics = tiers.get(input.tier);
+        //locals.stakedQubics = tiers.get(input.tier);
         if (locals.stakedQubics + state.transactionFee != qpi.invocationReward())
         {
             output.status = 3; 
