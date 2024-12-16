@@ -255,6 +255,7 @@ public:
 
     struct getProject_locals {
         ProjectResponse project;
+        NOSTROMOProject foundProject;
     };
 
     /*
@@ -265,12 +266,21 @@ public:
         //
         // If project doesn't exist, return an error
         //
-        if (!state.projects.get(input.projectId, locals.project)) {
+        if (!state.projects.get(input.projectId, locals.foundProject)) {
             output.status = NOST_PROJECT_NOT_FOUND;
             return;
         }
 
-        output.status = NOST_SUCCESS; // Success
+        locals.project.owner = locals.foundProject.owner;
+        locals.project.state = locals.foundProject.state;
+        locals.project.totalAmount = locals.foundProject.totalAmount;
+        locals.project.threeshold = locals.foundProject.threeshold;
+        locals.project.tokenPrice = locals.foundProject.tokenPrice;
+        locals.project.raisedAmount = locals.foundProject.raisedAmount;
+        locals.project.raiseInQubics = locals.foundProject.raiseInQubics;
+        locals.project.tokensInSale = locals.foundProject.tokensInSale;
+        
+        output.status = NOST_SUCCESS;
         output.project = locals.project;
     _
 
