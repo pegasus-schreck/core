@@ -152,7 +152,7 @@ private:
     typedef array<,131072> projectVoting;
 */    
 public:
-
+/*
     struct createProject_input {
         uint64 totalAmount;
         uint8 threeshold;
@@ -164,7 +164,7 @@ public:
     struct createProject_output {
         uint8 status;
     };
-
+*/
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
