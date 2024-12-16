@@ -86,9 +86,9 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_PROJECTS> investments;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        //QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_PROJECTS> investments;
     };
 
     struct ProjectResponse {
@@ -157,9 +157,9 @@ private:
     id admin;
     id wallet;
 
-    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
-    QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
-    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+    //QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    //QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
+    //QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
