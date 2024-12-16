@@ -64,6 +64,7 @@ public:
 
     struct addUserTier_output {
         uint8 status;
+        array<uint8, 32> message;
     };
 
 private:
@@ -93,6 +94,8 @@ public:
 
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
+            copyMemory(output.message, "Bad tier");
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
