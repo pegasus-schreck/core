@@ -81,7 +81,7 @@ public:
         id owner;
         uint8 state;
         uint64 totalAmount;
-        uint8 threeshold;
+        uint8 threshold;
         uint64 tokenPrice;
         uint64 raisedAmount;
         uint8 raiseInQubics;
@@ -169,7 +169,10 @@ private:
 
     typedef array<projectMeta,131072> projectMetadata;
     typedef array<projectFinance,131072> projectFinancials;
-    
+
+    projectMetadata metadataMaster; 
+    projectFinancials financeMaster;
+
 public:
 
     struct createProject_locals {
@@ -199,8 +202,8 @@ public:
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
 
-        state.projectMetadata.add(locals.metadata);
-        state.projectFinancials.add(locals.financials);
+        state.metadataMaster.add(locals.metadata);
+        state.financeMaster.add(locals.financials);
 
         /*
         NOSTROMOProject project = NOSTROMOProject{
