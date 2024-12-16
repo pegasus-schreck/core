@@ -133,11 +133,14 @@ public:
     //
     // Structures for Project Management
     //
+    typedef QPI::HashMap<id, bit, 131072> hasVoted;
+
     struct projectMeta {
         id owner;
         uint8 state;
-        uint64 yesvote;
-        uint64 novote;
+        uint64 yesvotes;
+        uint64 novotes;
+        hasVoted voteTracker;
     };
 
     struct projectFinance {
@@ -158,8 +161,6 @@ private:
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
-
-    QPI::HashMap<id, bit, 131072> votemap;
 
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
@@ -201,8 +202,9 @@ public:
         //
         locals.metadata.owner = qpi.invocator();
         locals.metadata.state = NOST_DRAFT;
-        locals.metadata.yesvote = 0;
-        locals.metadata.novote = 0;
+        locals.metadata.yesvotes = 0;
+        locals.metadata.novotes = 0;
+        locals.metadata.voteTracker.reset();
 
         locals.financials.totalAmount = input.totalAmount;
         locals.financials.threshold = input.threshold;
