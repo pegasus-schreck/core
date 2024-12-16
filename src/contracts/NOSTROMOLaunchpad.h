@@ -3,6 +3,28 @@
 
 using namespace QPI;
 
+/*
+    Various tier levels and their respective constants for checks below.
+*/
+constexpr uint8 NONE = 0;
+constexpr uint8 EGG = 1;
+constexpr uint8 DOG = 2;
+constexpr uint8 ALIEN = 3;
+constexpr uint8 WARRIOR = 4;
+constexpr uint8 QUEEN = 5;
+
+/*
+    Various project states and their respective constancts.
+*/
+constexpr uint8 VOTE_STATE = 0;
+constexpr uint8 REGISTER_STATE = 1;
+constexpr uint8 INVESTMENT_PHASE_1 = 2;
+constexpr uint8 INVESTMENT_PHASE_2 = 3;
+constexpr uint8 INVESTMENT_PHASE_3 = 4;
+constexpr uint8 CLOSED_FAILED = 5;
+constexpr uint8 CLOSED_SUCCESS = 6;
+constexpr uint8 BLOCKED = 7;
+
 struct NOST : public ContractBase
 {
 
@@ -17,7 +39,7 @@ public:
     };
 
 private:
-    QPI::HashMap<id, uint8, 8192> userTiers;              
+    QPI::HashMap<id, uint8, 131072> userTiers;              
     sint64 transactionFee;
 
 public:
