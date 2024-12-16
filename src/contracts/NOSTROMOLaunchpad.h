@@ -261,7 +261,7 @@ public:
     /*
      * Return the project details to the caller.
      */
-    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
         //
         // If project doesn't exist, return an error
