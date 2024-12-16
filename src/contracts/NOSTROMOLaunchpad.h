@@ -85,7 +85,7 @@ private:
 public:
 
     struct addUserTier_locals {
-        uint64 stakedQubics;
+        NOSTROMOTier stakingTier;
         uint8 foundTier;
     };
 
@@ -125,8 +125,8 @@ public:
         //
         // We must check to ensure user has the proper balance or return error code. 
         //
-        if (state.tiers.get(input.tier, locals.stakedQubics)) {
-            if(locals.stakedQubics + state.transactionFee != qpi.invocationReward()) {
+        if (state.tiers.get(input.tier, locals.stakingTier)) {
+            if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
                 output.status = 4;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
@@ -137,7 +137,7 @@ public:
         // Set the user tier and update staking volume
         //
         state.userTiers.set(qpi.invocator(), input.tier);
-        state.stakedQubicsInContract += locals.stakedQubics;
+        state.stakedQubicsInContract += locals.stakingTier.stakeAmount;
 
         //
         // Zero for status means life is good.
