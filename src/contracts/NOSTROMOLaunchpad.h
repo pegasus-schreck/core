@@ -16,15 +16,15 @@ constexpr uint8 QUEEN = 5;
 /*
  * Various project states and their respective constancts.
  */
-constexpr uint8 VOTE_STATE = 0;
-constexpr uint8 REGISTER_STATE = 1;
-constexpr uint8 INVESTMENT_PHASE_1 = 2;
-constexpr uint8 INVESTMENT_PHASE_2 = 3;
-constexpr uint8 INVESTMENT_PHASE_3 = 4;
-constexpr uint8 CLOSED_FAILED = 5;
-constexpr uint8 CLOSED_SUCCESS = 6;
-constexpr uint8 BLOCKED = 7;
-
+constexpr uint8 NOST_VOTE_STATE = 0;
+constexpr uint8 NOST_REGISTER_STATE = 1;
+constexpr uint8 NOST_INVESTMENT_PHASE_1 = 2;
+constexpr uint8 NOST_INVESTMENT_PHASE_2 = 3;
+constexpr uint8 NOST_INVESTMENT_PHASE_3 = 4;
+constexpr uint8 NOST_CLOSED_FAILED = 5;
+constexpr uint8 NOST_CLOSED_SUCCESS = 6;
+constexpr uint8 NOST_BLOCKED = 7;
+constexpr uint8 NOST_DRAFT = 8;
 /*
  * Constants for sizing
  */
@@ -60,6 +60,7 @@ public:
 
     struct createProject_output {
         uint8 status;
+        uint64 prodId;
     };
 
 
@@ -129,12 +130,31 @@ public:
         uint8 status;
     };
 
+    //
+    // Structures for Project Management
+    //
+    struct projectMeta {
+        id owner;
+        uint8 state;
+        uint64 yesvote;
+        uint64 novote;
+    };
+
+    struct projectFinance {
+        uint64 totalAmount;
+        uint8 threshold;
+        uint64 tokenPrice;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
 
 
 private:
 
     id admin;
     id wallet;
+
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
@@ -146,27 +166,15 @@ private:
 
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
-/*
-    typedef array<,131072> projectMetadata;
-    typedef array<,131072> projectFinancials;
-    typedef array<,131072> projectVoting;
-*/    
+
+    typedef array<projectMeta,131072> projectMetadata;
+    typedef array<projectFinance,131072> projectFinancials;
+    
 public:
-/*
-    struct createProject_input {
-        uint64 totalAmount;
-        uint8 threeshold;
-        uint64 tokenPrice;
-        uint8 raiseInQubics;
-        uint64 tokensInSale;
-    };
 
-    struct createProject_output {
-        uint8 status;
-    };
-*/
     struct createProject_locals {
-
+        projectMeta metadata;
+        projectFinance financials;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -180,6 +188,19 @@ public:
             return;
         }
 
+        locals.metadata.owner = qpi.invocator();
+        locals.metadata.state = NOST_DRAFT;
+        locals.metadata.yesvote = 0;
+        locals.metadata.novote = 0;
+
+        locals.financials.totalAmount = input.totalAmount;
+        locals.financials.threshold = input.threshold;
+        locals.financials.tokenPrice = input.tokenPrice;
+        locals.financials.raiseInQubics = input.raiseInQubics;
+        locals.financials.tokensInSale = input.tokensInSale;
+
+        state.projectMetadata.add(locals.metadata);
+        state.projectFinancials.add(locals.financials);
 
         /*
         NOSTROMOProject project = NOSTROMOProject{
@@ -195,9 +216,12 @@ public:
         project.investments.reset();
 
         //projects.set(projectNextId++, );
-
+        */
+        output.prodId = state.projectNextId;
         output.status = 0;
-    */
+        
+        state.projectNextId += 1;
+
     _ 
 
     struct addUserTier_locals {
