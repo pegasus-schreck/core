@@ -202,9 +202,9 @@ public:
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
 
-        state.metadataMaster.add(locals.metadata);
-        state.financeMaster.add(locals.financials);
-
+        //state.metadataMaster.add(locals.metadata);
+        //state.financeMaster.add(locals.financials);
+        state.financeMaster[state.projectNextId] = locals.financials;
         /*
         NOSTROMOProject project = NOSTROMOProject{
             owner: qpi.invocator(),
