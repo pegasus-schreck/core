@@ -43,6 +43,7 @@ constexpr uint8 NOST_USER_NOT_FOUND = 4;
 constexpr uint8 NOST_NO_TIER_FOUND = 5;
 constexpr uint8 NOST_UNABLE_TO_UNSTAKE = 6;
 constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
+constexpr uint8 NOST_PROJECT_CREATE_FAILED = 8;
 
 struct NOST : public ContractBase
 {
@@ -84,10 +85,9 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        QPI::HashMap<id, uint8, 131072> votes;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        //QPI::HashMap<id, NOSTROMOInvestment, 131072> investments;
-        typedef array<NOSTROMOInvestment, 131072> projectArray;
+        QPI::HashMap<id, NOSTROMOInvestment, 131072> investments;
     };
 
     struct ProjectResponse {
@@ -147,7 +147,54 @@ private:
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
 
+    typedef array<,131072> projectMetadata;
+    typedef array<,131072> projectFinancials;
+    typedef array<,131072> projectVoting;
+    
 public:
+
+    struct createProject_input {
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
+    struct createProject_output {
+        uint8 status;
+    };
+
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
+
+        //
+        // Ensure user has proper funds for project creation
+        //
+        if (qpi.invocationReward() < (state.transactionFee + state.projectFee)) {
+            output.status = NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+
+        /*
+        NOSTROMOProject project = NOSTROMOProject{
+            owner: qpi.invocator(),
+            state : ProjectStates.VOTE_PHASE,
+            totalAmount : input.totalAmount,
+            threeshold : input.threeshold,
+            raiseInQubics : input.raisedInQubics,
+            tokensInSale : tokensInSale
+        };
+        project.votes.reset();
+        project.registeredUsers.reset();
+        project.investments.reset();
+
+        //projects.set(projectNextId++, );
+
+        output.status = 0;
+    _   */
 
     struct addUserTier_locals {
         NOSTROMOTier stakingTier;
