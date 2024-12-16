@@ -146,11 +146,11 @@ private:
 
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
-
+/*
     typedef array<,131072> projectMetadata;
     typedef array<,131072> projectFinancials;
     typedef array<,131072> projectVoting;
-    
+*/    
 public:
 
     struct createProject_input {
