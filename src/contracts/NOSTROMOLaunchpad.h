@@ -25,7 +25,7 @@ constexpr uint8 CLOSED_FAILED = 5;
 constexpr uint8 CLOSED_SUCCESS = 6;
 constexpr uint8 BLOCKED = 7;
 
-constexpr uint64 NOSTROMO_MAX_USERS = 16384;
+constexpr uint64 NOSTROMO_MAX_USERS = 8192;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 constexpr uint64 NOSTROMO_MAX_LEVELS = 8;
 
