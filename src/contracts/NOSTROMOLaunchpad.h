@@ -178,6 +178,7 @@ private:
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
+    voterList projectVoting;
 
 public:
 
@@ -216,7 +217,7 @@ public:
 
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
-        state.voterList.set(state.projectNextId, locals.localVoteList);
+        state.projectVoting.set(state.projectNextId, locals.localVoteList);
         //
         // Incremenet ProjectId counter and return related output data 
         //
