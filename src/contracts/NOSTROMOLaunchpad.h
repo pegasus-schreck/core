@@ -74,10 +74,10 @@ public:
         uint8 status;
     };
 
-    struct removeTier_input {
+    struct removeUserTier_input {
     };
 
-    struct removeTier_output {
+    struct removeUserTier_output {
         uint8 status;
     };
 
