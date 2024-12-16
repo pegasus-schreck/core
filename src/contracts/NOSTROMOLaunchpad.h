@@ -46,7 +46,7 @@ public:
 
     struct NOSTROMOProject {
         id owner;
-        ProjectStates state;
+        uint8 state;
         uint64 totalAmount;
         uint8 threeshold;
         uint64 tokenPrice;
@@ -69,7 +69,7 @@ public:
 private:
 
     id admin;
-    id: wallet;
+    id wallet;
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
     QPI::HashMap<Tiers, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
