@@ -204,7 +204,8 @@ public:
 
         //state.metadataMaster.add(locals.metadata);
         //state.financeMaster.add(locals.financials);
-        state.financeMaster[state.projectNextId] = locals.financials;
+        //state.financeMaster[state.projectNextId] = locals.financials;
+        state.financeMaster.set(projectNextId, locals.financials);
         /*
         NOSTROMOProject project = NOSTROMOProject{
             owner: qpi.invocator(),
