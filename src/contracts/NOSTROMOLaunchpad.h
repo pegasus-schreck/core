@@ -165,7 +165,7 @@ public:
         output.status = 0; 
     _
 
-    struct addUserTier_locals {
+    struct removeUserTier_locals {
         uint8 foundTier;
         NOSTROMOTier stakingTier;
     };
