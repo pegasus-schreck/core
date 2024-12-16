@@ -85,7 +85,7 @@ public:
         uint64 raisedAmount;
         uint8 raiseInQubics;
         uint64 tokensInSale;
-        QPI::HashMap<id, uint8, 131072> votes;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
         QPI::HashMap<id, NOSTROMOInvestment, 131072> investments;
     };
@@ -194,7 +194,8 @@ public:
         //projects.set(projectNextId++, );
 
         output.status = 0;
-    _   */
+    */
+    _ 
 
     struct addUserTier_locals {
         NOSTROMOTier stakingTier;
