@@ -291,7 +291,7 @@ public:
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_PROCEDURE(addUserTier, 1);
         REGISTER_USER_PROCEDURE(removeUserTier, 2);
-        REGISTER_USER_PROCEDURE(getProject, 3);
+        //REGISTER_USER_PROCEDURE(getProject, 3);
 	_
 
     //INITIALIZE
