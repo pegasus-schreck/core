@@ -140,7 +140,6 @@ public:
         uint8 state;
         uint64 yesvotes;
         uint64 novotes;
-        hasVoted voteTracker;
     };
 
     struct projectFinance {
@@ -175,6 +174,7 @@ private:
     //
     typedef array<projectMeta,131072> projectMetadata;
     typedef array<projectFinance,131072> projectFinancials;
+    typedef array<hasVoted, 131072> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
