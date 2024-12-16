@@ -28,7 +28,7 @@ constexpr uint8 NOST_DRAFT = 8;
 /*
  * Constants for sizing
  */
-constexpr uint64 NOSTROMO_MAX_USERS = 8192;
+constexpr uint64 NOSTROMO_MAX_USERS = 131072;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 constexpr uint64 NOSTROMO_MAX_LEVELS = 8;
 
@@ -133,7 +133,7 @@ public:
     //
     // Structures for Project Management
     //
-    typedef QPI::HashMap<id, bit, 131072> hasVoted;
+    typedef QPI::HashMap<id, bit, NOSTROMO_MAX_USERS> hasVoted;
 
     struct projectMeta {
         id owner;
@@ -172,9 +172,9 @@ private:
     //
     // Types and state variables to manage project data
     //
-    typedef array<projectMeta,131072> projectMetadata;
-    typedef array<projectFinance,131072> projectFinancials;
-    typedef array<hasVoted, 131072> voterList;
+    typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
+    typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
+    typedef array<hasVoted, NOSTROMO_MAX_USERS> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
