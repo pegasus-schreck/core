@@ -74,6 +74,7 @@ public:
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
         QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+        typedef array<NOSTROMOInvestment, 131072> projectArray;
     };
 
     struct ProjectResponse {
@@ -253,14 +254,16 @@ public:
         output.status = NOST_SUCCESS;
     _    
 
+/*
     struct getProject_locals {
         ProjectResponse project;
         NOSTROMOProject foundProject;
     };
-
+*/
     /*
      * Return the project details to the caller.
      */
+    /*
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
         //
@@ -283,6 +286,7 @@ public:
         output.status = NOST_SUCCESS;
         output.project = locals.project;
     _
+    */
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_PROCEDURE(addUserTier, 1);
