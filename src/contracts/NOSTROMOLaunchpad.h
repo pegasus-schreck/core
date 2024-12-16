@@ -64,7 +64,6 @@ public:
 
     struct addUserTier_output {
         uint8 status;
-        array<uint8, 32> message;
     };
 
 private:
@@ -91,26 +90,62 @@ public:
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
-
+ 
+        //
+        // Make sure it is a valid tier, if not return error code.
+        //
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
-            copyMemory(output.message, "Bad tier");
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
+        //
+        // Ensure enough has been transferred to satisfy fee or return
+        // an error code.
+        //
         if (qpi.invocationReward() < state.transactionFee) {
             output.status = 2;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }
 
-        if(!state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-            output.status = 4;
-            return;
+        //
+        // If user doesn't exist we continue to checks below,
+        // else check the tier and return error if one is set.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            if(locals.foundTier == NONE) {
+                output.status = 3;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;
+            }
         }
-        
+
+        //
+        // We must check to ensure user has the proper balance or return error code. 
+        //
+        if (state.tiers.get(input.tier, locals.stakedQubics)) {
+            if(locals.stakedQubics + state.transactionFee != qpi.invocationReward()) {
+                output.status = 4;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;
+            }
+        }
+
+        //
+        // Set the user tier and update staking volume
+        //
+        state.userTiers.set(qpi.invocator(), input.tier);
+        state.stakedQubicsInContract += locals.stakedQubics;
+
+        //
+        // Zero for status means life is good.
+        //
         output.status = 0; 
     _
+
+
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_PROCEDURE(addUserTier, 1);
