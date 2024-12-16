@@ -4,8 +4,8 @@
 using namespace QPI;
 
 /*
-    Various tier levels and their respective constants for checks below.
-*/
+ * Various tier levels and their respective constants for checks below.
+ */
 constexpr uint8 NONE = 0;
 constexpr uint8 EGG = 1;
 constexpr uint8 DOG = 2;
@@ -14,8 +14,8 @@ constexpr uint8 WARRIOR = 4;
 constexpr uint8 QUEEN = 5;
 
 /*
-    Various project states and their respective constancts.
-*/
+ * Various project states and their respective constancts.
+ */
 constexpr uint8 VOTE_STATE = 0;
 constexpr uint8 REGISTER_STATE = 1;
 constexpr uint8 INVESTMENT_PHASE_1 = 2;
@@ -25,10 +25,16 @@ constexpr uint8 CLOSED_FAILED = 5;
 constexpr uint8 CLOSED_SUCCESS = 6;
 constexpr uint8 BLOCKED = 7;
 
+/*
+ * Constants for sizing
+ */
 constexpr uint64 NOSTROMO_MAX_USERS = 8192;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 constexpr uint64 NOSTROMO_MAX_LEVELS = 8;
 
+/*
+ * Return codes constants
+ */
 constexpr uint8 NOST_SUCCESS = 0;
 constexpr uint8 NOST_INVALID_TIER = 1;
 constexpr uint8 NOST_INSUFFICIENT_BALANCE = 2;
@@ -36,12 +42,16 @@ constexpr uint8 NOST_TIER_ALREADY_SET = 3;
 constexpr uint8 NOST_USER_NOT_FOUND = 4;
 constexpr uint8 NOST_NO_TIER_FOUND = 5;
 constexpr uint8 NOST_UNABLE_TO_UNSTAKE = 6;
+constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
 
 struct NOST : public ContractBase
 {
 
 public:
 
+    /*
+     * Type definitions for use in contract
+     */
     struct NOSTROMOTier {
         uint64 stakeAmount;
         uint64 poolWeight;
@@ -66,6 +76,30 @@ public:
         QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
     };
 
+    struct ProjectResponse {
+        id owner;
+        uint8 state;
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint64 raisedAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
+    struct getProject_input {
+        uint64 projectId;
+    };
+
+    struct getProject_output {
+        uint8 status;
+        array<uint8, 32> message;
+        ProjectResponse project;
+    };
+
+    /*
+     * Procedure & Function related structs
+     */
     struct addUserTier_input {
         uint8 tier;
     };
@@ -80,6 +114,8 @@ public:
     struct removeUserTier_output {
         uint8 status;
     };
+
+
 
 private:
 
@@ -217,11 +253,31 @@ public:
         output.status = NOST_SUCCESS;
     _    
 
+    struct getProject_locals {
+        ProjectResponse project;
+    };
 
+    /*
+     * Return the project details to the caller.
+     */
+    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+
+        //
+        // If project doesn't exist, return an error
+        //
+        if (!state.projects.get(input.projectId, locals.project)) {
+            output.status = NOST_PROJECT_NOT_FOUND;
+            return;
+        }
+
+        output.status = NOST_SUCCESS; // Success
+        output.project = locals.project;
+    _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_PROCEDURE(addUserTier, 1);
         REGISTER_USER_PROCEDURE(removeUserTier, 2);
+        REGISTER_USER_PROCEDURE(getProject, 3);
 	_
 
     //INITIALIZE
