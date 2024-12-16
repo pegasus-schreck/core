@@ -178,7 +178,7 @@ private:
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
-    //voterList projectVoting;
+    voterList projectVoting;
 
 public:
 
