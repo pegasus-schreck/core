@@ -159,6 +159,8 @@ private:
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
+    QPI::HashMap<> test;
+
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
     uint64 projectFee;
@@ -167,6 +169,9 @@ private:
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
 
+    //
+    // Types and state variables to manage project data
+    //
     typedef array<projectMeta,131072> projectMetadata;
     typedef array<projectFinance,131072> projectFinancials;
 
@@ -191,6 +196,9 @@ public:
             return;
         }
 
+        //
+        // Setup local structures and store them in the maintenance arrays
+        //
         locals.metadata.owner = qpi.invocator();
         locals.metadata.state = NOST_DRAFT;
         locals.metadata.yesvote = 0;
@@ -205,9 +213,12 @@ public:
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
 
+        //
+        // Incremenet ProjectId counter and return related output data 
+        //
+        state.projectNextId += 1;
         output.prodId = state.projectNextId;
         output.status = 0;        
-        state.projectNextId += 1;
 
     _ 
 
@@ -364,8 +375,8 @@ public:
     */
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
-        REGISTER_USER_PROCEDURE(addUserTier, 1);
-        REGISTER_USER_PROCEDURE(removeUserTier, 2);
+        //REGISTER_USER_PROCEDURE(addUserTier, 1);
+        //REGISTER_USER_PROCEDURE(removeUserTier, 2);
         //REGISTER_USER_PROCEDURE(getProject, 3);
 	_
 
