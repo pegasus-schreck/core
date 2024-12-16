@@ -29,6 +29,14 @@ constexpr uint64 NOSTROMO_MAX_USERS = 8192;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 constexpr uint64 NOSTROMO_MAX_LEVELS = 8;
 
+constexpr uint8 NOST_SUCCESS = 0;
+constexpr uint8 NOST_INVALID_TIER = 1;
+constexpr uint8 NOST_INSUFFICIENT_BALANCE = 2;
+constexpr uint8 NOST_TIER_ALREADY_SET = 3;
+constexpr uint8 NOST_USER_NOT_FOUND = 4;
+constexpr uint8 NOST_NO_TIER_FOUND = 5;
+constexpr uint8 NOST_UNABLE_TO_UNSTAKE = 6;
+
 struct NOST : public ContractBase
 {
 
@@ -66,6 +74,13 @@ public:
         uint8 status;
     };
 
+    struct removeTier_input {
+    };
+
+    struct removeTier_output {
+        uint8 status;
+    };
+
 private:
 
     id admin;
@@ -89,23 +104,28 @@ public:
         uint8 foundTier;
     };
 
+   /*
+    * Method used to add a tier to a specific user and to update the 
+    * staking balance.  Specific error codes are returned in event of 
+    * an error.        
+    */
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
  
         //
         // Make sure it is a valid tier, if not return error code.
         //
         if (input.tier <= 0 || input.tier > 5) {
-            output.status = 1;
+            output.status = NOST_INVALID_TIER;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
         //
-        // Ensure enough has been transferred to satisfy fee or return
+        // Ensure proper balance transfer attempted or return
         // an error code.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = 2;
+            output.status = NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }
@@ -116,7 +136,7 @@ public:
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
             if(locals.foundTier == NONE) {
-                output.status = 3;
+                output.status = NOST_TIER_ALREADY_SET;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
@@ -127,7 +147,7 @@ public:
         //
         if (state.tiers.get(input.tier, locals.stakingTier)) {
             if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
-                output.status = 4;
+                output.status = NOST_INSUFFICIENT_BALANCE;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
@@ -145,10 +165,63 @@ public:
         output.status = 0; 
     _
 
+    struct addUserTier_locals {
+        uint8 foundTier;
+        NOSTROMOTier stakingTier;
+    };
+
+   /*
+    * Method used to remove a tier from a user during an unstaking event.
+    */
+    PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
+        
+        // 
+        // Check to ensure user has sufficient balance.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        //
+        // Validate if the user is already in a tier.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier))
+        {
+            if(locals.foundTier == NONE) {
+                output.status = NOST_NO_TIER_FOUND;
+                return;
+            }   
+        }
+        else
+        {
+            output.status = NOST_USER_NOT_FOUND;
+            return;
+        }
+
+        //
+        // Set user tier to NONE
+        //
+        userTiers.set(qpi.invocator(), NONE);
+
+        //
+        // Return the staked qubics
+        //
+        state.tiers.get(locals.foundTier, locals.stakingTier);
+        qpi.transfer(qpi.invocator(), locals.stakingTier.stakeAmount);
+
+        // Update the staked qubics amount
+        state.stakedQubicsInContract -= locals.stakingTier.stakedAmount;
+
+        output.status = NOST_SUCCESS;
+    _    
+
 
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
         REGISTER_USER_PROCEDURE(addUserTier, 1);
+        REGISTER_USER_PROCEDURE(removeUserTier, 2);
 	_
 
     //INITIALIZE
