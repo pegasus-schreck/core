@@ -184,6 +184,7 @@ public:
     struct createProject_locals {
         projectMeta metadata;
         projectFinance financials;
+        hasVoted localVoteList;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -204,7 +205,6 @@ public:
         locals.metadata.state = NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
-        locals.metadata.voteTracker.reset();
 
         locals.financials.totalAmount = input.totalAmount;
         locals.financials.threshold = input.threshold;
@@ -212,9 +212,11 @@ public:
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
 
+        locals.localVoteList.reset();
+
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
-
+        state.metadataMaster.set(state.projectNextId, locals.localVoteList)
         //
         // Incremenet ProjectId counter and return related output data 
         //
