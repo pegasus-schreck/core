@@ -216,7 +216,7 @@ public:
 
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
-        state.voterList.set(state.projectNextId, locals.localVoteList)
+        state.voterList.set(state.projectNextId, locals.localVoteList);
         //
         // Incremenet ProjectId counter and return related output data 
         //
