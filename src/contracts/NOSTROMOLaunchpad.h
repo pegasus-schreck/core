@@ -174,7 +174,7 @@ private:
     //
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    //typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
+    typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
