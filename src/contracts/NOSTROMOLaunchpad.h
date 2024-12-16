@@ -174,7 +174,7 @@ private:
     //
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
+    //typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
@@ -217,7 +217,7 @@ public:
 
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
-        state.projectVoting.set(state.projectNextId, locals.localVoteList);
+        //state.projectVoting.set(state.projectNextId, locals.localVoteList);
         //
         // Incremenet ProjectId counter and return related output data 
         //
