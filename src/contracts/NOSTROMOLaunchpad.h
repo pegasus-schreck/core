@@ -52,7 +52,7 @@ public:
 
     struct createProject_input {
         uint64 totalAmount;
-        uint8 threeshold;
+        uint8 threshold;
         uint64 tokenPrice;
         uint8 raiseInQubics;
         uint64 tokensInSale;
