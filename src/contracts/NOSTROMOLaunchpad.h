@@ -203,7 +203,7 @@ public:
         //
         // Set user tier to NONE
         //
-        userTiers.set(qpi.invocator(), NONE);
+        state.userTiers.set(qpi.invocator(), NONE);
 
         //
         // Return the staked qubics
@@ -212,7 +212,7 @@ public:
         qpi.transfer(qpi.invocator(), locals.stakingTier.stakeAmount);
 
         // Update the staked qubics amount
-        state.stakedQubicsInContract -= locals.stakingTier.stakedAmount;
+        state.stakedQubicsInContract -= locals.stakingTier.stakeAmount;
 
         output.status = NOST_SUCCESS;
     _    
