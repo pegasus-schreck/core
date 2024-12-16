@@ -25,6 +25,10 @@ constexpr uint8 CLOSED_FAILED = 5;
 constexpr uint8 CLOSED_SUCCESS = 6;
 constexpr uint8 BLOCKED = 7;
 
+constexpr uint64 NOSTROMO_MAX_USERS = 131072;
+constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
+constexpr uint64 NOSTROMO_MAX_LEVELS = 5;
+
 struct NOST : public ContractBase
 {
 
@@ -39,8 +43,20 @@ public:
     };
 
 private:
-    QPI::HashMap<id, uint8, 131072> userTiers;              
-    sint64 transactionFee;
+
+    id admin;
+    id: wallet;
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;              
+    QPI::HashMap<Tiers, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
+    QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
+
+    uint64 stakedQubicsInContract;
+    uint64 transactionFee;
+    uint64 projectFee;
+    uint64 projectNextId;
+
+    typedef id isAdmin_input; 
+    typedef bit isAdmin_output;
 
 public:
 
