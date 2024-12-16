@@ -174,7 +174,7 @@ private:
     //
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    typedef array<hasVoted, NOSTROMO_MAX_USERS> voterList;
+    typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
@@ -236,7 +236,7 @@ public:
     * Method used to add a tier to a specific user and to update the 
     * staking balance.  Specific error codes are returned in event of 
     * an error.        
-    */
+    
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
  
         //
@@ -297,10 +297,10 @@ public:
         uint8 foundTier;
         NOSTROMOTier stakingTier;
     };
-
+*/
    /*
     * Method used to remove a tier from a user during an unstaking event.
-    */
+
     PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
         
         // 
@@ -344,7 +344,7 @@ public:
 
         output.status = NOST_SUCCESS;
     _    
-
+*/
 /*
     struct getProject_locals {
         ProjectResponse project;
