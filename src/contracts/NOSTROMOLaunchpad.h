@@ -34,6 +34,30 @@ struct NOST : public ContractBase
 
 public:
 
+    struct NOSTROMOTier {
+        uint64 stakeAmount;
+        uint64 poolWeight;
+    };
+
+    struct NOSTROMOInvestment {
+        id user;
+        uint64 amount;
+    };
+
+    struct NOSTROMOProject {
+        id owner;
+        ProjectStates state;
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint64 raisedAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
+        QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
+        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_USERS> investments;
+    };
+
     struct addUserTier_input {
         uint8 tier;
     };
