@@ -202,28 +202,11 @@ public:
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
 
-        //state.metadataMaster.add(locals.metadata);
-        //state.financeMaster.add(locals.financials);
-        //state.financeMaster[state.projectNextId] = locals.financials;
         state.financeMaster.set(state.projectNextId, locals.financials);
-        /*
-        NOSTROMOProject project = NOSTROMOProject{
-            owner: qpi.invocator(),
-            state : ProjectStates.VOTE_PHASE,
-            totalAmount : input.totalAmount,
-            threeshold : input.threeshold,
-            raiseInQubics : input.raisedInQubics,
-            tokensInSale : tokensInSale
-        };
-        project.votes.reset();
-        project.registeredUsers.reset();
-        project.investments.reset();
+        state.metadataMaster.set(state.projectNextId, locals.metadata);
 
-        //projects.set(projectNextId++, );
-        */
         output.prodId = state.projectNextId;
-        output.status = 0;
-        
+        output.status = 0;        
         state.projectNextId += 1;
 
     _ 
