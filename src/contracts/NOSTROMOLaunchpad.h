@@ -90,7 +90,7 @@ public:
         uint8 foundTier;
     };
 
-    PUBLIC_FUNCTION_WITH_LOCALS(addUserTier)
+    PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
 
         if (input.tier <= 0 || input.tier > 5) {
             output.status = 1;
@@ -113,7 +113,7 @@ public:
     _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
-        REGISTER_USER_FUNCTION(addUserTier, 1);
+        REGISTER_USER_PROCEDURE(addUserTier, 1);
 	_
 
     //INITIALIZE
