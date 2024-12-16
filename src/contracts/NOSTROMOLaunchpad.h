@@ -87,7 +87,7 @@ public:
         uint64 tokensInSale;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> votes;
         QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> registeredUsers;
-        QPI::HashMap<id, NOSTROMOInvestment, 131072> investments;
+        QPI::HashMap<id, NOSTROMOInvestment, NOSTROMO_MAX_PROJECTS> investments;
     };
 
     struct ProjectResponse {
@@ -165,6 +165,9 @@ public:
         uint8 status;
     };
 */
+    struct createProject_locals {
+
+    };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
