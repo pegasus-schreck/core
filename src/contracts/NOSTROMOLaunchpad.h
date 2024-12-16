@@ -49,6 +49,19 @@ struct NOST : public ContractBase
 
 public:
 
+    struct createProject_input {
+        uint64 totalAmount;
+        uint8 threeshold;
+        uint64 tokenPrice;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+    };
+
+    struct createProject_output {
+        uint8 status;
+    };
+
+
     /*
      * Type definitions for use in contract
      */
