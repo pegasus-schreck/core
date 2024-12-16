@@ -75,7 +75,7 @@ private:
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
     uint64 stakedQubicsInContract;
-    uint64 transactionFee;
+    sint64 transactionFee;
     uint64 projectFee;
     uint64 projectNextId;
 
