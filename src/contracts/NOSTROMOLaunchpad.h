@@ -159,7 +159,7 @@ private:
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;                         
     QPI::HashMap<uint64, NOSTROMOProject, NOSTROMO_MAX_PROJECTS> projects;
 
-    QPI::HashMap<> test;
+    QPI::HashMap<id, bit, 65536> votemap;
 
     uint64 stakedQubicsInContract;
     sint64 transactionFee;
