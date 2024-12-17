@@ -239,7 +239,7 @@ public:
         projectFinance financial;
     };
 
-    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
         output.status = input.projectIdentity;
     -
 /*
@@ -266,13 +266,12 @@ public:
             return;
         }
     -
-*/
 
     struct addUserTier_locals {
         NOSTROMOTier stakingTier;
         uint8 foundTier;
     };
-
+*/
 
 
    /*
@@ -423,6 +422,7 @@ public:
     */
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
+        REGISTER_USER_PROCEDURE(createProject, 1)
         //REGISTER_USER_PROCEDURE(addUserTier, 1);
         //REGISTER_USER_PROCEDURE(removeUserTier, 2);
         //REGISTER_USER_PROCEDURE(getProject, 3);
