@@ -232,15 +232,14 @@ public:
         state.projectNextId += 1;
         output.prodId = state.projectNextId;
         output.status = 0;        
-
     _ 
 
     struct getProject_locals {
         projectMeta metadata;
-        projectFinance financials;
+        projectFinance financial;
     };
 
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+    PUBLIC_PROCEDURE(getProject)
         
         //
         // Make sure projectId is valid before we return anything
