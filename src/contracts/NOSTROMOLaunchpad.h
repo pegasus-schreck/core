@@ -238,8 +238,8 @@ public:
         projectMeta metadata;
         projectFinance financial;
     };
-
-    PUBLIC_PROCEDURE(getProject)
+/*
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
         
         //
         // Make sure projectId is valid before we return anything
@@ -262,7 +262,7 @@ public:
             return;
         }
     -
-
+*/
 
     struct addUserTier_locals {
         NOSTROMOTier stakingTier;
