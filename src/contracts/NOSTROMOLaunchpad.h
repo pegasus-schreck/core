@@ -83,7 +83,7 @@ public:
         //uint64 raiseAmount;
         //uint8 raiseInQubics;
         //uint64 tokensInSale;
-        //uint8 status;
+        uint8 status;
     };
 
 
@@ -172,7 +172,7 @@ public:
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-        output.status = NONE;
+        output.status = NOST_NONE;
     -
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
