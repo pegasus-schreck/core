@@ -122,7 +122,7 @@ private:
     sint64 transactionFee;
     sint64 projectFee;
 
-public:
+protected:
 
     struct createProject_locals {
         projectMeta metadata;
