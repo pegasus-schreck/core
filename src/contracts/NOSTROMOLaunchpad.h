@@ -240,7 +240,7 @@ public:
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-        output.status = input.projectIdentity;
+        output.status = NONE;
     -
 /*
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
