@@ -107,8 +107,8 @@ public:
 
 private:
 
-    projectMetadata metadataMaster; 
-    projectFinancials financeMaster;
+    projectMeta metadataMaster; 
+    projectFinance financeMaster;
     voterList projectVoting;
 
     uint64 projectNextId;
