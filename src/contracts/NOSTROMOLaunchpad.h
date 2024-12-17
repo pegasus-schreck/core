@@ -172,7 +172,8 @@ protected:
             return;
         }
 
-        output.owner = state.metadataMaster.get(input.projectIdentity).owner;
+        locals.metadata = state.metadataMaster.get(input.projectIdentity);
+        output.owner = locals.metadata.owner;
     _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
