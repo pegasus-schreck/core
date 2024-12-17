@@ -177,7 +177,7 @@ private:
     //typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
 
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
-    QPI::HashMap<id, uint16, NOSTROMO_MAX_USERS> voterList;
+    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
