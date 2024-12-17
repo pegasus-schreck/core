@@ -177,18 +177,10 @@ protected:
         state.projectNextId += 1;
         output.prodId = state.projectNextId;
         output.status = 0;   
-
     _ 
-
-    //PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-
-    //    output.status = locals.something;
-
-    //-
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
         REGISTER_USER_PROCEDURE(createProject, 1);
     _
-
 };
