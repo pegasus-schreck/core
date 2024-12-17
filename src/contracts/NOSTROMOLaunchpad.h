@@ -46,6 +46,10 @@ constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
 constexpr uint8 NOST_PROJECT_CREATE_FAILED = 8;
 constexpr uint8 NOST_INVALID_PROJECT_ID = 9;
 
+struct NOST2
+{
+};
+
 struct NOST : public ContractBase
 {
 
@@ -174,15 +178,12 @@ protected:
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
         output.status = input.nothing;
-        return;
 
     -
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        //REGISTER_USER_PROCEDURE(createProject, 1);
-        REGISTER_USER_PROCEDURE(getProject, 1);
-	
+        REGISTER_USER_PROCEDURE(createProject, 1);
     _
 
 };
