@@ -139,7 +139,7 @@ protected:
         uint8 something;
     };
 
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
         locals.something = 0;
     -
 /*
