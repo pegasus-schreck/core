@@ -173,7 +173,8 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
-        output.status = 0;
+        output.status = input.nothing;
+        return;
 
     -
 
