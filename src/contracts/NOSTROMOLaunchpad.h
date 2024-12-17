@@ -239,9 +239,9 @@ public:
         projectFinance financial;
     };
 
-    //PUBLIC_FUNCTION_WITH_LOCALS(getProject)
-
-    //-
+    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+        output.status = input.project;
+    -
 /*
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
         
