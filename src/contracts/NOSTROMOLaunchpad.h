@@ -160,7 +160,8 @@ protected:
         //
         state.projectNextId += 1;
         output.prodId = state.projectNextId;
-        output.status = 0;        
+        output.status = 0;   
+
     _ 
 
     struct getProject_locals {
@@ -169,13 +170,16 @@ protected:
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-    
+
         output.status = NOST_NONE;
+
     -
 
-	REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
+	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
+
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
-	_
+	
+    _
 
 };
