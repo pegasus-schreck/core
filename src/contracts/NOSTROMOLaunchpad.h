@@ -71,19 +71,19 @@ public:
     // Structures used for the getProject method.
     //
     struct getProject_input {
-        uint64 projectIdentity;
+        //uint64 projectIdentity;
     };
 
     struct getProject_output {
-        id owner;
-        uint8 state;
-        uint64 totalAmount;
-        uint8 threshold;
-        uint64 tokenPrice;
-        uint64 raiseAmount;
-        uint8 raiseInQubics;
-        uint64 tokensInSale;
-        uint8 status;
+        //id owner;
+        //uint8 state;
+        //uint64 totalAmount;
+        //uint8 threshold;
+        //uint64 tokenPrice;
+        //uint64 raiseAmount;
+        //uint8 raiseInQubics;
+        //uint64 tokensInSale;
+        //uint8 status;
     };
 
 
@@ -164,10 +164,11 @@ public:
         output.prodId = state.projectNextId;
         output.status = 0;        
     _ 
-    
+
+
     struct getProject_locals {
-        projectMeta metadata;
-        projectFinance financial;
+        //projectMeta metadata;
+        //projectFinance financial;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
