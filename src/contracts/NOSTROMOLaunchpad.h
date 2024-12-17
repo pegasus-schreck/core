@@ -69,6 +69,14 @@ public:
     struct createProject_output {
         uint8 status;
         uint64 prodId;
+        uint8 projState;
+        uint64 yesvotes;
+        uint64 novotes;
+        uint64 totalAmount;
+        uint8 threshold;
+        uint64 tokenPrice;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;        
     };
 
     //
@@ -156,9 +164,8 @@ protected:
         //
         state.projectNextId += 1;
         output.prodId = state.projectNextId;
-        output.status = 0;   
+        output.status = NOST_SUCCESS;   
     _ 
-
 
     struct getProject_locals {
         projectMeta metadata;
@@ -174,6 +181,16 @@ protected:
 
         locals.metadata = state.metadataMaster.get(input.projectIdentity);
         output.owner = locals.metadata.owner;
+        output.prodId = locals.metadata.prodId;
+        output.projState = locals.metadata.projState;
+        output.yesvotes = locals.metadata.yesvotes;
+        output.novotes = locals.metadata.novotes;
+        output.totalAmount = locals.financial.totalAmount;
+        output.threshold = locals.financial.threshold;
+        output.tokenPrice = locals.financial.tokenPrice;
+        output.raiseInQubics = locals.financial.raiseInQubics;
+        output.tokensInSale = locals.financial.tokensInSale;
+        output.status = NOST_SUCCESS
     _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
