@@ -72,6 +72,7 @@ public:
     //
     struct getProject_input {
         //uint64 projectIdentity;
+        uint8 nothing;
     };
 
     struct getProject_output {
@@ -92,7 +93,7 @@ public:
     //
     struct projectMeta {
         id owner;
-        uint8 state;
+        uint8 projState;
         uint64 yesvotes;
         uint64 novotes;
     };
@@ -142,7 +143,7 @@ protected:
         // Setup local structures and store them in the maintenance arrays
         //
         locals.metadata.owner = qpi.invocator();
-        locals.metadata.state = NOST_DRAFT;
+        locals.metadata.projState = NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
 
@@ -167,11 +168,12 @@ protected:
     struct getProject_locals {
         //projectMeta metadata;
         //projectFinance financial;
+        uint8 something;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
-        output.status = NOST_NONE;
+        output.status = 0;
 
     -
 
