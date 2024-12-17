@@ -238,6 +238,10 @@ public:
         projectMeta metadata;
         projectFinance financial;
     };
+
+    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+
+    -
 /*
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
         
