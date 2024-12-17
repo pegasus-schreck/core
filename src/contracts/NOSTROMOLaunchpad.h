@@ -72,7 +72,7 @@ public:
     //
     struct getProject_input {
         uint64 projectIdentity;
-    }
+    };
 
     struct getProject_output {
         id owner;
@@ -84,7 +84,7 @@ public:
         uint8 raiseInQubics;
         uint64 tokensInSale;
         uint8 status;
-    }
+    };
 
     /*
      * Type definitions for use in contract
