@@ -120,7 +120,7 @@ private:
     uint64 projectNextId;
     
     sint64 transactionFee;
-    uint64 projectFee;
+    sint64 projectFee;
 
 public:
 
