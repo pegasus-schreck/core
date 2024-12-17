@@ -171,9 +171,9 @@ public:
         projectFinance financial;
     };
 
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-        output.status = NONE;
-    -
+//    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+//        output.status = NONE;
+//    -
 
 
 	//REGISTER_USER_FUNCTIONS_AND_PROCEDURES    
