@@ -110,7 +110,7 @@ public:
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
 protected:
-
+/*
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
 
@@ -164,7 +164,7 @@ protected:
         output.status = 0;   
 
     _ 
-
+*/
     struct getProject_locals {
         //projectMeta metadata;
         //projectFinance financial;
@@ -179,8 +179,8 @@ protected:
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_PROCEDURE(createProject, 1);
-        REGISTER_USER_PROCEDURE(getProject, 2);
+        //REGISTER_USER_PROCEDURE(createProject, 1);
+        REGISTER_USER_PROCEDURE(getProject, 1);
 	
     _
 
