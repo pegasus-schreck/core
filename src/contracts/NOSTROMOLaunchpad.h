@@ -86,8 +86,7 @@ public:
 
     struct createProject_output {
         uint8 status;
-        projectMeta metadata;
-        projectFinance finance;
+        uint64 prodId;
     };
 
     //
