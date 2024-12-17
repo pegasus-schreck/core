@@ -139,9 +139,9 @@ protected:
         uint8 something;
     };
 
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-        locals.something = 0;
-    -
+    //PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+    //    locals.something = 0;
+    //-
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
