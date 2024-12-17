@@ -235,7 +235,7 @@ protected:
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_FUNCTION(createProject, 1);
+        REGISTER_USER_PROCEDURE(createProject, 1);
 
     _
 };
