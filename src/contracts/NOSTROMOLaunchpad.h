@@ -105,6 +105,9 @@ public:
         uint64 tokensInSale;
     };
 
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+
 private:
 
     projectMeta metadataMaster; 
@@ -112,6 +115,7 @@ private:
     voterList projectVoting;
 
     uint64 projectNextId;
+    
 
 public:
 
