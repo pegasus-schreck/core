@@ -108,7 +108,7 @@ public:
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
-private:
+protected:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
@@ -121,8 +121,6 @@ private:
     
     sint64 transactionFee;
     sint64 projectFee;
-
-protected:
 
     struct createProject_locals {
         projectMeta metadata;
