@@ -165,11 +165,11 @@ public:
         output.status = 0;        
     _ 
 
+
     struct getProject_locals {
         projectMeta metadata;
         projectFinance financial;
     };
-
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
         output.status = NONE;
