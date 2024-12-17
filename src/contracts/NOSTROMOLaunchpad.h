@@ -110,8 +110,11 @@ public:
 
 private:
 
-    projectMeta metadataMaster; 
-    projectFinance financeMaster;
+    typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
+    typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
+
+    projectMetadata metadataMaster; 
+    projectFinancials financeMaster;
     voterList projectVoting;
 
     uint64 projectNextId;
