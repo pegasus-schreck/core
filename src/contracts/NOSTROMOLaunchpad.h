@@ -78,22 +78,20 @@ public:
 
     
     struct getNostProject_input {
-        //uint64 projectIdentity;
-        uint8 nothing;
+        uint64 projectIdentity;
     };
 
     struct getNostProject_output {
-        //id owner;
-        //uint8 state;
-        //uint64 totalAmount;
-        //uint8 threshold;
-        //uint64 tokenPrice;
-        //uint64 raiseAmount;
-        //uint8 raiseInQubics;
-        //uint64 tokensInSale;
+        id owner;
+        uint8 state;
+        uint64 totalAmount;
+        uint8 threshold;
+        uint64 tokenPrice;
+        uint64 raiseAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
         uint8 status;
     };
-
 
     //
     // Structures for Project Management
@@ -183,6 +181,7 @@ protected:
 */
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_PROCEDURE(getNostProject, 1);
+        REGISTER_USER_FUNCTION(getNostProject, 1);
+
     _
 };
