@@ -124,16 +124,6 @@ public:
         uint64 tokensInSale;
     };
 
-    struct getProject_input {
-        uint64 projectId;
-    };
-
-    struct getProject_output {
-        uint8 status;
-        array<uint8, 32> message;
-        ProjectResponse project;
-    };
-
     /*
      * Procedure & Function related structs
      */
