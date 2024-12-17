@@ -211,8 +211,6 @@ public:
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
 
-        locals.localVoteList.reset();
-
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
 
