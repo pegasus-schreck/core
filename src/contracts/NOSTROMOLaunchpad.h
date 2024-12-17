@@ -76,12 +76,12 @@ public:
     // Structures used for the getProject method.
     //
 
-    /*
+    
     struct getProject_input {
-        uint64 projectIdentity;
+        //uint64 projectIdentity;
         uint8 nothing;
     };
-
+/*
     struct getProject_output {
         id owner;
         uint8 state;
