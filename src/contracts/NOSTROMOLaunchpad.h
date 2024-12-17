@@ -1,6 +1,5 @@
-#pragma once
-#include "qpi.h"
-
+//#pragma once
+//#include "qpi.h"
 using namespace QPI;
 
 /*
@@ -111,8 +110,8 @@ public:
         uint64 tokensInSale;
     };
 
-    //typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
-    //typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
 protected:
 
@@ -121,7 +120,7 @@ protected:
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
-    //voterList projectVoting;
+    voterList projectVoting;
 
     uint64 projectNextId;
     
@@ -142,7 +141,7 @@ protected:
     PUBLIC_FUNCTION_WITH_LOCALS(getNostProject)
         locals.something = 0;
     -
-/*
+
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
         //
@@ -178,10 +177,10 @@ protected:
         output.prodId = state.projectNextId;
         output.status = 0;   
     _ 
-*/
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_FUNCTION(getNostProject, 1);
+        REGISTER_USER_FUNCTION(createProject, 1);
 
     _
 };
