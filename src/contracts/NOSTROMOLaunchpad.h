@@ -174,8 +174,11 @@ private:
     //
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
+    //typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
 
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> projectVoting;
+    
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
     voterList projectVoting;
