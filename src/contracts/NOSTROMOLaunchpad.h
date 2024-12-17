@@ -75,6 +75,8 @@ public:
     //
     // Structures used for the getProject method.
     //
+
+    /*
     struct getProject_input {
         uint64 projectIdentity;
         uint8 nothing;
@@ -91,7 +93,7 @@ public:
         uint64 tokensInSale;
         uint8 status;
     };
-
+*/
 
     //
     // Structures for Project Management
