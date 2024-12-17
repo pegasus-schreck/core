@@ -79,6 +79,7 @@ public:
     };
 
     struct getProject_output {
+        uint8 status;
         id owner;
     };
 
