@@ -165,7 +165,7 @@ protected:
         projectFinance financial;
     };
 
-     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
         if (input.projectIdentity < state.projectNextId) {
             output.status = NOST_INVALID_PROJECT_ID;
@@ -174,7 +174,6 @@ protected:
 
         output.owner = state.projectMetadata.owner;
     -
-
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
