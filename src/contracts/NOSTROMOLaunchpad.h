@@ -164,8 +164,7 @@ public:
         output.prodId = state.projectNextId;
         output.status = 0;        
     _ 
-
-
+    
     struct getProject_locals {
         projectMeta metadata;
         projectFinance financial;
