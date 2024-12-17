@@ -110,11 +110,11 @@ public:
         uint64 tokensInSale;
     };
 
-    //typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
-    //typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
 protected:
-/*
+
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
 
@@ -124,8 +124,8 @@ protected:
 
     uint64 projectNextId;
     
-    sint32 transactionFee;
-    sint32 projectFee;
+    sint64 transactionFee;
+    sint64 projectFee;
 
     struct createProject_locals {
         projectMeta metadata;
@@ -168,18 +168,18 @@ protected:
         output.status = 0;   
 
     _ 
-*/
+
     struct getProject_locals {
         //projectMeta metadata;
         //projectFinance financial;
         uint8 something;
     };
 
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+    //PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
-        output.status = locals.something;
+    //    output.status = locals.something;
 
-    -
+    //-
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
