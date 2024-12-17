@@ -71,38 +71,15 @@ public:
         uint64 prodId;
     };
 
-    struct getProject_input {
-        uint64 totalAmount;
-        uint8 threshold;
-        uint64 tokenPrice;
-        uint8 raiseInQubics;
-        uint64 tokensInSale;
-    };
-
-    struct getProject_output {
-        uint8 status;
-        uint64 prodId;
-    };
-
     //
     // Structures used for the getProject method.
     //
-
-    
-    struct getNostProject_input {
+    struct getProject_input {
         uint64 projectIdentity;
     };
 
-    struct getNostProject_output {
+    struct getProject_output {
         id owner;
-        uint8 state;
-        uint64 totalAmount;
-        uint8 threshold;
-        uint64 tokenPrice;
-        uint64 raiseAmount;
-        uint8 raiseInQubics;
-        uint64 tokensInSale;
-        uint8 status;
     };
 
     //
@@ -145,58 +122,6 @@ protected:
         projectFinance financials;
     };
 
-    struct getProject_locals {
-        projectMeta metadata;
-        projectFinance financials;
-    };
-
-    struct getNostProject_locals {
-        projectMeta metadata;
-        projectFinance financial;
-        uint8 something;
-    };
-
-    //PUBLIC_FUNCTION_WITH_LOCALS(getNostProject)
-    //    locals.something = 0;
-    //-
-
-    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-
-        //
-        // Ensure user has proper funds for project creation
-        //
-        if (qpi.invocationReward() < (state.transactionFee + state.projectFee)) {
-            output.status = NOST_INSUFFICIENT_BALANCE;
-            qpi.transfer(qpi.invocator(), qpi.invocationReward());
-            return;
-        }
-
-        //
-        // Setup local structures and store them in the maintenance arrays
-        //
-        locals.metadata.owner = qpi.invocator();
-        locals.metadata.projState = NOST_DRAFT;
-        locals.metadata.yesvotes = 0;
-        locals.metadata.novotes = 0;
-
-        locals.financials.totalAmount = input.totalAmount;
-        locals.financials.threshold = input.threshold;
-        locals.financials.tokenPrice = input.tokenPrice;
-        locals.financials.raiseInQubics = input.raiseInQubics;
-        locals.financials.tokensInSale = input.tokensInSale;
-
-        state.financeMaster.set(state.projectNextId, locals.financials);
-        state.metadataMaster.set(state.projectNextId, locals.metadata);
-
-        //
-        // Incremenet ProjectId counter and return related output data 
-        //
-        state.projectNextId += 1;
-        output.prodId = state.projectNextId;
-        output.status = 0;   
-    _ 
-
-
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
         //
@@ -233,9 +158,25 @@ protected:
         output.status = 0;   
     _ 
 
+
+    struct getProject_locals {
+        projectMeta metadata;
+        projectFinance financial;
+    };
+
+     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+
+        if (input.projectIdentity < state.projectNextId) {
+            output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+
+        output.owner = state.projectMetadata.owner;
+    -
+
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
-
         REGISTER_USER_PROCEDURE(createProject, 1);
-
+        REGISTER_USER_PROCEDURE(getProject, 2);
     _
 };
