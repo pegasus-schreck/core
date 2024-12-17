@@ -139,10 +139,10 @@ protected:
         uint8 something;
     };
 
-    //PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
-    //    locals.something = 0;
-    //-
-
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+        locals.something = 0;
+    -
+/*
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
         //
@@ -178,9 +178,9 @@ protected:
         output.prodId = state.projectNextId;
         output.status = 0;   
     _ 
-
+*/
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_PROCEDURE(createProject, 1);
+        REGISTER_USER_PROCEDURE(getProject, 1);
     _
 };
