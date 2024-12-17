@@ -133,8 +133,6 @@ public:
     //
     // Structures for Project Management
     //
-    typedef QPI::HashMap<id, bit, NOSTROMO_MAX_USERS> hasVoted;
-
     struct projectMeta {
         id owner;
         uint8 state;
@@ -174,8 +172,6 @@ private:
     //
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    //typedef array<hasVoted, NOSTROMO_MAX_PROJECTS> voterList;
-
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
@@ -188,7 +184,6 @@ public:
     struct createProject_locals {
         projectMeta metadata;
         projectFinance financials;
-        hasVoted localVoteList;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -220,7 +215,7 @@ public:
 
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
-        //state.projectVoting.set(state.projectNextId, locals.localVoteList);
+
         //
         // Incremenet ProjectId counter and return related output data 
         //
