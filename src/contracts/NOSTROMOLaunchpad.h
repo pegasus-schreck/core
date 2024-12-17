@@ -81,19 +81,19 @@ public:
         //uint64 projectIdentity;
         uint8 nothing;
     };
-/*
+
     struct getProject_output {
-        id owner;
-        uint8 state;
-        uint64 totalAmount;
-        uint8 threshold;
-        uint64 tokenPrice;
-        uint64 raiseAmount;
-        uint8 raiseInQubics;
-        uint64 tokensInSale;
+        //id owner;
+        //uint8 state;
+        //uint64 totalAmount;
+        //uint8 threshold;
+        //uint64 tokenPrice;
+        //uint64 raiseAmount;
+        //uint8 raiseInQubics;
+        //uint64 tokensInSale;
         uint8 status;
     };
-*/
+
 
     //
     // Structures for Project Management
