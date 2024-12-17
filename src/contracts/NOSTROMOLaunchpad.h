@@ -111,8 +111,8 @@ public:
         uint64 tokensInSale;
     };
 
-    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
-    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+    //typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    //typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
 protected:
 
@@ -121,7 +121,7 @@ protected:
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
-    voterList projectVoting;
+    //voterList projectVoting;
 
     uint64 projectNextId;
     
