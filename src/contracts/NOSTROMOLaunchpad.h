@@ -98,7 +98,8 @@ public:
 
     struct getProject_output {
         uint8 status;
-        id owner;
+        projectMeta metadata;
+        projectFinance finance;
     };
 
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
