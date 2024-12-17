@@ -133,6 +133,16 @@ protected:
         projectFinance financials;
     };
 
+    struct getProject_locals {
+        projectMeta metadata;
+        projectFinance financial;
+        uint8 something;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+        locals.something = 0;
+    -
+
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
 
         //
@@ -169,12 +179,6 @@ protected:
         output.status = 0;   
 
     _ 
-
-    struct getProject_locals {
-        projectMeta metadata;
-        projectFinance financial;
-        uint8 something;
-    };
 
     //PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
