@@ -173,7 +173,7 @@ protected:
         }
 
         output.owner = state.projectMetadata.owner;
-    -
+    _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
