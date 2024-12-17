@@ -25,6 +25,7 @@ constexpr uint8 NOST_CLOSED_FAILED = 5;
 constexpr uint8 NOST_CLOSED_SUCCESS = 6;
 constexpr uint8 NOST_BLOCKED = 7;
 constexpr uint8 NOST_DRAFT = 8;
+
 /*
  * Constants for sizing
  */
@@ -75,19 +76,19 @@ public:
     // Structures used for the getProject method.
     //
     struct getProject_input {
-        //uint64 projectIdentity;
+        uint64 projectIdentity;
         uint8 nothing;
     };
 
     struct getProject_output {
-        //id owner;
-        //uint8 state;
-        //uint64 totalAmount;
-        //uint8 threshold;
-        //uint64 tokenPrice;
-        //uint64 raiseAmount;
-        //uint8 raiseInQubics;
-        //uint64 tokensInSale;
+        id owner;
+        uint8 state;
+        uint64 totalAmount;
+        uint8 threshold;
+        uint64 tokenPrice;
+        uint64 raiseAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
         uint8 status;
     };
 
@@ -170,8 +171,8 @@ protected:
     _ 
 
     struct getProject_locals {
-        //projectMeta metadata;
-        //projectFinance financial;
+        projectMeta metadata;
+        projectFinance financial;
         uint8 something;
     };
 
