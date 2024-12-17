@@ -124,8 +124,8 @@ protected:
 
     uint64 projectNextId;
     
-    sint64 transactionFee;
-    sint64 projectFee;
+    sint32 transactionFee;
+    sint32 projectFee;
 
     struct createProject_locals {
         projectMeta metadata;
@@ -177,7 +177,7 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
 
-        output.status = input.nothing;
+        output.status = locals.something;
 
     -
 
