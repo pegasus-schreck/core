@@ -77,12 +77,12 @@ public:
     //
 
     
-    struct getProject_input {
+    struct getNostProject_input {
         //uint64 projectIdentity;
         uint8 nothing;
     };
 
-    struct getProject_output {
+    struct getNostProject_output {
         //id owner;
         //uint8 state;
         //uint64 totalAmount;
@@ -135,13 +135,13 @@ protected:
         projectFinance financials;
     };
 
-    struct getProject_locals {
+    struct getNostProject_locals {
         projectMeta metadata;
         projectFinance financial;
         uint8 something;
     };
 
-    PUBLIC_FUNCTION_WITH_LOCALS(getProject)
+    PUBLIC_FUNCTION_WITH_LOCALS(getNostProject)
         locals.something = 0;
     -
 /*
@@ -183,6 +183,6 @@ protected:
 */
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
 
-        REGISTER_USER_PROCEDURE(getProject, 1);
+        REGISTER_USER_PROCEDURE(getNostProject, 1);
     _
 };
