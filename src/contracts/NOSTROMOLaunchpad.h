@@ -6,12 +6,12 @@ using namespace QPI;
 /*
  * Various tier levels and their respective constants for checks below.
  */
-constexpr uint8 NONE = 0;
-constexpr uint8 EGG = 1;
-constexpr uint8 DOG = 2;
-constexpr uint8 ALIEN = 3;
-constexpr uint8 WARRIOR = 4;
-constexpr uint8 QUEEN = 5;
+constexpr uint8 NOST_NONE = 0;
+constexpr uint8 NOST_EGG = 1;
+constexpr uint8 NOST_DOG = 2;
+constexpr uint8 NOST_ALIEN = 3;
+constexpr uint8 NOST_WARRIOR = 4;
+constexpr uint8 NOST_QUEEN = 5;
 
 /*
  * Various project states and their respective constancts.
@@ -44,12 +44,16 @@ constexpr uint8 NOST_NO_TIER_FOUND = 5;
 constexpr uint8 NOST_UNABLE_TO_UNSTAKE = 6;
 constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
 constexpr uint8 NOST_PROJECT_CREATE_FAILED = 8;
+constexpr uint8 NOST_INVALID_PROJECT_ID = 9;
 
 struct NOST : public ContractBase
 {
 
 public:
 
+    //
+    // Structures used for the createProject method.
+    //
     struct createProject_input {
         uint64 totalAmount;
         uint8 threshold;
@@ -63,6 +67,24 @@ public:
         uint64 prodId;
     };
 
+    //
+    // Structures used for the getProject method.
+    //
+    struct getProject_input {
+        uint64 projectIdentity;
+    }
+
+    struct getProject_output {
+        id owner;
+        uint8 state;
+        uint64 totalAmount;
+        uint8 threshold;
+        uint64 tokenPrice;
+        uint64 raiseAmount;
+        uint8 raiseInQubics;
+        uint64 tokensInSale;
+        uint8 status;
+    }
 
     /*
      * Type definitions for use in contract
@@ -80,7 +102,7 @@ public:
     struct NOSTROMOProject {
         id owner;
         uint8 state;
-        uint64 totalAmount;
+        uint64 totalAmount; 
         uint8 threshold;
         uint64 tokenPrice;
         uint64 raisedAmount;
@@ -223,10 +245,42 @@ public:
 
     _ 
 
+    struct getProject_locals {
+        projectMeta metadata;
+        projectFinance financials;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(getProject)
+        
+        //
+        // Make sure projectId is valid before we return anything
+        //
+        if (input.projectIdentity < state.projectNextId) {
+            locals.financials = state.financeMaster.get(input.projectIdentity);
+            locals.metadata = state.metadataMaster.get(input.projectIdentity);
+        
+            output.owner = locals.metadata.owner;
+            output.state = locals.metadata.state;
+            output.totalAmount = locals.financials.totalAmount;
+            output.threshold = locals.financials.threshold;
+            output.tokenPrice = locals.financials.tokenPrice;
+            output.raiseAmount = locals.financials.raiseAmount;
+            output.raiseInQubics = locals.financials.raiseInQubics;
+            output.tokensInSale = locals.financials.tokensInSale;
+        }
+        else {
+            output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+    -
+
+
     struct addUserTier_locals {
         NOSTROMOTier stakingTier;
         uint8 foundTier;
     };
+
+
 
    /*
     * Method used to add a tier to a specific user and to update the 
