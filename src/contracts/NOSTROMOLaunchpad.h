@@ -45,6 +45,7 @@ constexpr uint8 NOST_UNABLE_TO_UNSTAKE = 6;
 constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
 constexpr uint8 NOST_PROJECT_CREATE_FAILED = 8;
 constexpr uint8 NOST_INVALID_PROJECT_ID = 9;
+constexpr uint8 NOST_INVALID_STATE = 10;
 
 struct NOST2
 {
@@ -102,13 +103,22 @@ public:
         projectFinance finance;
     };
 
-    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
-    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+    //
+    // Structures for user management
+    //
+    struct NOSTROMOTier {
+        uint64 stakeAmount;
+        uint64 poolWeight;
+    };
+
 
 protected:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
+    typedef QPI::HashMap<Tiers, NOSTROMOTier, 5> nostTiers;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
@@ -118,6 +128,8 @@ protected:
     
     sint64 transactionFee;
     sint64 projectFee;
+
+    nostTiers tiers;
 
     struct createProject_locals {
         projectMeta metadata;
@@ -148,7 +160,10 @@ protected:
         locals.financials.tokenPrice = input.tokenPrice;
         locals.financials.raiseInQubics = input.raiseInQubics;
         locals.financials.tokensInSale = input.tokensInSale;
-
+ 
+        //
+        // Add project info to each respective mgmt array.
+        //
         state.financeMaster.set(state.projectNextId, locals.financials);
         state.metadataMaster.set(state.projectNextId, locals.metadata);
 
@@ -161,7 +176,10 @@ protected:
     _ 
 
     PUBLIC_PROCEDURE(getProject)
-
+ 
+        //
+        // Make sure the ID is at least within range of what has been stored thus far
+        //
         if (input.projectIdentity < state.projectNextId) {
             output.status = NOST_INVALID_PROJECT_ID;
             return;
@@ -172,8 +190,49 @@ protected:
         output.status = NOST_SUCCESS;
     _
 
+    struct changeProjectState_input {
+        uint64 projectIdentity;
+        uint8 newProjectState;
+    };
+
+    PUBLIC_PROCEDURE(changeProjectState)
+
+        //
+        // Make sure the ID is at least within range of what has been stored thus far
+        //        
+        if (input.projectIdentity < state.projectNextId) {
+            output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+
+        if(input.newProjectState < NOST_VOTE_STATE || input.newProjectState > NOST_DRAFT) {
+            output.status = NOST_INVALID_STATE;
+            return;
+        }
+
+        state.metadataMaster.get(input.projectIdentity).projState = input.newProjectState;
+        output.status = NOST_SUCCESS;
+    _
+
+
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
+    _
+
+    INITIALIZE
+        state.stakedQubicsInContract = 0;
+        state.admin = qpi.invocator();
+        state.wallet = qpi.invocator();
+        state.transactionFee = 1000;
+        state.projectFee = 10000;
+        state.projectNextId = 1;
+        state.tiers.reset();
+        state.tiers.set(Tiers.EGG, NOSTROMOTier{ 1, 55 });
+        state.tiers.set(Tiers.DOG, NOSTROMOTier{ 5, 300 });
+        state.tiers.set(Tiers.ALIEN, NOSTROMOTier{ 10, 75 });
+        state.tiers.set(Tiers.WARRIOR, NOSTROMOTier{ 30, 305 });
+        state.tiers.set(Tiers.QUEEN, NOSTROMOTier{ 100, 1375 });
     _
 };
