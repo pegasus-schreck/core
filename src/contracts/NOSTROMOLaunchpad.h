@@ -195,6 +195,10 @@ protected:
         uint8 newProjectState;
     };
 
+    struct changeProjectState_output {
+        uint8 status;
+    }
+
     PUBLIC_PROCEDURE(changeProjectState)
 
         //
@@ -210,7 +214,7 @@ protected:
             return;
         }
 
-        state.metadataMaster.get(input.projectIdentity).projState = input.newProjectState;
+        state.metadataMaster.set(input.projectIdentity).projState = input.newProjectState;
         output.status = NOST_SUCCESS;
     _
 
