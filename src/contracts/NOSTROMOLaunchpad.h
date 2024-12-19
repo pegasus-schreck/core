@@ -119,7 +119,7 @@ protected:
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
 
-    QPI::HashMap<uint8, NOSTROMOTier, 5> tiers;
+    QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;
 
     projectMetadata metadataMaster; 
