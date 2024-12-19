@@ -197,7 +197,7 @@ protected:
 
     struct changeProjectState_output {
         uint8 status;
-    }
+    };
 
     PUBLIC_PROCEDURE(changeProjectState)
 
