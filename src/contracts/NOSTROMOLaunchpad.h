@@ -232,8 +232,6 @@ protected:
         output.status = NOST_SUCCESS;
     _
 
-
-
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
