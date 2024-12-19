@@ -118,8 +118,8 @@ protected:
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
-    typedef QPI::HashMap<uint8, NOSTROMOTier, 8> nostTiers;
 
+    QPI::HashMap<uint8, NOSTROMOTier, 8> tiers;
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;
 
     projectMetadata metadataMaster; 
@@ -131,7 +131,7 @@ protected:
     sint64 transactionFee;
     sint64 projectFee;
 
-    nostTiers tiers;
+    //nostTiers tiers;
 
     uint64 stakedQubicsInContract;
 
