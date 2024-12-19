@@ -120,7 +120,7 @@ protected:
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
     typedef QPI::HashMap<uint8, NOSTROMOTier, 8> nostTiers;
 
-    typedef QPI::HashMap<id, Tiers, NOSTROMO_MAX_USERS> userTiers;
+    QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
