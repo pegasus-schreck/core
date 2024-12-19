@@ -214,12 +214,12 @@ protected:
             return;
         }
 
-        if(input.newProjectState < NOST_VOTE_STATE || input.newProjectState > NOST_DRAFT) {
+        if (input.newProjectState < NOST_VOTE_STATE || input.newProjectState > NOST_DRAFT) {
             output.status = NOST_INVALID_STATE;
             return;
         }
 
-        state.metadataMaster.set(input.projectIdentity).projState = input.newProjectState;
+        //state.metadataMaster.set(input.projectIdentity).projState = input.newProjectState;
         output.status = NOST_SUCCESS;
     _
 
