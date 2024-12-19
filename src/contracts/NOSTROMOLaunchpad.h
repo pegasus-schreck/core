@@ -2,9 +2,9 @@
 //#include "qpi.h"
 using namespace QPI;
 
-/*
- * Various tier levels and their respective constants for checks below.
- */
+//
+// Various tier levels and their respective constants for checks below.
+//
 constexpr uint8 NOST_NONE = 0;
 constexpr uint8 NOST_EGG = 1;
 constexpr uint8 NOST_DOG = 2;
@@ -12,9 +12,9 @@ constexpr uint8 NOST_ALIEN = 3;
 constexpr uint8 NOST_WARRIOR = 4;
 constexpr uint8 NOST_QUEEN = 5;
 
-/*
- * Various project states and their respective constancts.
- */
+//
+// Various project states and their respective constancts.
+//
 constexpr uint8 NOST_VOTE_STATE = 0;
 constexpr uint8 NOST_REGISTER_STATE = 1;
 constexpr uint8 NOST_INVESTMENT_PHASE_1 = 2;
@@ -25,16 +25,16 @@ constexpr uint8 NOST_CLOSED_SUCCESS = 6;
 constexpr uint8 NOST_BLOCKED = 7;
 constexpr uint8 NOST_DRAFT = 8;
 
-/*
- * Constants for sizing
- */
+//
+// Constants for sizing
+//
 constexpr uint64 NOSTROMO_MAX_USERS = 131072;
 constexpr uint64 NOSTROMO_MAX_PROJECTS = 1024;
 constexpr uint64 NOSTROMO_MAX_LEVELS = 8;
 
-/*
- * Return codes constants
- */
+//
+// Return codes constants
+//
 constexpr uint8 NOST_SUCCESS = 0;
 constexpr uint8 NOST_INVALID_TIER = 1;
 constexpr uint8 NOST_INSUFFICIENT_BALANCE = 2;
@@ -104,14 +104,35 @@ public:
     };
 
     //
-    // Structures for user management
+    // Structures used for changeProjectState method.
+    //
+    struct changeProjectState_input {
+        uint64 projectIdentity;
+        uint8 newProjectState;
+    };
+
+    struct changeProjectState_output {
+        uint8 status;
+    };
+
+    //
+    // Structure for tier definitions.
     //
     struct NOSTROMOTier {
         uint64 stakeAmount;
         uint64 poolWeight;
     };
 
+    //
+    // Structures for addUserTier method.
+    //
+    struct addUserTier_input {
+        uint8 tier;
+    };
 
+    struct addUserTier_output {
+        uint8 status;
+    };
 protected:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
@@ -124,10 +145,8 @@ protected:
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
-    //voterList projectVoting;
 
-    uint64 projectNextId;
-    
+    uint64 projectNextId;    
     sint64 transactionFee;
     sint64 projectFee;
 
@@ -197,15 +216,6 @@ protected:
         output.status = NOST_SUCCESS;
     _
 
-    struct changeProjectState_input {
-        uint64 projectIdentity;
-        uint8 newProjectState;
-    };
-
-    struct changeProjectState_output {
-        uint8 status;
-    };
-
     struct changeProjectState_locals {
         projectMeta metadata;
     };
@@ -234,6 +244,66 @@ protected:
         output.status = NOST_SUCCESS;
     _
 
+    struct addUserTier_locals {
+
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
+ 
+        //
+        // Make sure it is a valid tier, if not return error code.
+        //
+        if (input.tier > 5) {
+            output.status = NOST_INVALID_TIER;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        //
+        // Ensure proper balance transfer attempted or return
+        // an error code.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());     
+            return;
+        }
+
+        //
+        // If user doesn't exist we continue to checks below,
+        // else check the tier and return error if one is set.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            if(locals.foundTier == NONE) {
+                output.status = NOST_TIER_ALREADY_SET;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;
+            }
+        }
+
+        //
+        // We must check to ensure user has the proper balance or return error code. 
+        //
+        if (state.tiers.get(input.tier, locals.stakingTier)) {
+            if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
+                output.status = NOST_INSUFFICIENT_BALANCE;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;
+            }
+        }
+
+        //
+        // Set the user tier and update staking volume
+        //
+        state.userTiers.set(qpi.invocator(), input.tier);
+        state.stakedQubicsInContract += locals.stakingTier.stakeAmount;
+
+        //
+        // Zero for status means life is good.
+        //
+        output.status = 0; 
+    _
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
@@ -246,7 +316,11 @@ protected:
         state.wallet = qpi.invocator();
         state.transactionFee = 1000;
         state.projectFee = 10000;
-        state.projectNextId = 1;
+        state.projectNextId = 1; 
+
+        //
+        // Initialize the tier information and set it.
+        //
         state.tiers.reset();
         state.tiers.set(NOST_EGG, NOSTROMOTier{ 1, 55 });
         state.tiers.set(NOST_DOG, NOSTROMOTier{ 5, 300 });
