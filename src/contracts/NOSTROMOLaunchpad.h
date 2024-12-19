@@ -134,6 +134,17 @@ public:
         uint8 status;
     };
 
+    //
+    // Structures for removeUserTier method.
+    //
+    struct removeUserTier_input {
+
+    };
+
+    struct removeUserTier_output {
+        uint8 status;
+    };
+
 protected:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
@@ -303,13 +314,64 @@ protected:
         //
         // Zero for status means life is good.
         //
-        output.status = 0; 
+        output.status = NOST_SUCCESS; 
+    _
+    
+    struct removeUserTier_locals {
+        uint8 foundTier;
+        NOSTROMOTier stakingTier;
+    };    
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(removeUserTier)
+        
+        // 
+        // Check to ensure user has sufficient balance.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        //
+        // Validate if the user is already in a tier.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier))
+        {
+            if(locals.foundTier == NONE) {
+                output.status = NOST_NO_TIER_FOUND;
+                return;
+            }   
+        }
+        else
+        {
+            output.status = NOST_USER_NOT_FOUND;
+            return;
+        }
+
+        //
+        // Set user tier to NONE
+        //
+        state.userTiers.set(qpi.invocator(), NOST_NONE);
+
+        //
+        // Return the staked qubics
+        //
+        state.tiers.get(locals.foundTier, locals.stakingTier);
+        qpi.transfer(qpi.invocator(), locals.stakingTier.stakeAmount);
+
+        // Update the staked qubics amount
+        state.stakedQubicsInContract -= locals.stakingTier.stakeAmount;
+
+        output.status = NOST_SUCCESS;
     _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
         REGISTER_USER_PROCEDURE(changeProjectState, 3);
+        REGISTER_USER_PROCEDURE(addUserTier, 4);
+        REGISTER_USER_PROCEDURE(removeUserTier, 5);
     _
 
     INITIALIZE
