@@ -131,6 +131,11 @@ protected:
 
     nostTiers tiers;
 
+    uint64 stakedQubicsInContract;
+
+    id wallet;
+    id admin;
+
     struct createProject_locals {
         projectMeta metadata;
         projectFinance financials;
