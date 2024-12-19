@@ -204,6 +204,10 @@ protected:
         uint8 status;
     };
 
+    struct changeProjectState_locals {
+        projectMeta metadata;
+    }
+
     PUBLIC_PROCEDURE(changeProjectState)
 
         //
@@ -219,7 +223,12 @@ protected:
             return;
         }
 
-        //state.metadataMaster.set(input.projectIdentity).projState = input.newProjectState;
+        //
+        // Update project state in metadata array.
+        //
+        locals.metadata = state.metadataMaster.get(input.projectIdentity);
+        locals.metadata.state = input.newProjectState;
+        state.metadataMaster.set(input.projectIdentity, locals.metadata);
         output.status = NOST_SUCCESS;
     _
 
