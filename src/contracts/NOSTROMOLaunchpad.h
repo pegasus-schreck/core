@@ -227,7 +227,7 @@ protected:
         // Update project state in metadata array.
         //
         locals.metadata = state.metadataMaster.get(input.projectIdentity);
-        locals.metadata.state = input.newProjectState;
+        locals.metadata.projState = input.newProjectState;
         state.metadataMaster.set(input.projectIdentity, locals.metadata);
         output.status = NOST_SUCCESS;
     _
