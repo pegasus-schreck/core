@@ -206,7 +206,7 @@ protected:
 
     struct changeProjectState_locals {
         projectMeta metadata;
-    }
+    };
 
     PUBLIC_PROCEDURE(changeProjectState)
 
