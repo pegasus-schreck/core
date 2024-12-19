@@ -338,7 +338,7 @@ protected:
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier))
         {
-            if(locals.foundTier == NONE) {
+            if(locals.foundTier == NOST_NONE) {
                 output.status = NOST_NO_TIER_FOUND;
                 return;
             }   
