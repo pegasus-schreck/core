@@ -208,7 +208,7 @@ protected:
         projectMeta metadata;
     };
 
-    PUBLIC_PROCEDURE(changeProjectState)
+    PUBLIC_PROCEDURE_WITH_LOCALS(changeProjectState)
 
         //
         // Make sure the ID is at least within range of what has been stored thus far
