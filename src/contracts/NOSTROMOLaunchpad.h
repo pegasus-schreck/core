@@ -247,6 +247,7 @@ protected:
 
     struct addUserTier_locals {
         uint8 foundTier;
+        NOSTROMOTier stakingTier;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
@@ -271,7 +272,7 @@ protected:
         }
 
         //
-        // If user doesn't exist we continue to checks below,
+        // If user doesn't appear in map we continue to checks below,
         // else check the tier and return error if one is set.
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
