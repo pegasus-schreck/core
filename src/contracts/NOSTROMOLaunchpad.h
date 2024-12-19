@@ -238,10 +238,10 @@ protected:
         state.projectFee = 10000;
         state.projectNextId = 1;
         state.tiers.reset();
-        state.tiers.set(Tiers.EGG, NOSTROMOTier{ 1, 55 });
-        state.tiers.set(Tiers.DOG, NOSTROMOTier{ 5, 300 });
-        state.tiers.set(Tiers.ALIEN, NOSTROMOTier{ 10, 75 });
-        state.tiers.set(Tiers.WARRIOR, NOSTROMOTier{ 30, 305 });
-        state.tiers.set(Tiers.QUEEN, NOSTROMOTier{ 100, 1375 });
+        state.tiers.set(NOST_EGG, NOSTROMOTier{ 1, 55 });
+        state.tiers.set(NOST_DOG, NOSTROMOTier{ 5, 300 });
+        state.tiers.set(NOST_ALIEN, NOSTROMOTier{ 10, 75 });
+        state.tiers.set(NOST_WARRIOR, NOSTROMOTier{ 30, 305 });
+        state.tiers.set(NOST_QUEEN, NOSTROMOTier{ 100, 1375 });
     _
 };
