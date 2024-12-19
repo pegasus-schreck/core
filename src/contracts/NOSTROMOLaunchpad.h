@@ -118,7 +118,7 @@ protected:
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
     typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
-    typedef QPI::HashMap<Tiers, NOSTROMOTier, 5> nostTiers;
+    typedef QPI::HashMap<uint8, NOSTROMOTier, 5> nostTiers;
 
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
