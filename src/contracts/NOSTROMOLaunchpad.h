@@ -133,6 +133,7 @@ public:
     struct addUserTier_output {
         uint8 status;
     };
+
 protected:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
@@ -245,7 +246,7 @@ protected:
     _
 
     struct addUserTier_locals {
-
+        uint8 foundTier;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(addUserTier)
@@ -274,7 +275,7 @@ protected:
         // else check the tier and return error if one is set.
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-            if(locals.foundTier == NONE) {
+            if(locals.foundTier != NOST_NONE) {
                 output.status = NOST_TIER_ALREADY_SET;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
