@@ -120,6 +120,8 @@ protected:
     typedef QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> voterList;
     typedef QPI::HashMap<uint8, NOSTROMOTier, 8> nostTiers;
 
+    typedef QPI::HashMap<id, Tiers, NOSTROMO_MAX_USERS> userTiers;
+
     projectMetadata metadataMaster; 
     projectFinancials financeMaster;
     voterList projectVoting;
@@ -235,6 +237,7 @@ protected:
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
+        REGISTER_USER_PROCEDURE(changeProjectStatus, 3);
     _
 
     INITIALIZE
