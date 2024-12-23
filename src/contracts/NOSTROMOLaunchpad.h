@@ -1,5 +1,3 @@
-//#pragma once
-//#include "qpi.h"
 using namespace QPI;
 
 //
@@ -23,7 +21,10 @@ constexpr uint8 NOST_INVESTMENT_PHASE_3 = 4;
 constexpr uint8 NOST_CLOSED_FAILED = 5;
 constexpr uint8 NOST_CLOSED_SUCCESS = 6;
 constexpr uint8 NOST_BLOCKED = 7;
-constexpr uint8 NOST_DRAFT = 8;
+constexpr uint8 NOST_ASK_MORE_INFORMATION = 8;
+constexpr uint8 NOST_PREREGISTER_STATE = 9;
+constexpr uint8 NOST_PREINVEST_STATE = 10;
+constexpr uint8 NOST_DRAFT = 11;
 
 //
 // Constants for sizing
@@ -46,6 +47,9 @@ constexpr uint8 NOST_PROJECT_NOT_FOUND = 7;
 constexpr uint8 NOST_PROJECT_CREATE_FAILED = 8;
 constexpr uint8 NOST_INVALID_PROJECT_ID = 9;
 constexpr uint8 NOST_INVALID_STATE = 10;
+constexpr uint8 NOST_INVALID_TRANSITION = 11;
+constexpr uint8 NOST_ALREADY_REGISTERED = 12;
+constexpr uint8 NOST_NOT_REGISTERED = 13;
 
 struct NOST2
 {
@@ -145,13 +149,26 @@ public:
         uint8 status;
     };
 
-protected:
+    //
+    // Structures for regForProject method.
+    //
+    struct regForProject_input {
+        uint64 projectIdentity;
+    };
+
+    struct regForProject_output {
+        uint8 status;
+    };
+
+private:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
     typedef array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinancials;
-    typedef array<bit, NOSTROMO_MAX_PROJECTS> votes; 
+    
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> flags; 
 
-    QPI::HashMap<id, votes, NOSTROMO_MAX_USERS> projectVoting;
+    QPI::HashMap<id, flags, NOSTROMO_MAX_USERS> voteTracking;
+    QPI::HashMap<id, flags, NOSTROMO_MAX_USERS> regTracking;
     QPI::HashMap<uint8, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;
     QPI::HashMap<id, uint8, NOSTROMO_MAX_USERS> userTiers;
 
@@ -162,12 +179,126 @@ protected:
     sint64 transactionFee;
     sint64 projectFee;
 
-    //nostTiers tiers;
-
     uint64 stakedQubicsInContract;
 
     id wallet;
     id admin;
+
+    flags preInvestProjects;
+    flags preVoteProjects;
+
+protected:
+
+    struct unregForProject_locals {
+        flags userFlags; 
+        bit regFlag;
+        projMeta metadata;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(unregForProject)
+        
+        if (input.projectIdentity < state.projectNextId) {
+            output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+
+        //
+        // Ensure project is in proper state.
+        //
+        if (state.metadataMaster.get(input.projectIdentity, locals.metadata)) {
+            if(locals.metadata.projState == NOST_REGISTER_STATE) {
+
+                //
+                // Check is user is already registered, if not toggle the bit to 
+                // indicate success.  If user isn't in the listing add him and 
+                // set the registration bit.
+                //
+                if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
+                    locals.regFlag = locals.userFlags.get(input.projectIdentity);
+
+                    //
+                    // Not registered treat as successful. otherwise unregister
+                    // and declare success.
+                    //
+                    if (locals.regFlag == 0) {
+                        ouput.status = NOST_SUCCESS;
+                        return;
+                    }
+                    else {
+                        locals.userFlags.set(input.projectIdentity, 0);
+                        state.regTracking.set(qpi.invocator(), locals.userFlags);
+                        output.status = NOST_SUCCESS;
+                        return;
+                    }
+                }
+                //
+                // User never attempted to register, so success!
+                //
+                else {
+                    output.status = NOST_SUCCESS;
+                    return;
+                }
+
+            }
+            else {
+                output.status = NOST_INVALID_STATE;
+                return;
+            }
+        }
+    _
+
+    struct regForProject_locals {
+        flags userFlags; 
+        bit regFlag;
+        projMeta metadata;
+    }
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(regForProject)
+
+        if (input.projectIdentity < state.projectNextId) {
+            output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+
+        //
+        // Ensure project is in proper state.
+        //
+        if (state.metadataMaster.get(input.projectIdentity, locals.metadata)) {
+            if(locals.metadata.projState == NOST_REGISTER_STATE) {
+
+                //
+                // Check is user is already registered, if not toggle the bit to 
+                // indicate success.  If user isn't in the listing add him and 
+                // set the registration bit.
+                //
+                if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
+                    locals.regFlag = locals.userFlags.get(input.projectIdentity);
+
+                    if (locals.regFlag == 1) {
+                        ouput.status = NOST_ALREADY_REGISTERED;
+                        return;
+                    }
+                    else {
+                        locals.userFlags.set(input.projectIdentity, 1);
+                        state.regTracking.set(qpi.invocator(), locals.userFlags);
+                        output.status = NOST_SUCCESS;
+                        return;
+                    }
+                }
+                else {
+                    locals.userFlags.set(input.projectIdentity, 1);
+                    state.regTracking.set(qpi.invocator(), locals.userFlags);        
+                    output.status = NOST_SUCCESS;
+                    return;
+                }
+
+            }
+            else {
+                output.status = NOST_INVALID_STATE;
+                return;
+            }
+        }
+    _
 
     struct createProject_locals {
         projectMeta metadata;
@@ -208,8 +339,8 @@ protected:
         //
         // Incremenet ProjectId counter and return related output data 
         //
-        state.projectNextId += 1;
         output.prodId = state.projectNextId;
+        state.projectNextId += 1;
         output.status = NOST_SUCCESS;   
     _ 
 
@@ -237,7 +368,7 @@ protected:
         //
         // Make sure the ID is at least within range of what has been stored thus far
         //        
-        if (input.projectIdentity < state.projectNextId) {
+        if (state.projectNextId <= input.projectIdentity) {
             output.status = NOST_INVALID_PROJECT_ID;
             return;
         }
@@ -247,10 +378,24 @@ protected:
             return;
         }
 
+        if (input.newProjectState == NOST_PREINVEST_STATE) {
+            state.preInvestProjects.set(input.projectIdentity, 1);
+        }
+
+        if (input.newProjectState == NOST_PREREGISTER_STATE) {
+            state.preVoteProjects.set(input.projectIdentity, 1);
+        }
+
         //
-        // Update project state in metadata array.
+        // Check current state to ensure we aren't making an invalid state transition.
         //
         locals.metadata = state.metadataMaster.get(input.projectIdentity);
+
+        if (input.newProjectState >= NOST_INVESTMENT_PHASE_1 && input.newProjectState <= NOST_CLOSED_SUCCESS) {
+            output.status = NOST_INVALID_TRANSITION;
+            return;            
+        }
+
         locals.metadata.projState = input.newProjectState;
         state.metadataMaster.set(input.projectIdentity, locals.metadata);
         output.status = NOST_SUCCESS;
@@ -380,7 +525,7 @@ protected:
         state.wallet = qpi.invocator();
         state.transactionFee = 1000;
         state.projectFee = 10000;
-        state.projectNextId = 1; 
+        state.projectNextId = 0; 
 
         //
         // Initialize the tier information and set it.
@@ -392,4 +537,43 @@ protected:
         state.tiers.set(NOST_WARRIOR, NOSTROMOTier{ 30, 305 });
         state.tiers.set(NOST_QUEEN, NOSTROMOTier{ 100, 1375 });
     _
+
+    
+    struct BEGIN_EPOCH_locals {
+        uint64 index;
+        projectMeta metadata;
+    };
+
+    BEGIN_EPOCH_WITH_LOCALS
+
+        for (locals.index = 0; locals.index < NOSTROMO_MAX_PROJECTS; locals.index++) {
+            
+            if (state.preVoteProjects.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
+
+                //
+                // Before transitioning state lets make sure we are in Pre.
+                //
+                if (locals.metadata.projState == NOST_PREREGISTER_STATE) {
+                    locals.metadata.projState = NOST_REGISTER_STATE;
+                    state.metadataMaster.set(locals.index, locals.metadata);
+                }
+
+                //
+                // Set it to 0 so it doesn't trigger on the next Epoch regardless.
+                //
+                state.preVoteProjects.set(locals.index, 0);
+            }
+        }
+    _
+
+	struct END_EPOCH_locals {
+        uint64 index;
+        projectMeta metadata;
+    };
+    
+    END_EPOCH_WITH_LOCALS
+	
+    _
+
 };
