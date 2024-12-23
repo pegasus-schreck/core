@@ -186,6 +186,14 @@ private:
 
     flags preInvestProjects;
     flags preVoteProjects;
+    flags midInvestProjects;
+
+    typedef id isAdmin_input; 
+    typedef bit isAdmin_output;
+
+    PRIVATE_FUNCTION(isAdmin)
+        output = (qpi.invocator() == state.admin);
+    _
 
 protected:
 
@@ -251,12 +259,28 @@ protected:
         flags userFlags; 
         bit regFlag;
         projMeta metadata;
+        uint8 tier;
     }
 
     PUBLIC_PROCEDURE_WITH_LOCALS(regForProject)
 
         if (input.projectIdentity < state.projectNextId) {
             output.status = NOST_INVALID_PROJECT_ID;
+            return;
+        }
+
+        //
+        // Check user tier, if one hasn't been added or is NONE we 
+        // return a bad status.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.tier)) {
+            if (locals.tier == NOST_NONE) {
+                output.status = NOST_INVALID_TIER;
+                return;
+            }
+        }
+        else {
+            output.status = NOST_INVALID_TIER;
             return;
         }
 
@@ -556,6 +580,26 @@ protected:
                 //
                 if (locals.metadata.projState == NOST_PREREGISTER_STATE) {
                     locals.metadata.projState = NOST_REGISTER_STATE;
+                    state.metadataMaster.set(locals.index, locals.metadata);
+                }
+
+                //
+                // Set it to 0 so it doesn't trigger on the next Epoch regardless.
+                //
+                state.preVoteProjects.set(locals.index, 0);
+            }
+        }
+
+        for (locals.index = 0; locals.index < NOSTROMO_MAX_PROJECTS; locals.index++) {
+            
+            if (state.preInvestProjects.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
+
+                //
+                // Before transitioning state lets make sure we are in Pre.
+                //
+                if (locals.metadata.projState == NOST_PREINVEST_STATE) {
+                    locals.metadata.projState = NOST_INVESTMENT_PHASE_1;
                     state.metadataMaster.set(locals.index, locals.metadata);
                 }
 
