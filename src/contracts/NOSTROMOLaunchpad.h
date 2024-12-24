@@ -272,7 +272,7 @@ protected:
         bit regFlag;
         projectMeta metadata;
         uint8 tier;
-    }
+    };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(regForProject)
 
