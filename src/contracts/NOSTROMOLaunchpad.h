@@ -663,8 +663,6 @@ protected:
                 state.inRegistration.set(locals.index, 0);
                 state.investProjects.set(locals.index, 1);
             }
-
-
         }
     _
 
