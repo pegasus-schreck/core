@@ -161,6 +161,17 @@ public:
         uint8 status;
     };
 
+    //
+    // Structures for unregForProject method.
+    //
+    struct unregForProject_input {
+        uint64 projectIdentity;
+    };
+
+    struct unregForProject_output {
+        uint8 status;
+    };
+
 private:
 
     typedef array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadata;
