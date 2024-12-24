@@ -22,9 +22,10 @@ constexpr uint8 NOST_CLOSED_FAILED = 5;
 constexpr uint8 NOST_CLOSED_SUCCESS = 6;
 constexpr uint8 NOST_BLOCKED = 7;
 constexpr uint8 NOST_ASK_MORE_INFORMATION = 8;
-constexpr uint8 NOST_PREREGISTER_STATE = 9;
-constexpr uint8 NOST_PREINVEST_STATE = 10;
+constexpr uint8 NOST_PREINVEST_STATE = 9;
+constexpr uint8 NOST_PREPARE_VOTE = 10;
 constexpr uint8 NOST_DRAFT = 11;
+
 
 //
 // Constants for sizing
@@ -186,7 +187,7 @@ private:
 
     flags preInvestProjects;
     flags preVoteProjects;
-    flags midInvestProjects;
+    flags inRegistration;
 
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
@@ -402,11 +403,7 @@ protected:
             return;
         }
 
-        if (input.newProjectState == NOST_PREINVEST_STATE) {
-            state.preInvestProjects.set(input.projectIdentity, 1);
-        }
-
-        if (input.newProjectState == NOST_PREREGISTER_STATE) {
+        if (input.newProjectState == NOST_PREPARE_VOTE) {
             state.preVoteProjects.set(input.projectIdentity, 1);
         }
 
@@ -415,9 +412,17 @@ protected:
         //
         locals.metadata = state.metadataMaster.get(input.projectIdentity);
 
-        if (input.newProjectState >= NOST_INVESTMENT_PHASE_1 && input.newProjectState <= NOST_CLOSED_SUCCESS) {
+        if (input.newProjectState >= NOST_INVESTMENT_PHASE_1 && input.newProjectState <= NOST_BLOCKED) {
             output.status = NOST_INVALID_TRANSITION;
             return;            
+        }
+
+        //
+        // Must be done by smart contract
+        //
+        if (input.newProjectState == NOST_VOTE_STATE || input.newProjectState == NOST_REGISTER_STATE) {
+            output.status = NOST_INVALID_TRANSITION;
+            return;                        
         }
 
         locals.metadata.projState = input.newProjectState;
@@ -578,37 +583,18 @@ protected:
                 //
                 // Before transitioning state lets make sure we are in Pre.
                 //
-                if (locals.metadata.projState == NOST_PREREGISTER_STATE) {
-                    locals.metadata.projState = NOST_REGISTER_STATE;
+                if (locals.metadata.projState == NOST_PREPARE_VOTE) {
+                    locals.metadata.projState = NOST_VOTE_STATE;
                     state.metadataMaster.set(locals.index, locals.metadata);
                 }
-
-                //
-                // Set it to 0 so it doesn't trigger on the next Epoch regardless.
-                //
-                state.preVoteProjects.set(locals.index, 0);
-            }
-        }
-
-        for (locals.index = 0; locals.index < NOSTROMO_MAX_PROJECTS; locals.index++) {
-            
-            if (state.preInvestProjects.get(locals.index) == 1) {
-                locals.metadata = state.metadataMaster.get(locals.index);
-
-                //
-                // Before transitioning state lets make sure we are in Pre.
-                //
-                if (locals.metadata.projState == NOST_PREINVEST_STATE) {
-                    locals.metadata.projState = NOST_INVESTMENT_PHASE_1;
-                    state.metadataMaster.set(locals.index, locals.metadata);
+                else {
+                    //
+                    // Set it to 0 so it doesn't trigger on the next Epoch regardless.
+                    //
+                    state.preVoteProjects.set(locals.index, 0);
                 }
-
-                //
-                // Set it to 0 so it doesn't trigger on the next Epoch regardless.
-                //
-                state.preVoteProjects.set(locals.index, 0);
             }
-        }
+        }        
     _
 
 	struct END_EPOCH_locals {
@@ -617,7 +603,63 @@ protected:
     };
     
     END_EPOCH_WITH_LOCALS
-	
+	    
+        //
+        // Walk through lists, if in PRE_VOTE state move it to vote and wait till 
+        // the end of the epoch.  If in VOTE_STATE we check the vote tally and if 
+        // the vote wins it moves to registration, if it loses the vote it is set
+        // to CLOSED_FAILED.
+        //
+        for (locals.index = 0; locals.index < NOSTROMO_MAX_PROJECTS; locals.index++) {
+            
+            //
+            // If project has been moved to 
+            // 
+            if (state.preVoteProjects.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
+
+                //
+                // Before transitioning state lets make sure we are in Pre.
+                //
+                if (locals.metadata.projState == NOST_PREPARE_VOTE) {
+                    locals.metadata.projState = NOST_VOTE_STATE;
+                    state.metadataMaster.set(locals.index, locals.metadata);
+                }
+                else if (locals.metadata.projectState == NOST_VOTE_STATE) {
+                    
+                    //
+                    // Has been in voting for 1 epoch, check tally and set appropriately. 
+                    //
+                    if (locals.metadata.yesvotes > locals.metadata.novotes) {
+                        locals.metadata.projState = NOST_REGISTER_STATE;
+                        state.metadataMaster.set(locals.index, locals.metadata);
+
+                        state.preVoteProjects.set(locals.index, 0);
+                        state.inRegistration.set(locals.index, 1);
+                    }
+                    else {
+                        locals.metadata.projState = NOST_CLOSED_FAILED;
+                        state.metadataMaster.set(locals.index, locals.metadata);
+                        state.preVoteProjects.set(locals.index, 0);
+                    }
+                }
+                else {
+                    //
+                    // Set it to 0 so it doesn't trigger on the next Epoch regardless.
+                    //
+                    state.preVoteProjects.set(locals.index, 0);
+                }
+            }
+
+            //
+            // If it's been in registration for a week we move it to the investor phase.
+            //
+            if (state.inRegistration.get(locals.index) == 1) {
+
+            }
+
+
+        }
     _
 
 };
