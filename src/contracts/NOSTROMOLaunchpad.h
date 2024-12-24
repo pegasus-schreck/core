@@ -185,7 +185,7 @@ private:
     id wallet;
     id admin;
 
-    flags preInvestProjects;
+    flags investProjects;
     flags preVoteProjects;
     flags inRegistration;
 
@@ -655,7 +655,13 @@ protected:
             // If it's been in registration for a week we move it to the investor phase.
             //
             if (state.inRegistration.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
 
+                locals.metadata.projState = NOST_INVESTMENT_PHASE_1;
+                state.metadataMaster.set(locals.index, locals.metadata);
+
+                state.inRegistration.set(locals.index, 0);
+                state.investProjects.set(locals.index, 1);
             }
 
 
