@@ -225,45 +225,44 @@ protected:
         //
         // Ensure project is in proper state.
         //
-        if (state.metadataMaster.get(input.projectIdentity, locals.metadata)) {
-            if(locals.metadata.projState == NOST_REGISTER_STATE) {
+        locals.metadata = state.metadataMaster.get(input.projectIdentity);
+        if(locals.metadata.projState == NOST_REGISTER_STATE) {
+
+            //
+            // Check is user is already registered, if not toggle the bit to 
+            // indicate success.  If user isn't in the listing add him and 
+            // set the registration bit.
+            //
+            if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
+                locals.regFlag = locals.userFlags.get(input.projectIdentity);
 
                 //
-                // Check is user is already registered, if not toggle the bit to 
-                // indicate success.  If user isn't in the listing add him and 
-                // set the registration bit.
+                // Not registered treat as successful. otherwise unregister
+                // and declare success.
                 //
-                if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
-                    locals.regFlag = locals.userFlags.get(input.projectIdentity);
-
-                    //
-                    // Not registered treat as successful. otherwise unregister
-                    // and declare success.
-                    //
-                    if (locals.regFlag == 0) {
-                        output.status = NOST_SUCCESS;
-                        return;
-                    }
-                    else {
-                        locals.userFlags.set(input.projectIdentity, 0);
-                        state.regTracking.set(qpi.invocator(), locals.userFlags);
-                        output.status = NOST_SUCCESS;
-                        return;
-                    }
-                }
-                //
-                // User never attempted to register, so success!
-                //
-                else {
+                if (locals.regFlag == 0) {
                     output.status = NOST_SUCCESS;
                     return;
                 }
-
+                else {
+                    locals.userFlags.set(input.projectIdentity, 0);
+                    state.regTracking.set(qpi.invocator(), locals.userFlags);
+                    output.status = NOST_SUCCESS;
+                    return;
+                }
             }
+            //
+            // User never attempted to register, so success!
+            //
             else {
-                output.status = NOST_INVALID_STATE;
+                output.status = NOST_SUCCESS;
                 return;
             }
+
+        }
+        else {
+            output.status = NOST_INVALID_STATE;
+            return;
         }
     _
 
