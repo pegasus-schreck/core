@@ -298,40 +298,39 @@ protected:
         //
         // Ensure project is in proper state.
         //
-        if (state.metadataMaster.get(input.projectIdentity, locals.metadata)) {
-            if(locals.metadata.projState == NOST_REGISTER_STATE) {
+        locals.metadata = state.metadataMaster.get(input.projectIdentity);
+        if(locals.metadata.projState == NOST_REGISTER_STATE) {
 
-                //
-                // Check is user is already registered, if not toggle the bit to 
-                // indicate success.  If user isn't in the listing add him and 
-                // set the registration bit.
-                //
-                if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
-                    locals.regFlag = locals.userFlags.get(input.projectIdentity);
+            //
+            // Check is user is already registered, if not toggle the bit to 
+            // indicate success.  If user isn't in the listing add him and 
+            // set the registration bit.
+            //
+            if (state.regTracking.get(qpi.invocator(), locals.userFlags)) {
+                locals.regFlag = locals.userFlags.get(input.projectIdentity);
 
-                    if (locals.regFlag == 1) {
-                        output.status = NOST_ALREADY_REGISTERED;
-                        return;
-                    }
-                    else {
-                        locals.userFlags.set(input.projectIdentity, 1);
-                        state.regTracking.set(qpi.invocator(), locals.userFlags);
-                        output.status = NOST_SUCCESS;
-                        return;
-                    }
+                if (locals.regFlag == 1) {
+                    output.status = NOST_ALREADY_REGISTERED;
+                    return;
                 }
                 else {
                     locals.userFlags.set(input.projectIdentity, 1);
-                    state.regTracking.set(qpi.invocator(), locals.userFlags);        
+                    state.regTracking.set(qpi.invocator(), locals.userFlags);
                     output.status = NOST_SUCCESS;
                     return;
                 }
-
             }
             else {
-                output.status = NOST_INVALID_STATE;
+                locals.userFlags.set(input.projectIdentity, 1);
+                state.regTracking.set(qpi.invocator(), locals.userFlags);        
+                output.status = NOST_SUCCESS;
                 return;
             }
+
+        }
+        else {
+            output.status = NOST_INVALID_STATE;
+            return;
         }
     _
 
