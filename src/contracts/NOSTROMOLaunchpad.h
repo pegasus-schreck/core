@@ -241,7 +241,7 @@ protected:
                     // and declare success.
                     //
                     if (locals.regFlag == 0) {
-                        ouput.status = NOST_SUCCESS;
+                        output.status = NOST_SUCCESS;
                         return;
                     }
                     else {
@@ -636,7 +636,7 @@ protected:
                     locals.metadata.projState = NOST_VOTE_STATE;
                     state.metadataMaster.set(locals.index, locals.metadata);
                 }
-                else if (locals.metadata.projectState == NOST_VOTE_STATE) {
+                else if (locals.metadata.projState == NOST_VOTE_STATE) {
                     
                     //
                     // Has been in voting for 1 epoch, check tally and set appropriately. 
