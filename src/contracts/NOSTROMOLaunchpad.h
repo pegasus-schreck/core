@@ -201,7 +201,7 @@ protected:
     struct unregForProject_locals {
         flags userFlags; 
         bit regFlag;
-        projMeta metadata;
+        projectMeta metadata;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(unregForProject)
@@ -259,7 +259,7 @@ protected:
     struct regForProject_locals {
         flags userFlags; 
         bit regFlag;
-        projMeta metadata;
+        projectMeta metadata;
         uint8 tier;
     }
 
