@@ -311,7 +311,7 @@ protected:
                     locals.regFlag = locals.userFlags.get(input.projectIdentity);
 
                     if (locals.regFlag == 1) {
-                        ouput.status = NOST_ALREADY_REGISTERED;
+                        output.status = NOST_ALREADY_REGISTERED;
                         return;
                     }
                     else {
