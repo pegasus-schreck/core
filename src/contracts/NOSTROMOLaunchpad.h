@@ -183,11 +183,24 @@ public:
     // Structures for voteProject method.
     //
     struct voteProject_input {
-        projectId: uint64,
-        vote: uint8
+        uint64 projectId;
+        uint8 vote;
     };
 
     struct voteProject_output {
+        uint8 status;
+    };
+
+    // 
+    // Structures foer checkProjectVote method,
+    //
+    struct checkProjectVote_input {
+        uint64 projectId;
+    };
+
+    struct checkProjectVote_output {
+        uint64 yesvotes;
+        uint64 novotes;
         uint8 status;
     };
 
@@ -589,7 +602,9 @@ protected:
             return;            
         }
 
-        // Check the user tier.
+        // Check the user tier, if they aren't yet in the array set
+        // it to invalid tier and do the same thing if their tier
+        // is NONE.
         if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
             if (locals.localTier == NOST_NONE) {
                 output.status = NOST_INVALID_TIER;
@@ -638,6 +653,22 @@ protected:
         output.status = NOST_SUCCESS;
     _    
 
+    struct checkProjectVote_locals {
+        projectMeta metadata;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(checkProjectVote)
+        if (input.projectId < state.projectNextId) {
+            locals.metadata = state.metadataMaster.get(input.projectId);
+            output.yesvotes = locals.metadata.yesvotes;
+            output.novotes = locals.metadata.novotes;
+            output.status = NOST_SUCCESS;
+        }
+        else {
+            output.status = NOST_INVALID_PROJECT_ID;
+        }
+    _
+
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
         REGISTER_USER_PROCEDURE(getProject, 2);
@@ -645,6 +676,7 @@ protected:
         REGISTER_USER_PROCEDURE(addUserTier, 4);
         REGISTER_USER_PROCEDURE(removeUserTier, 5);
         REGISTER_USER_PROCEDURE(voteProject, 6);
+        REGISTER_USER_PROCEDURE(checkProjectVote, 7);
     _
 
     INITIALIZE
