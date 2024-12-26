@@ -644,6 +644,7 @@ protected:
         REGISTER_USER_PROCEDURE(changeProjectState, 3);
         REGISTER_USER_PROCEDURE(addUserTier, 4);
         REGISTER_USER_PROCEDURE(removeUserTier, 5);
+        REGISTER_USER_PROCEDURE(voteProject, 6);
     _
 
     INITIALIZE
