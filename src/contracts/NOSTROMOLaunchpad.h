@@ -51,6 +51,13 @@ constexpr uint8 NOST_INVALID_STATE = 10;
 constexpr uint8 NOST_INVALID_TRANSITION = 11;
 constexpr uint8 NOST_ALREADY_REGISTERED = 12;
 constexpr uint8 NOST_NOT_REGISTERED = 13;
+constexpr uint8 NOST_ALREADY_VOTED = 14;
+
+//
+// Vote enums for consistency in code
+//
+constexpr uint8 NOST_NO_VOTE = 0;
+constexpr uint8 NOST_YES_VOTE = 1;
 
 struct NOST2
 {
@@ -169,6 +176,18 @@ public:
     };
 
     struct unregForProject_output {
+        uint8 status;
+    };
+
+    //
+    // Structures for voteProject method.
+    //
+    struct voteProject_input {
+        projectId: uint64,
+        vote: uint8
+    };
+
+    struct voteProject_output {
         uint8 status;
     };
 
@@ -548,6 +567,76 @@ protected:
 
         output.status = NOST_SUCCESS;
     _
+
+    struct voteProject_locals {
+        uint8 localTier;
+        projectMeta metadata;
+        flags votingList;
+    };
+
+    // To vote for a project
+    PUBLIC_PROCEDURE_WITH_LOCALS(voteProject)
+
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        if (input.projectId >= state.projectNextId) {
+            output.status = NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        }
+
+        // Check the user tier.
+        if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
+            if (locals.localTier == NOST_NONE) {
+                output.status = NOST_INVALID_TIER;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;            
+            }            
+        }
+        else {
+            output.status = NOST_INVALID_TIER;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        }
+
+        //
+        // Check current state to ensure we can vote.
+        //
+        locals.metadata = state.metadataMaster.get(input.projectId);
+
+        // Check the project is in VOTE phase
+        if (locals.metadata.projState != NOST_VOTE_STATE) {
+            output.status = NOST_INVALID_STATE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        if (state.voteTracking.get(qpi.invocator(),locals.votingList)) {
+            if (locals.votingList.get(input.projectId)) {
+                output.status = NOST_ALREADY_VOTED;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;
+            }
+            else {
+                if (input.vote) {
+                    locals.projectMeta.yesvotes += 1;
+                }
+                else {
+                    locals.projectMeta.novotes += 1;
+                }
+                locals.votingList.set(input.projectId, 1);
+                state.metadataMaster.set(input.projectId, locals.projectMeta);
+                state.voteTracking.set(qpi.invocator(), locals.votingList);
+            }
+
+        }
+
+        output.status = NOST_SUCCESS;
+    _    
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(createProject, 1);
