@@ -52,6 +52,7 @@ constexpr uint8 NOST_INVALID_TRANSITION = 11;
 constexpr uint8 NOST_ALREADY_REGISTERED = 12;
 constexpr uint8 NOST_NOT_REGISTERED = 13;
 constexpr uint8 NOST_ALREADY_VOTED = 14;
+constexpr uint8 NOST_REQUIRES_ADMIN = 15;
 
 //
 // Vote enums for consistency in code
@@ -192,7 +193,7 @@ public:
     };
 
     // 
-    // Structures foer checkProjectVote method,
+    // Structures foer checkProjectVote method
     //
     struct checkProjectVote_input {
         uint64 projectId;
@@ -203,6 +204,35 @@ public:
         uint64 novotes;
         uint8 status;
     };
+
+    //
+    // Structures for setting epoch counts
+    //
+    struct setPhaseOneEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseOneEpochs_output {
+        uint8 status;
+    };
+
+    struct setPhaseTwoEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseTwoEpochs_output {
+        uint8 status;
+    };
+
+    struct setPhaseThreeEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseThreeEpochs_output {
+        uint8 status;
+    };
+
+
 
 private:
 
@@ -235,11 +265,43 @@ private:
     typedef id isAdmin_input; 
     typedef bit isAdmin_output;
 
+    uint8 investPhaseOneEpochs;
+    uint8 investPhaseTwoEpochs;
+    uint8 investPhaseThreeEpochs;
+
     PRIVATE_FUNCTION(isAdmin)
         output = (qpi.invocator() == state.admin);
     _
 
 protected:
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseOneEpochs)
+
+    // TODO: admin check first
+        if( !isAdmin() ) {
+            output.status = NOST_REQUIRES_ADMIN;
+            return;
+        }
+
+        state.investPhaseOneEpochs = input.epochs;
+        output.status = NOST_SUCCESS;
+    _
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
+
+    // TODO: admin check first
+    
+        state.investPhaseTwoEpochs = input.epochs;
+        output.status = NOST_SUCCESS;
+    _
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseThreeEpochs)
+
+    // TODO: admin check first
+
+        state.investPhaseThreeEpochs = input.epochs;
+        output.status = NOST_SUCCESS;
+    _        
 
     struct unregForProject_locals {
         flags userFlags; 
@@ -696,6 +758,10 @@ protected:
         state.tiers.set(NOST_ALIEN, NOSTROMOTier{ 10, 75 });
         state.tiers.set(NOST_WARRIOR, NOSTROMOTier{ 30, 305 });
         state.tiers.set(NOST_QUEEN, NOSTROMOTier{ 100, 1375 });
+
+        state.investPhaseOneEpochs = 2;
+        state.investPhaseTwoEpochs = 1;
+        state.investPhaseThreeEpochs = 1;
     _
 
     
