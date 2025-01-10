@@ -24,7 +24,8 @@ constexpr uint8 NOST_BLOCKED = 7;
 constexpr uint8 NOST_ASK_MORE_INFORMATION = 8;
 constexpr uint8 NOST_PREINVEST_STATE = 9;
 constexpr uint8 NOST_PREPARE_VOTE = 10;
-constexpr uint8 NOST_DRAFT = 11;
+constexpr uint8 NOST_FUNDED = 11;
+constexpr uint8 NOST_DRAFT = 12;
 
 
 //
@@ -77,6 +78,9 @@ public:
         uint8 projState;
         uint64 yesvotes;
         uint64 novotes;
+        uint8 investPhaseOne;
+        uint8 investPhaseTwo;
+        uint8 investPhaseThree;
     };
 
     struct projectFinance {
@@ -273,12 +277,61 @@ private:
         output = (qpi.invocator() == state.admin);
     _
 
+    struct manageInvestTier_input {
+        projectMeta metadata;
+        uint64 projectId;
+    };
+
+    struct manageInvestTier_output {
+        uint8 status;
+    };
+
+    struct manageInvestTier_locals {
+        uint8 placeHolder;
+    };
+
+    PRIVATE_FUNCTION_WITH_LOCALS(manageInvestTier) 
+
+        if (input.metadata.projState == NOST_INVESTMENT_PHASE_1) {
+            if (input.metadata.investPhaseOne < state.investPhaseOneEpochs) {
+                
+                input.metadata.investPhaseOne += 1;
+            }
+            else {
+                input.metadata.projState = NOST_INVESTMENT_PHASE_2;
+                state.metadataMaster.set(input.projectId, input.metadata);
+            }
+        }
+        else if (input.metadata.projState == NOST_INVESTMENT_PHASE_2) {
+            if (input.metadata.investPhaseTwo < state.investPhaseTwoEpochs) {
+
+                input.metadata.investPhaseTwo += 1;
+            }
+            else {
+                state.metadataMaster.set(input.projectId, input.metadata);
+                input.metadata.projState = NOST_INVESTMENT_PHASE_3;
+            }
+        }
+        else if (input.metadata.projState == NOST_INVESTMENT_PHASE_3){
+            if (input.metadata.investPhaseThree < state.investPhaseThreeEpochs) {
+                
+                input.metadata.investPhaseThree += 1;
+            }
+            else {
+                
+            }
+        }
+        else {
+            output.status = NOST_INVALID_TIER;
+            return;
+        }
+    _
+
 protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseOneEpochs)
 
-    // TODO: admin check first
-        if( !isAdmin() ) {
+        if (!isAdmin()) {
             output.status = NOST_REQUIRES_ADMIN;
             return;
         }
@@ -289,15 +342,21 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
 
-    // TODO: admin check first
-    
+        if (!isAdmin()) {
+            output.status = NOST_REQUIRES_ADMIN;
+            return;
+        }
+
         state.investPhaseTwoEpochs = input.epochs;
         output.status = NOST_SUCCESS;
     _
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseThreeEpochs)
 
-    // TODO: admin check first
+        if (!isAdmin()) {
+            output.status = NOST_REQUIRES_ADMIN;
+            return;
+        }
 
         state.investPhaseThreeEpochs = input.epochs;
         output.status = NOST_SUCCESS;
@@ -451,6 +510,9 @@ protected:
         locals.metadata.projState = NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
+        locals.metadata.investPhaseOne = 0;
+        locals.metadata.investPhaseTwo = 0;
+        locals.metadata.investPhaseThree = 0;
 
         locals.financials.totalAmount = input.totalAmount;
         locals.financials.threshold = input.threshold;
@@ -613,15 +675,13 @@ protected:
         //
         // Validate if the user is already in a tier.
         //
-        if (state.userTiers.get(qpi.invocator(), locals.foundTier))
-        {
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier)){
             if(locals.foundTier == NOST_NONE) {
                 output.status = NOST_NO_TIER_FOUND;
                 return;
             }   
         }
-        else
-        {
+        else{
             output.status = NOST_USER_NOT_FOUND;
             return;
         }
@@ -791,6 +851,11 @@ protected:
                     state.preVoteProjects.set(locals.index, 0);
                 }
             }
+
+            if (state.investProjects.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
+                
+            }
         }        
     _
 
@@ -859,6 +924,11 @@ protected:
 
                 state.inRegistration.set(locals.index, 0);
                 state.investProjects.set(locals.index, 1);
+            }
+
+            if (state.investProjects.get(locals.index) == 1) {
+                locals.metadata = state.metadataMaster.get(locals.index);
+
             }
         }
     _
