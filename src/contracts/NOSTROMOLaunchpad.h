@@ -171,6 +171,31 @@ private:
     array<projectFinance,NOSTROMO_MAX_PROJECTS> projectFinanceList;
 
     //
+    // Type used for user tracking.  Two lists get created, one list for vote flagging, the other for
+    // investment flagging. 0 == NO & 1 == YES
+    //
+    typedef array<bit, NOSTROMO_MAX_PROJECTS> flags;
+
+    //
+    // HashMap indexed by wallet id.  Each id is mapped to an array that maps to max number of possible projects.
+    // If within the array a flag is toggled to 1 that means user has voted.  For example:
+    // flags[0] ... flags[1024] if a user votes for projectId 7 then the following occurs:
+    // flags[7] = 1;
+    // This indicates a vote has been cast by the user with a particular ID for projectId 7. 
+    //
+    QPI::HashMap<id, flags, NOSTROMO_MAX_USERS> voteTracking;
+
+    //
+    // HashMap indexed by wallet id.  Each id is mapped to an array that maps to max number of possible projects.
+    // If within the array a flag is toggled to 1 that means user has registered.  For example:
+    // flags[0] ... flags[1024] if a user registers for projectId 7 then the following occurs:
+    // flags[7] = 1;
+    // In the event a user unregisters then the flag is toggled back to a 0.  For example:
+    // flags[7] = 0;
+    //
+    QPI::HashMap<id, flags, NOSTROMO_MAX_USERS> regTracking;
+
+    //
     // Typedefs & method used to identify if current wallet is admin.
     //
     struct isAdmin_input {
@@ -183,6 +208,7 @@ private:
 
     PRIVATE_FUNCTION(isAdmin)
         output = (input.passedId == state.admin);
+        return;
     _
 
 protected:
@@ -248,6 +274,7 @@ protected:
         // Zero for status means life is good.
         //
         output.status = returnCodeNost.NOST_SUCCESS; 
+        return;
     _
 
     //
@@ -308,6 +335,7 @@ protected:
         state.stakedQubicsInContract -= locals.stakingTier.stakeAmount;
 
         output.status = returnCodeNost.NOST_SUCCESS;
+        return;
     _
 
     //
@@ -387,14 +415,16 @@ protected:
         //
         // Make sure the ID is at least within range of what has been stored thus far
         //
-        if (input.projectIdentity < state.projectNextId) {
+        if (input.projectIdentity >= state.projectNextId) {
             output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
         output.metadata = state.projectMetadataList.get(input.projectIdentity);
         output.finance = state.projectFinanceList.get(input.projectIdentity);
         output.status = returnCodeNost.NOST_SUCCESS;
+        return;
     _
 
     //
@@ -420,6 +450,7 @@ protected:
         //
         if (!isAdmin(qpi.invocator())) {
             output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
@@ -428,6 +459,7 @@ protected:
         //        
         if (state.projectNextId <= input.projectIdentity) {
             output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
@@ -443,6 +475,7 @@ protected:
                 return;
             }
             else {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 output.status = returnCodeNost.NOST_INVALID_TRANSITION;
                 return;
             }
@@ -461,6 +494,7 @@ protected:
                 return;                
             } 
             else {
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 output.status = returnCodeNost.NOST_INVALID_TRANSITION;
                 return;
             }
@@ -472,14 +506,123 @@ protected:
         // actions to ensure movement forward.
         //
         output.status = returnCodeNost.NOST_INVALID_TRANSITION;
+        return;
     _
 
+    //
+    // Structures and method used to register for a project.
+    //
+    struct regForProject_input {
+        uint64 projectIdentity;
+    };
+
+    struct regForProject_output {
+        returnCodeNost status;
+    };
+
+    struct regForProject_locals {
+        flags userFlags; 
+        projectMeta metadata;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(regForProject)
+
+        //
+        // Check is project ID is valid
+        //
+        if (input.projectIdentity >= state.projectNextId) {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+
+        //
+        // Make sure we are in the correct state
+        //
+        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
+    
+        if (locals.projectMeta.projectSt == projectState.NOST_REGISTER_STATE) {
+            //
+            // Check to see if user is in the registration list, if so are they
+            // registered yet?  If they aren't then add them and setup the registration.
+            //
+            if(state.regTracking.get(qpi.invocator(), locals.userFlags))
+                if (locals.userFlags.get(input.projectIdentity) == 1) {
+                    output.status = returnCodeNost.NOST_ALREADY_REGISTERED;
+                    qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                    return;
+                }
+                else {
+                    locals.userFlags.set(input.projectIdentity, 1);
+                    state.projectMetadataList.set(qpi.invocator(), locals.userFlags);
+                    output.status = returnCodeNost.NOST_SUCCESS;
+                    return;
+                }
+            }
+            else {
+                locals.userFlags.set(input.projectIdentity, 1);
+                state.projectMetadataList.set(qpi.invocator(), locals.userFlags);
+                output.status = returnCodeNost.NOST_SUCCESS;
+                return;
+            }
+        }
+        else {
+            output.status = returnCodeNost.NOST_INVALID_STATE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+    _
+
+    //
+    // Structures and method used to unregister for a project.
+    //
+    struct unregForProject_input {
+        uint64 projectIdentity;
+    };
+
+    struct unregForProject_output {
+        uint8 status;
+    };
+
+    struct unregForProject_locals {
+        flags userFlags; 
+        projectMeta metadata;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(unregForProject)
+        //
+        // Check is project ID is valid
+        //
+        if (input.projectIdentity >= state.projectNextId) {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+        
+        //
+        // Make sure we are in the correct state
+        //
+        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
+    
+        if (locals.projectMeta.projectSt == projectState.NOST_REGISTER_STATE) {
+            
+        }
+        else {
+            output.status = returnCodeNost.NOST_INVALID_STATE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
+        
+    _
 
 	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(addUserTier, 1);
         REGISTER_USER_PROCEDURE(removeUserTier, 2);
         REGISTER_USER_PROCEDURE(createProject, 3);
         REGISTER_USER_PROCEDURE(getProject, 4);
+        REGISTER_USER_PROCEDURE(changeProjectState, 5);
+        REGISTER_USER_PROCEDURE(regForProject, 6);
+        REGISTER_USER_PROCEDURE(unregForProject, 7);
     _
 
     INITIALIZE
