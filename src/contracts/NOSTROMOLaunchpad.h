@@ -64,8 +64,8 @@ enum returnCodeNost {
 // Vote enums for consistency in code
 //
 enum voteValue {
-    NOST_NO_VOTE = 0,
-    NOST_YES_VOTE = 1
+    NO_VOTE = 0,
+    YES_VOTE = 1
 };
 
 struct NOST2
@@ -242,23 +242,23 @@ protected:
         }
 
         //
-        // If user doesn't appear in map we continue to checks below,
-        // else check the tier and return error if one is set.
+        // We must check to ensure user has the proper balance or return error code. 
         //
-        if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-            if(locals.foundTier != tierLevel.NOST_NONE) {
-                output.status = returnCodeNost.NOST_TIER_ALREADY_SET;
+        if (state.tiers.get(input.tier, locals.stakingTier)) {
+            if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
+                output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
         }
 
         //
-        // We must check to ensure user has the proper balance or return error code. 
+        // If user appears in the map chck to see if he has a tier assigned.
+        // If it is NONE add new tier, if not we cannot assign the new tier.
         //
-        if (state.tiers.get(input.tier, locals.stakingTier)) {
-            if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
-                output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+        if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
+            if(locals.foundTier != tierLevel.NOST_NONE) {
+                output.status = returnCodeNost.NOST_TIER_ALREADY_SET;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
@@ -528,6 +528,16 @@ protected:
     PUBLIC_PROCEDURE_WITH_LOCALS(regForProject)
 
         //
+        // Ensure proper balance transfer attempted or return
+        // an error code.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());     
+            return;
+        }  
+    
+        //
         // Check is project ID is valid
         //
         if (input.projectIdentity >= state.projectNextId) {
@@ -546,7 +556,7 @@ protected:
             // Check to see if user is in the registration list, if so are they
             // registered yet?  If they aren't then add them and setup the registration.
             //
-            if(state.regTracking.get(qpi.invocator(), locals.userFlags))
+            if(state.regTracking.get(qpi.invocator(), locals.userFlags)) {
                 if (locals.userFlags.get(input.projectIdentity) == 1) {
                     output.status = returnCodeNost.NOST_ALREADY_REGISTERED;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
@@ -554,14 +564,14 @@ protected:
                 }
                 else {
                     locals.userFlags.set(input.projectIdentity, 1);
-                    state.projectMetadataList.set(qpi.invocator(), locals.userFlags);
+                    state.regTracking.set(qpi.invocator(), locals.userFlags);
                     output.status = returnCodeNost.NOST_SUCCESS;
                     return;
                 }
             }
             else {
                 locals.userFlags.set(input.projectIdentity, 1);
-                state.projectMetadataList.set(qpi.invocator(), locals.userFlags);
+                state.regTracking.set(qpi.invocator(), locals.userFlags);
                 output.status = returnCodeNost.NOST_SUCCESS;
                 return;
             }
@@ -581,7 +591,7 @@ protected:
     };
 
     struct unregForProject_output {
-        uint8 status;
+        returnCodeNost status;
     };
 
     struct unregForProject_locals {
@@ -590,6 +600,17 @@ protected:
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(unregForProject)
+
+        //
+        // Ensure proper balance transfer attempted or return
+        // an error code.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());     
+            return;
+        }
+
         //
         // Check is project ID is valid
         //
@@ -605,17 +626,83 @@ protected:
         locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
     
         if (locals.projectMeta.projectSt == projectState.NOST_REGISTER_STATE) {
-            
+            //
+            // Check to see if user is in the registration list, if so are they
+            // registered yet?  If they aren't indicate operation is not necessary
+            // otherwise set the flag appropriately and move on.
+            //
+            if(state.regTracking.get(qpi.invocator(), locals.userFlags)) {
+                if (locals.userFlags.get(input.projectIdentity) == 0) {
+                    output.status = returnCodeNost.NOST_NOT_REGISTERED;
+                    qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                    return;
+                }
+                else {
+                    locals.userFlags.set(input.projectIdentity, 0);
+                    state.regTracking.set(qpi.invocator(), locals.userFlags);
+                    output.status = returnCodeNost.NOST_SUCCESS;
+                    return;
+                }
+            }
+            else {
+                locals.userFlags.set(input.projectIdentity, 0);
+                state.regTracking.set(qpi.invocator(), locals.userFlags);
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                output.status = returnCodeNost.NOST_NOT_REGISTERED;
+                return;
+            }            
         }
         else {
             output.status = returnCodeNost.NOST_INVALID_STATE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
+
+    _
+
+    //
+    // Structures and method used to vote for a project.
+    //
+    struct voteProject_input {
+        uint64 projectId;
+        voteValue vote;
+    };
+
+    struct voteProject_output {
+        returnCodeNost status;
+    };
+
+    struct voteProject_locals {
+        tierLevel localTier;
+        projectMeta metadata;
+        flags votingList;
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(voteProject)
+
+        //
+        // Ensure proper balance transfer attempted or return
+        // an error code.
+        //
+        if (qpi.invocationReward() < state.transactionFee) {
+            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());     
+            return;
+        }
+        
+        //
+        // Make sure its a valid project
+        //
+        if (input.projectId >= state.projectNextId) {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        }        
+
         
     _
 
-	REGISTER_USER_FUNCTIONS_AND_PROCEDURES
+    REGISTER_USER_FUNCTIONS_AND_PROCEDURES
         REGISTER_USER_PROCEDURE(addUserTier, 1);
         REGISTER_USER_PROCEDURE(removeUserTier, 2);
         REGISTER_USER_PROCEDURE(createProject, 3);
