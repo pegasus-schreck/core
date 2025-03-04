@@ -109,23 +109,40 @@ public:
     //
     // Structure used to hold financial data related to a project:
     //
-    // totalAmount : total tokens allocated for project in createProject method
+    // totalAmount : total amount to be raised for project
     // threshold : decimal representing % of threshold between min and max caps 
     // tokenPrice : initial token price set in createProject method
+    // raisedAmount : raised amount in dollars
     // raiseInQubics : number of Qubics allocated during project raise
     // tokensInSale : number of tokens allocated during initial sale
     //
     struct projectFinance {
-        uint64 totalAmount;
+        double totalAmount;
         float threshold;
         uint64 tokenPrice;
-        uint8 raiseInQubics;
+        uint64 raisedAmount;
+        uint64 raiseInQubics;
         uint64 tokensInSale;
-    };    
+    };
+    
+    //
+    // Used to keep track of project min & max caps for investment levels.
+    //
+    struct projectCapPairs {
+        double minCap;
+        double maxCap;
+    }
 
 private:
 
-//
+    //
+    // Used to track the caps for each project.  Caps are calculated as follows:
+    // Target amount to raise - threshold = min cap
+    // Target amount to raise + threshold = max cap
+    //
+    array<projectCapPairs, NOSTROMO_MAX_PROJECTS> capTracker;
+
+    //
     // State hash map to manage tier information
     //
     QPI::HashMap<tierLevel, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;
@@ -177,6 +194,14 @@ private:
     typedef array<bit, NOSTROMO_MAX_PROJECTS> flags;
 
     //
+    // Type used for tracking each user's investments.  The array represents an investment pattern per
+    // user.  For example if a user invests in a project with projectId of 9 then we would set the value
+    // at index 9 to be their investment amount.  This allows us to track a user's investments across all
+    // projects.
+    //
+    typedef array<float, NOSTROMO_MAX_PROJECTS> investments;
+
+    //
     // HashMap indexed by wallet id.  Each id is mapped to an array that maps to max number of possible projects.
     // If within the array a flag is toggled to 1 that means user has voted.  For example:
     // flags[0] ... flags[1024] if a user votes for projectId 7 then the following occurs:
@@ -196,6 +221,14 @@ private:
     QPI::HashMap<id, flags, NOSTROMO_MAX_USERS> regTracking;
 
     //
+    // Hashmap indexed by wallet id.  Each id is mapped to an array representing that users investment 
+    // activity for example a user invests in a projects with project IDs of 4, 9 and 25 we would set
+    // the values appropriately for that in their investment array and then associate it to their id
+    // in this HashMap.
+    //
+    QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
+
+    //
     // Typedefs & method used to identify if current wallet is admin.
     //
     struct isAdmin_input {
@@ -208,6 +241,70 @@ private:
 
     PRIVATE_FUNCTION(isAdmin)
         output = (input.passedId == state.admin);
+        return;
+    _
+
+    //
+    // Structures and method for calculating perUse.
+    //
+    // This method will walk through the registration list and for any user
+    // registered the following will occur:
+    //
+    // 1. User's tier is extracted
+    // 2. The pool weight is determined for each and a running total is created
+    //
+    // The output of the procedure will be used to calculate investment per tier.
+    //
+    struct calculatePerUse_input {
+        uint64 projectId;
+    };
+
+    struct calculatePerUse_output {
+        returnCodeNost status;
+        double totalPerUse;
+    };
+
+    struct calculatePerUse_locals {
+        uint64 index;
+        flags userReg;
+        id wallet;
+        tierLevel tier;
+        double perUse;
+        nostromoTier usersTier;
+    };
+
+    PRIVATE_PROCEDURE_WITH_LOCALS(calculatePerUse)
+
+        //
+        // Make sure the ID is at least within range of what has been stored thus far
+        //        
+        if (state.projectNextId <= input.projectIdentity) {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            output.totalPerUse = 0.0;
+            return;
+        }
+        
+        //
+        // Traverse the Hashmap and check each users registration status for investment.  If
+        // they are registered to invest we need to grab their tier and tabulate the per use value for
+        // the project.
+        //
+        locals.perUse = 0.0;
+
+        for(locals.index = 0; locals.index < state.regTracking.capacity(); locals.index++) {
+            locals.userReg = state.regTracking.value(locals.index);
+
+            if(locals.userReg.get(input.projectId) == 1) {
+                locals.wallet = state.regTracking.key(index);
+                locals.tier = state.userTiers.get(locals.wallet);
+                state.tiers.get(locals.tier, locals.usersTier);
+                locals.perUse += locals.usersTier.stakeAmount;
+            }
+        }
+
+        output.totalPerUse = locals.perUse;
+        output.status = returnCodeNost.NOST_SUCCESS;
         return;
     _
 
@@ -380,6 +477,7 @@ protected:
         locals.financials.totalAmount = input.financeInput.totalAmount;
         locals.financials.threshold = input.financeInput.threshold;
         locals.financials.tokenPrice = input.financeInput.tokenPrice;
+        locals.financials.raisedAmount = input.financeInput.raisedAmount;
         locals.financials.raiseInQubics = input.financeInput.raiseInQubics;
         locals.financials.tokensInSale = input.financeInput.tokensInSale;
  
@@ -676,6 +774,7 @@ protected:
         tierLevel localTier;
         projectMeta metadata;
         flags votingList;
+
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(voteProject)
@@ -699,10 +798,198 @@ protected:
             return;            
         }        
 
-        
+        //
+        // Make sure the user is listed has a vote tier.  If we pass those 
+        // conditions we carry on. 
+        //   
+        if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
+            if (locals.localTier == tierLevel.NOST_NONE) {
+                output.status = returnCodeNost.NOST_INVALID_TIER;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;            
+            }       
+            else {
+                //
+                // Get the project metadata and make sure we are in the vote state
+                //
+                locals.metadata = state.projectMetadataList.get(input.projectId);
+
+                if (locals.metadata.projectSt != tierLevel.NOST_VOTE_STATE) {
+                    output.status = returnCodeNost.NOST_INVALID_STATE;
+                    qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                    return;
+                }
+                else {
+                    //
+                    // Check to see if user has voted, if so do nothing otherwise process
+                    // the vote and increment the appropriate counter.
+                    //
+                    if (state.voteTracking.get(qpi.invocator(),locals.votingList)) {
+                        if (locals.votingList.get(input.projectId) == 0) {
+                            locals.votingList.set(input.projectId, 1);
+
+                            //
+                            // Apply vote to appropriate counter.
+                            //
+                            if (input.vote == voteValue.NO_VOTE) {
+                                locals.metadata.novotes += 1;
+                            }
+                            else {
+                                locals.metadata.yesvotes += 1;
+                            }
+
+                            //
+                            // Assign vote list and metadata update to state variables.
+                            //
+                            state.voteTracking.set(qpi.invocator(), locals.votingList);
+                            state.projectMetadataList.set(input.projectId, locals.metadata);
+                            output.status = returnCodeNost.NOST_SUCCESS;
+                            return;
+                        }
+                        else {
+                            output.status = returnCodeNost.NOST_ALREADY_VOTED;
+                            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                            return;
+                        }
+                    }
+                    else {
+                        output.status = returnCodeNost.NOST_INVALID_TIER;
+                        qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                        return;                         
+                    }
+                }
+            }     
+        }
+        else {
+            output.status = returnCodeNost.NOST_INVALID_TIER;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        }
+
+    _
+
+    //
+    // Structures and method used to check on a projects vote.
+    //
+    struct checkProjectVote_input {
+        uint64 projectId;
+    };
+
+    struct checkProjectVote_output {
+        uint64 yesvotes;
+        uint64 novotes;
+        uint8 status;
+    };
+
+    struct checkProjectVote_locals {
+        projectMeta metadata;
+    };
+    
+    PUBLIC_PROCEDURE_WITH_LOCALS(checkProjectVote)
+
+        //
+        // Just make sure the ProjectId is valid and grab the respective vote
+        // counts for yes and no.
+        //
+        if (input.projectId < state.projectNextId) {
+            locals.metadata = state.projectMetadataList.get(input.projectId);
+            output.yesvotes = locals.metadata.yesvotes;
+            output.novotes = locals.metadata.novotes;
+            output.status = returnCodeNost.NOST_SUCCESS;
+        }
+        else {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+        }
+        return;
+    _
+
+    //
+    // Methods and structures used by an admin to set the epoch counts
+    // for each investment phase.  
+    // 
+    struct setPhaseOneEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseOneEpochs_output {
+        returnCodeNost status;
+    };
+
+    PUBLIC_PROCEDURE(setPhaseOneEpochs)
+
+        if (!isAdmin(qpi.invocator())) {
+            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            return;
+        }
+
+        state.investPhaseOneEpochs = input.epochs;
+        output.status = returnCodeNost.NOST_SUCCESS;
+        return;
+    _
+
+    struct setPhaseTwoEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseTwoEpochs_output {
+        returnCodeNost status;
+    };
+
+    PUBLIC_PROCEDURE(setPhaseTwoEpochs)
+
+        if (!isAdmin(qpi.invocator())) {
+            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            return;
+        }
+
+        state.investPhaseTwoEpochs = input.epochs;
+        output.status = returnCodeNost.NOST_SUCCESS;
+        return;
+    _
+
+    struct setPhaseThreeEpochs_input {
+        uint8 epochs;
+    };
+
+    struct setPhaseThreeEpochs_output {
+        returnCodeNost status;
+    };
+
+    PUBLIC_PROCEDURE(setPhaseThreeEpochs)
+
+        if (!isAdmin(qpi.invocator())) {
+            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            return;
+        }
+
+        state.investPhaseThreeEpochs = input.epochs;
+        output.status = returnCodeNost.NOST_SUCCESS;
+        return;
+    _    
+
+    //
+    // Structures and methods used to invest in a project.
+    //
+    struct investInProject_input {
+        uint64 projectId;
+        uint64 investmentAmount;
+    };
+
+    struct investInProject_output {
+
+    };
+
+    struct investInProject_locals {
+
+    };
+
+    PUBLIC_PROCEDURE_WITH_LOCALS(investInProject)
+
+
     _
 
     REGISTER_USER_FUNCTIONS_AND_PROCEDURES
+
         REGISTER_USER_PROCEDURE(addUserTier, 1);
         REGISTER_USER_PROCEDURE(removeUserTier, 2);
         REGISTER_USER_PROCEDURE(createProject, 3);
@@ -710,6 +997,12 @@ protected:
         REGISTER_USER_PROCEDURE(changeProjectState, 5);
         REGISTER_USER_PROCEDURE(regForProject, 6);
         REGISTER_USER_PROCEDURE(unregForProject, 7);
+        REGISTER_USER_PROCEDURE(voteProject, 8);
+        REGISTER_USER_PROCEDURE(checkProjectVote, 9);
+        REGISTER_USER_PROCEDURE(setPhaseOneEpochs, 10);
+        REGISTER_USER_PROCEDURE(setPhaseTwoEpochs, 11);
+        REGISTER_USER_PROCEDURE(checkProjectVote, 12);            
+
     _
 
     INITIALIZE
