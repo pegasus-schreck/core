@@ -872,7 +872,7 @@ protected:
                             //
                             // Apply vote to appropriate counter.
                             //
-                            if (input.vote == voteValue.NO_VOTE) {
+                            if (input.vote == voteValue::NO_VOTE) {
                                 locals.metadata.novotes += 1;
                             }
                             else {
