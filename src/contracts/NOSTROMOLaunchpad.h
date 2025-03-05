@@ -229,7 +229,8 @@ private:
     QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
 
     //
-    // Epoch state variables for tracking
+    // Epoch state variables for tracking, this will be used to determine how many epochs each
+    // phase will last, can be modified by admin only.
     //
     uint8 investPhaseOneEpochs;
     uint8 investPhaseTwoEpochs;
