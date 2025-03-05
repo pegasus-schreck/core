@@ -606,7 +606,7 @@ protected:
         // We should allow the state change if are in Draft or Ask for more information as the project is being promoted to next step,
         // we update the project metadata and exit method, else this is an invalid state transition.
         if (input.newProjectState == projectState::NOST_PREPARE_VOTE) {
-            projectMetadataList.get(input.projectIdentity, locals.localMeta);
+            locals.localMeta = projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
                 locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
                 projectMetadataList.set(input.projectIdentity, locals.localMeta);
@@ -855,7 +855,7 @@ protected:
                 //
                 locals.metadata = state.projectMetadataList.get(input.projectId);
 
-                if (locals.metadata.projectSt != tierLevel::NOST_VOTE_STATE) {
+                if (locals.metadata.projectSt != projectState::NOST_VOTE_STATE) {
                     output.status = returnCodeNost::NOST_INVALID_STATE;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
                     return;
@@ -1023,7 +1023,7 @@ protected:
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
-        
+
         state.investPhaseThreeEpochs = input.epochs;
         output.status = returnCodeNost::NOST_SUCCESS;
         return;
