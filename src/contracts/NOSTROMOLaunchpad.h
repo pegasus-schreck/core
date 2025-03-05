@@ -340,7 +340,7 @@ private:
         //
         // Make sure the ID is at least within range of what has been stored thus far
         //        
-        if (state.projectNextId <= input.projectIdentity) {
+        if (state.projectNextId <= input.projectId) {
             output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             output.projectCaps.minCap = 0.0;
             output.projectCaps.maxCap = 0.0;
@@ -351,17 +351,10 @@ private:
         // We have identified that the projectId is valid, pull the necessary financial/metadata
         // and calculate the caps and add them to the array for tracking based on projectId.
         //
-        if (state.projectFinanceList.get(input.projectId, locals.financials)) {
-            output.projectCaps.minCap = (1.0 - locals.financials.threshold) * locals.financials.totalAmount;
-            output.projectCaps.maxCap = (1.0 + locals.financials.threshold) * locals.financials.totalAmount;            
-        }
-        else {
-            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
-            output.projectCaps.minCap = 0.0;
-            output.projectCaps.maxCap = 0.0;
-            return;            
-        }
-        
+        locals.financials = state.projectFinanceList.get(input.projectId);
+        output.projectCaps.minCap = (1.0 - locals.financials.threshold) * locals.financials.totalAmount;
+        output.projectCaps.maxCap = (1.0 + locals.financials.threshold) * locals.financials.totalAmount;            
+        output.status = returnCodeNost::NOST_SUCCESS;
     _
 
 protected:
