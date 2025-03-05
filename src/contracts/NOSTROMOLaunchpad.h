@@ -974,9 +974,15 @@ protected:
         returnCodeNost status;
     };
 
+    struct setPhaseOneEpochs_locals {
+        bit result;
+    }
+
     PUBLIC_PROCEDURE(setPhaseOneEpochs)
 
-        if (!isAdmin(qpi.invocator())) {
+        isAdmin(qpi.invocator(), locals.result);
+
+        if (locals.result == 0) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
@@ -994,9 +1000,15 @@ protected:
         returnCodeNost status;
     };
 
+    struct setPhaseTwoEpochs_locals {
+        bit result;
+    }    
+
     PUBLIC_PROCEDURE(setPhaseTwoEpochs)
 
-        if (!isAdmin(qpi.invocator())) {
+        isAdmin(qpi.invocator(), locals.result);
+
+        if (locals.result == 0) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
@@ -1014,9 +1026,15 @@ protected:
         returnCodeNost status;
     };
 
-    PUBLIC_PROCEDURE(setPhaseThreeEpochs)
+    struct setPhaseThreeEpochs_locals {
+        bit result;
+    }
 
-        if (!isAdmin(qpi.invocator())) {
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseThreeEpochs)
+
+        isAdmin(qpi.invocator(), locals.result);
+
+        if (locals.result == 0) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
