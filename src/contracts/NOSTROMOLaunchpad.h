@@ -919,7 +919,7 @@ protected:
     struct checkProjectVote_output {
         uint64 yesvotes;
         uint64 novotes;
-        uint8 status;
+        returnCodeNost status;
     };
 
     struct checkProjectVote_locals {
@@ -936,7 +936,7 @@ protected:
             locals.metadata = state.projectMetadataList.get(input.projectId);
             output.yesvotes = locals.metadata.yesvotes;
             output.novotes = locals.metadata.novotes;
-            output.status = returnCodeNost.NOST_SUCCESS;
+            output.status = returnCodeNost::NOST_SUCCESS;
         }
         else {
             output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
