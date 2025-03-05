@@ -131,9 +131,9 @@ public:
     struct projectCapPairs {
         double minCap;
         double maxCap;
-    }
+    };
 
-protected:
+private:
 
     //
     // Used to track the caps for each project.  Caps are calculated as follows:
