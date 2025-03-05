@@ -240,7 +240,7 @@ private:
     };
 
     PRIVATE_FUNCTION(isAdmin)
-        output = (input.passedId == state.admin);
+        output.status = (input.passedId == state.admin);
         return;
     _
 
