@@ -588,7 +588,10 @@ protected:
         //
         // Only admin can advance a project state or it is done implicitly by contract
         //
-        EXPECT_EQ(qpi.invocator(), state.admin);
+        if (qpi.invocator() != state.admin) {
+            output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
+            return;
+        }
 
         //
         // Make sure the ID is at least within range of what has been stored thus far
@@ -985,7 +988,7 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
 
-        if (!qpi.invocator() == state.admin) {
+        if (qpi.invocator() == state.admin) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
