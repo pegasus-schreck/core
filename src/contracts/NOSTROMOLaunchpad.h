@@ -644,7 +644,7 @@ protected:
         if (input.newProjectState == projectState::NOST_ASK_MORE_INFORMATION) {
             locals.localMeta = projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_BLOCKED) {
-                locals.localMeta.projectSt = projectState::NOST_NOST_DRAFT;
+                locals.localMeta.projectSt = projectState::NOST_DRAFT;
                 projectMetadataList.set(input.projectIdentity, locals.localMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;                
@@ -705,7 +705,7 @@ protected:
         //
         // Make sure we are in the correct state
         //
-        locals.metadata = state.projectMetadataList.get(input.projectIdentity)
+        locals.metadata = state.projectMetadataList.get(input.projectIdentity);
     
         if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
             //
@@ -779,7 +779,7 @@ protected:
         //
         // Make sure we are in the correct state
         //
-        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
+        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity);
     
         if (locals.projectMeta.projectSt == projectState::NOST_REGISTER_STATE) {
             //
@@ -872,7 +872,7 @@ protected:
                 //
                 locals.metadata = state.projectMetadataList.get(input.projectId);
 
-                if (locals.metadata.projectSt != tierLevel.NOST_VOTE_STATE) {
+                if (locals.metadata.projectSt != tierLevel::NOST_VOTE_STATE) {
                     output.status = returnCodeNost::NOST_INVALID_STATE;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
                     return;
