@@ -133,7 +133,7 @@ public:
         double maxCap;
     }
 
-private:
+protected:
 
     //
     // Used to track the caps for each project.  Caps are calculated as follows:
