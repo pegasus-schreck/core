@@ -626,7 +626,7 @@ protected:
             locals.localMeta = projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
                 locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
-                projectMetadataList.set(input.projectIdentity, locals.projectMeta);
+                projectMetadataList.set(input.projectIdentity, locals.localMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;
             }
@@ -642,10 +642,10 @@ protected:
         // request this while in the vote or investment stages.
         //
         if (input.newProjectState == projectState::NOST_ASK_MORE_INFORMATION) {
-            locals.projectMeta = projectMetadataList.get(input.projectIdentity)
+            locals.localMeta = projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_BLOCKED) {
                 locals.localMeta.projectSt = projectState::NOST_NOST_DRAFT;
-                projectMetadataList.set(input.projectIdentity, locals.projectMeta);
+                projectMetadataList.set(input.projectIdentity, locals.localMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;                
             } 
@@ -705,9 +705,9 @@ protected:
         //
         // Make sure we are in the correct state
         //
-        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
+        locals.metadata = state.projectMetadataList.get(input.projectIdentity)
     
-        if (locals.projectMeta.projectSt == projectState::NOST_REGISTER_STATE) {
+        if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
             //
             // Check to see if user is in the registration list, if so are they
             // registered yet?  If they aren't then add them and setup the registration.
