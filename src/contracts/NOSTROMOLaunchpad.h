@@ -236,29 +236,6 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
-
-    //
-    // Typedefs & method used to identify if current wallet is admin.
-    //
-    struct isAdmin_input {
-        id passedId;
-    };
-
-    struct isAdmin_output {
-        uint8 status;
-    };
-
-    PRIVATE_FUNCTION(isAdmin)
-        
-        if(input.passedId == state.admin) {
-            output.status = 1;
-        }
-        else {
-            output.status = 0;
-        }
-        return;
-    _
-
     //
     // Structures and method for calculating perUse.
     //
@@ -1008,9 +985,7 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
 
-        isAdmin(qpi.invocator(), locals.result);
-
-        if (locals.result == 0) {
+        if (!qpi.invocator() == state.admin) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
