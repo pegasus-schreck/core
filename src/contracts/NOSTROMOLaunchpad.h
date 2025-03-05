@@ -978,7 +978,7 @@ protected:
         bit result;
     };
 
-    PUBLIC_PROCEDURE(setPhaseOneEpochs)
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseOneEpochs)
 
         isAdmin(qpi.invocator(), locals.result);
 
@@ -1004,7 +1004,7 @@ protected:
         bit result;
     };    
 
-    PUBLIC_PROCEDURE(setPhaseTwoEpochs)
+    PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
 
         isAdmin(qpi.invocator(), locals.result);
 
