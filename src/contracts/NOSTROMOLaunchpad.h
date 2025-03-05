@@ -1073,11 +1073,11 @@ protected:
         // Initialize the tier information.
         //
         state.tiers.reset();
-        state.tiers.set(tierLevel.NOST_EGG, nostromoTier{ 1, 5.5 });
-        state.tiers.set(tierLevel.NOST_DOG, nostromoTier{ 5, 30.0 });
-        state.tiers.set(tierLevel.NOST_ALIEN, nostromoTier{ 10, 75.0 });
-        state.tiers.set(tierLevel.NOST_WARRIOR, nostromoTier{ 30, 305.0 });
-        state.tiers.set(tierLevel.NOST_QUEEN, nostromoTier{ 100, 1375.0 });
+        state.tiers.set(tierLevel::NOST_EGG, nostromoTier{ 1, 5.5 });
+        state.tiers.set(tierLevel::NOST_DOG, nostromoTier{ 5, 30.0 });
+        state.tiers.set(tierLevel::NOST_ALIEN, nostromoTier{ 10, 75.0 });
+        state.tiers.set(tierLevel::NOST_WARRIOR, nostromoTier{ 30, 305.0 });
+        state.tiers.set(tierLevel::NOST_QUEEN, nostromoTier{ 100, 1375.0 });
 
         //
         // Initialize key state variables.
