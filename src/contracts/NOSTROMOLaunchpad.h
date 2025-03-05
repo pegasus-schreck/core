@@ -279,7 +279,7 @@ private:
         // Make sure the ID is at least within range of what has been stored thus far
         //        
         if (state.projectNextId <= input.projectId) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             output.totalPerUse = 0.0;
             return;
@@ -304,7 +304,7 @@ private:
         }
 
         output.totalPerUse = locals.perUse;
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
 
@@ -341,7 +341,7 @@ private:
         // Make sure the ID is at least within range of what has been stored thus far
         //        
         if (state.projectNextId <= input.projectIdentity) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             output.projectCaps.minCap = 0.0;
             output.projectCaps.maxCap = 0.0;
             return;
@@ -356,7 +356,7 @@ private:
             output.projectCaps.maxCap = (1.0 + locals.financials.threshold) * locals.financials.totalAmount;            
         }
         else {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             output.projectCaps.minCap = 0.0;
             output.projectCaps.maxCap = 0.0;
             return;            
@@ -389,7 +389,7 @@ protected:
         // an error code.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }
@@ -399,7 +399,7 @@ protected:
         //
         if (state.tiers.get(input.tier, locals.stakingTier)) {
             if(locals.stakingTier.stakeAmount + state.transactionFee != qpi.invocationReward()) {
-                output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+                output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
@@ -410,8 +410,8 @@ protected:
         // If it is NONE add new tier, if not we cannot assign the new tier.
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier)) {
-            if(locals.foundTier != tierLevel.NOST_NONE) {
-                output.status = returnCodeNost.NOST_TIER_ALREADY_SET;
+            if(locals.foundTier != tierLevel::NOST_NONE) {
+                output.status = returnCodeNost::NOST_TIER_ALREADY_SET;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }
@@ -426,7 +426,7 @@ protected:
         //
         // Zero for status means life is good.
         //
-        output.status = returnCodeNost.NOST_SUCCESS; 
+        output.status = returnCodeNost::NOST_SUCCESS; 
         return;
     _
 
@@ -452,7 +452,7 @@ protected:
         // Check to ensure user has sufficient balance.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -461,14 +461,14 @@ protected:
         // Validate if the user is already in a tier.
         //
         if (state.userTiers.get(qpi.invocator(), locals.foundTier)){
-            if(locals.foundTier == tierLevel.NOST_NONE) {
-                output.status = returnCodeNost.NOST_NO_TIER_FOUND;
+            if(locals.foundTier == tierLevel::NOST_NONE) {
+                output.status = returnCodeNost::NOST_NO_TIER_FOUND;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;
             }   
         }
         else {
-            output.status = returnCodeNost.NOST_USER_NOT_FOUND;
+            output.status = returnCodeNost::NOST_USER_NOT_FOUND;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -487,7 +487,7 @@ protected:
         // Update the staked qubics amount
         state.stakedQubicsInContract -= locals.stakingTier.stakeAmount;
 
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
 
@@ -514,7 +514,7 @@ protected:
         // Ensure user has proper funds for project creation
         //
         if (qpi.invocationReward() < (state.transactionFee + state.projectFee)) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -523,7 +523,7 @@ protected:
         // Setup local structures and store them in the maintenance arrays
         //
         locals.metadata.owner = qpi.invocator();
-        locals.metadata.projState = projectState.NOST_DRAFT;
+        locals.metadata.projState = projectState::NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
         locals.metadata.investPhaseOne = 0;
@@ -548,7 +548,7 @@ protected:
         //
         output.prodId = state.projectNextId;
         state.projectNextId += 1;
-        output.status = returnCodeNost.NOST_SUCCESS;   
+        output.status = returnCodeNost::NOST_SUCCESS;   
     _ 
 
     //
@@ -570,14 +570,14 @@ protected:
         // Make sure the ID is at least within range of what has been stored thus far
         //
         if (input.projectIdentity >= state.projectNextId) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
 
         output.metadata = state.projectMetadataList.get(input.projectIdentity);
         output.finance = state.projectFinanceList.get(input.projectIdentity);
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
 
@@ -603,7 +603,7 @@ protected:
         // Only admin can advance a project state or it is done implicitly by contract
         //
         if (!isAdmin(qpi.invocator())) {
-            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -612,7 +612,7 @@ protected:
         // Make sure the ID is at least within range of what has been stored thus far
         //        
         if (state.projectNextId <= input.projectIdentity) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -620,17 +620,17 @@ protected:
         //
         // We should allow the state change if are in Draft or Ask for more information as the project is being promoted to next step,
         // we update the project metadata and exit method, else this is an invalid state transition.
-        if (input.newProjectState == projectState.NOST_PREPARE_VOTE) {
+        if (input.newProjectState == projectState::NOST_PREPARE_VOTE) {
             locals.projectMeta = projectMetadataList.get(input.projectIdentity)
-            if (locals.projectMeta.projectSt == projectState.NOST_DRAFT || locals.projectMeta.projectSt == projectState.NOST_ASK_MORE_INFORMATION) {
-                locals.projectMeta.projectSt = projectState.NOST_PREPARE_VOTE;
+            if (locals.projectMeta.projectSt == projectState::NOST_DRAFT || locals.projectMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
+                locals.projectMeta.projectSt = projectState::NOST_PREPARE_VOTE;
                 projectMetadataList.set(input.projectIdentity, locals.projectMeta);
-                output.status = returnCodeNost.NOST_SUCCESS;
+                output.status = returnCodeNost::NOST_SUCCESS;
                 return;
             }
             else {
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
-                output.status = returnCodeNost.NOST_INVALID_TRANSITION;
+                output.status = returnCodeNost::NOST_INVALID_TRANSITION;
                 return;
             }
         }
@@ -639,17 +639,17 @@ protected:
         // A transition to asking for more info can only come from a draft or blocked state.  We cannot
         // request this while in the vote or investment stages.
         //
-        if (input.newProjectState == projectState.NOST_ASK_MORE_INFORMATION) {
+        if (input.newProjectState == projectState::NOST_ASK_MORE_INFORMATION) {
             locals.projectMeta = projectMetadataList.get(input.projectIdentity)
-            if (locals.projectMeta.projectSt == projectState.NOST_DRAFT || locals.projectMeta.projectSt == projectState.NOST_BLOCKED) {
-                locals.projectMeta.projectSt = projectState.NOST_NOST_DRAFT;
+            if (locals.projectMeta.projectSt == projectState::NOST_DRAFT || locals.projectMeta.projectSt == projectState::NOST_BLOCKED) {
+                locals.projectMeta.projectSt = projectState::NOST_NOST_DRAFT;
                 projectMetadataList.set(input.projectIdentity, locals.projectMeta);
-                output.status = returnCodeNost.NOST_SUCCESS;
+                output.status = returnCodeNost::NOST_SUCCESS;
                 return;                
             } 
             else {
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
-                output.status = returnCodeNost.NOST_INVALID_TRANSITION;
+                output.status = returnCodeNost::NOST_INVALID_TRANSITION;
                 return;
             }
         }
@@ -659,7 +659,7 @@ protected:
         // based on contract rules.  Other states should require automated SC
         // actions to ensure movement forward.
         //
-        output.status = returnCodeNost.NOST_INVALID_TRANSITION;
+        output.status = returnCodeNost::NOST_INVALID_TRANSITION;
         return;
     _
 
@@ -686,7 +686,7 @@ protected:
         // an error code.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }  
@@ -695,7 +695,7 @@ protected:
         // Check is project ID is valid
         //
         if (input.projectIdentity >= state.projectNextId) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -705,33 +705,33 @@ protected:
         //
         locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
     
-        if (locals.projectMeta.projectSt == projectState.NOST_REGISTER_STATE) {
+        if (locals.projectMeta.projectSt == projectState::NOST_REGISTER_STATE) {
             //
             // Check to see if user is in the registration list, if so are they
             // registered yet?  If they aren't then add them and setup the registration.
             //
             if(state.regTracking.get(qpi.invocator(), locals.userFlags)) {
                 if (locals.userFlags.get(input.projectIdentity) == 1) {
-                    output.status = returnCodeNost.NOST_ALREADY_REGISTERED;
+                    output.status = returnCodeNost::NOST_ALREADY_REGISTERED;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
                     return;
                 }
                 else {
                     locals.userFlags.set(input.projectIdentity, 1);
                     state.regTracking.set(qpi.invocator(), locals.userFlags);
-                    output.status = returnCodeNost.NOST_SUCCESS;
+                    output.status = returnCodeNost::NOST_SUCCESS;
                     return;
                 }
             }
             else {
                 locals.userFlags.set(input.projectIdentity, 1);
                 state.regTracking.set(qpi.invocator(), locals.userFlags);
-                output.status = returnCodeNost.NOST_SUCCESS;
+                output.status = returnCodeNost::NOST_SUCCESS;
                 return;
             }
         }
         else {
-            output.status = returnCodeNost.NOST_INVALID_STATE;
+            output.status = returnCodeNost::NOST_INVALID_STATE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -760,7 +760,7 @@ protected:
         // an error code.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }
@@ -769,7 +769,7 @@ protected:
         // Check is project ID is valid
         //
         if (input.projectIdentity >= state.projectNextId) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -779,7 +779,7 @@ protected:
         //
         locals.projectMeta = state.projectMetadataList.get(input.projectIdentity)
     
-        if (locals.projectMeta.projectSt == projectState.NOST_REGISTER_STATE) {
+        if (locals.projectMeta.projectSt == projectState::NOST_REGISTER_STATE) {
             //
             // Check to see if user is in the registration list, if so are they
             // registered yet?  If they aren't indicate operation is not necessary
@@ -787,14 +787,14 @@ protected:
             //
             if(state.regTracking.get(qpi.invocator(), locals.userFlags)) {
                 if (locals.userFlags.get(input.projectIdentity) == 0) {
-                    output.status = returnCodeNost.NOST_NOT_REGISTERED;
+                    output.status = returnCodeNost::NOST_NOT_REGISTERED;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
                     return;
                 }
                 else {
                     locals.userFlags.set(input.projectIdentity, 0);
                     state.regTracking.set(qpi.invocator(), locals.userFlags);
-                    output.status = returnCodeNost.NOST_SUCCESS;
+                    output.status = returnCodeNost::NOST_SUCCESS;
                     return;
                 }
             }
@@ -802,12 +802,12 @@ protected:
                 locals.userFlags.set(input.projectIdentity, 0);
                 state.regTracking.set(qpi.invocator(), locals.userFlags);
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
-                output.status = returnCodeNost.NOST_NOT_REGISTERED;
+                output.status = returnCodeNost::NOST_NOT_REGISTERED;
                 return;
             }            
         }
         else {
-            output.status = returnCodeNost.NOST_INVALID_STATE;
+            output.status = returnCodeNost::NOST_INVALID_STATE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
@@ -840,7 +840,7 @@ protected:
         // an error code.
         //
         if (qpi.invocationReward() < state.transactionFee) {
-            output.status = returnCodeNost.NOST_INSUFFICIENT_BALANCE;
+            output.status = returnCodeNost::NOST_INSUFFICIENT_BALANCE;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());     
             return;
         }
@@ -849,7 +849,7 @@ protected:
         // Make sure its a valid project
         //
         if (input.projectId >= state.projectNextId) {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;            
         }        
@@ -859,8 +859,8 @@ protected:
         // conditions we carry on. 
         //   
         if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
-            if (locals.localTier == tierLevel.NOST_NONE) {
-                output.status = returnCodeNost.NOST_INVALID_TIER;
+            if (locals.localTier == tierLevel::NOST_NONE) {
+                output.status = returnCodeNost::NOST_INVALID_TIER;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;            
             }       
@@ -871,7 +871,7 @@ protected:
                 locals.metadata = state.projectMetadataList.get(input.projectId);
 
                 if (locals.metadata.projectSt != tierLevel.NOST_VOTE_STATE) {
-                    output.status = returnCodeNost.NOST_INVALID_STATE;
+                    output.status = returnCodeNost::NOST_INVALID_STATE;
                     qpi.transfer(qpi.invocator(), qpi.invocationReward());
                     return;
                 }
@@ -899,17 +899,17 @@ protected:
                             //
                             state.voteTracking.set(qpi.invocator(), locals.votingList);
                             state.projectMetadataList.set(input.projectId, locals.metadata);
-                            output.status = returnCodeNost.NOST_SUCCESS;
+                            output.status = returnCodeNost::NOST_SUCCESS;
                             return;
                         }
                         else {
-                            output.status = returnCodeNost.NOST_ALREADY_VOTED;
+                            output.status = returnCodeNost::NOST_ALREADY_VOTED;
                             qpi.transfer(qpi.invocator(), qpi.invocationReward());
                             return;
                         }
                     }
                     else {
-                        output.status = returnCodeNost.NOST_INVALID_TIER;
+                        output.status = returnCodeNost::NOST_INVALID_TIER;
                         qpi.transfer(qpi.invocator(), qpi.invocationReward());
                         return;                         
                     }
@@ -917,7 +917,7 @@ protected:
             }     
         }
         else {
-            output.status = returnCodeNost.NOST_INVALID_TIER;
+            output.status = returnCodeNost::NOST_INVALID_TIER;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;            
         }
@@ -954,7 +954,7 @@ protected:
             output.status = returnCodeNost.NOST_SUCCESS;
         }
         else {
-            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
         }
         return;
     _
@@ -974,12 +974,12 @@ protected:
     PUBLIC_PROCEDURE(setPhaseOneEpochs)
 
         if (!isAdmin(qpi.invocator())) {
-            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
 
         state.investPhaseOneEpochs = input.epochs;
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
 
@@ -994,12 +994,12 @@ protected:
     PUBLIC_PROCEDURE(setPhaseTwoEpochs)
 
         if (!isAdmin(qpi.invocator())) {
-            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
 
         state.investPhaseTwoEpochs = input.epochs;
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
 
@@ -1014,12 +1014,12 @@ protected:
     PUBLIC_PROCEDURE(setPhaseThreeEpochs)
 
         if (!isAdmin(qpi.invocator())) {
-            output.status = returnCodeNost.NOST_REQUIRES_ADMIN;
+            output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
 
         state.investPhaseThreeEpochs = input.epochs;
-        output.status = returnCodeNost.NOST_SUCCESS;
+        output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _    
 
