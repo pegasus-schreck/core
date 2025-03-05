@@ -278,7 +278,7 @@ private:
         //
         // Make sure the ID is at least within range of what has been stored thus far
         //        
-        if (state.projectNextId <= input.projectIdentity) {
+        if (state.projectNextId <= input.projectId) {
             output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             output.totalPerUse = 0.0;
@@ -296,8 +296,8 @@ private:
             locals.userReg = state.regTracking.value(locals.index);
 
             if(locals.userReg.get(input.projectId) == 1) {
-                locals.wallet = state.regTracking.key(index);
-                locals.tier = state.userTiers.get(locals.wallet);
+                locals.wallet = state.regTracking.key(locals.index);
+                state.userTiers.get(locals.wallet, locals.tier);
                 state.tiers.get(locals.tier, locals.usersTier);
                 locals.perUse += locals.usersTier.stakeAmount;
             }
