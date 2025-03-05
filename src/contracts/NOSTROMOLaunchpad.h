@@ -597,6 +597,7 @@ protected:
 
     struct changeProjectState_locals {
         projectMeta localMeta;
+        bit result;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(changeProjectState)
@@ -604,7 +605,9 @@ protected:
         //
         // Only admin can advance a project state or it is done implicitly by contract
         //
-        if (!isAdmin(qpi.invocator())) {
+        isAdmin(qpi.invocator(), locals.result);
+
+        if (locals.result == 0) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
