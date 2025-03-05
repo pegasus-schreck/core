@@ -976,7 +976,7 @@ protected:
 
     struct setPhaseOneEpochs_locals {
         bit result;
-    }
+    };
 
     PUBLIC_PROCEDURE(setPhaseOneEpochs)
 
@@ -1002,7 +1002,7 @@ protected:
 
     struct setPhaseTwoEpochs_locals {
         bit result;
-    }    
+    };    
 
     PUBLIC_PROCEDURE(setPhaseTwoEpochs)
 
@@ -1028,7 +1028,7 @@ protected:
 
     struct setPhaseThreeEpochs_locals {
         bit result;
-    }
+    };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseThreeEpochs)
 
