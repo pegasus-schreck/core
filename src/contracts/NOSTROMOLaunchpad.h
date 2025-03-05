@@ -308,6 +308,62 @@ private:
         return;
     _
 
+    //
+    // Structures and methods for setting max/min cap for a given project.
+    //
+    // The cap is determined by utilizing the threshold for a project.  For example:
+    //
+    // A project has a fund raise goal of $250K with a threshold of 10%
+    //
+    // Min cap becomes 250,000 * .90 or 225,000
+    // Max cap becomes 250,000 * 1.10 or 275,000
+    //
+    // Extracted pairs are placed in an array mapped to a particular projectID
+    //
+    struct calculateCaps_input {
+        uint64 projectId;
+    };
+
+    struct calculateCaps_output {
+        projectCapPairs projectCaps;
+        returnCodeNost status;
+    };
+
+    struct calculateCaps_locals {
+        projectFinance financials;
+        float threshold;
+        double totalAmount;
+    };
+
+    PRIVATE_PROCEDURE_WITH_LOCALS(calculateCaps)
+
+        //
+        // Make sure the ID is at least within range of what has been stored thus far
+        //        
+        if (state.projectNextId <= input.projectIdentity) {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.projectCaps.minCap = 0.0;
+            output.projectCaps.maxCap = 0.0;
+            return;
+        }
+        
+        //
+        // We have identified that the projectId is valid, pull the necessary financial/metadata
+        // and calculate the caps and add them to the array for tracking based on projectId.
+        //
+        if (state.projectFinanceList.get(input.projectId, locals.financials)) {
+            output.projectCaps.minCap = (1.0 - locals.financials.threshold) * locals.financials.totalAmount;
+            output.projectCaps.maxCap = (1.0 + locals.financials.threshold) * locals.financials.totalAmount;            
+        }
+        else {
+            output.status = returnCodeNost.NOST_INVALID_PROJECT_ID;
+            output.projectCaps.minCap = 0.0;
+            output.projectCaps.maxCap = 0.0;
+            return;            
+        }
+        
+    _
+
 protected:
 
     //
