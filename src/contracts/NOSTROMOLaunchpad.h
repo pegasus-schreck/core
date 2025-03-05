@@ -528,7 +528,7 @@ protected:
         locals.metadata.projectSt = projectState::NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
-        locals.metadata.investPOne = 0;
+        locals.metadata.investOne = 0;
         locals.metadata.investTwo = 0;
         locals.metadata.investThree = 0;
 
@@ -589,7 +589,6 @@ protected:
     struct changeProjectState_input {
         uint64 projectIdentity;
         projectState newProjectState;
-        projectMeta localMeta;
     };
 
     struct changeProjectState_output {
@@ -597,7 +596,7 @@ protected:
     };
 
     struct changeProjectState_locals {
-        projectMeta metadata;
+        projectMeta localMeta;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(changeProjectState)
@@ -624,7 +623,7 @@ protected:
         // We should allow the state change if are in Draft or Ask for more information as the project is being promoted to next step,
         // we update the project metadata and exit method, else this is an invalid state transition.
         if (input.newProjectState == projectState::NOST_PREPARE_VOTE) {
-            locals.projectMeta = projectMetadataList.get(input.projectIdentity)
+            locals.localMeta = projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
                 locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
                 projectMetadataList.set(input.projectIdentity, locals.projectMeta);
