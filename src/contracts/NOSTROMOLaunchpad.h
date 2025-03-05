@@ -160,7 +160,7 @@ private:
     //
     // Cost of a transaction with Nostromo
     //
-    uint64 transactionFee;
+    sint64 transactionFee;
 
     //
     // Fee associated with creating a project
@@ -469,7 +469,7 @@ protected:
         //
         // Set user tier to NONE
         //
-        state.userTiers.set(qpi.invocator(), tierLevel.NOST_NONE);
+        state.userTiers.set(qpi.invocator(), tierLevel::NOST_NONE);
 
         //
         // Return the staked qubics
@@ -516,7 +516,7 @@ protected:
         // Setup local structures and store them in the maintenance arrays
         //
         locals.metadata.owner = qpi.invocator();
-        locals.metadata.projState = projectState::NOST_DRAFT;
+        locals.metadata.projectSt = projectState::NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
         locals.metadata.investPhaseOne = 0;
