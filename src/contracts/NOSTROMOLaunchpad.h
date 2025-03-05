@@ -229,6 +229,14 @@ private:
     QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
 
     //
+    // Epoch state variables for tracking
+    //
+    uint8 investPhaseOneEpochs;
+    uint8 investPhaseTwoEpochs;
+    uint8 investPhaseThreeEpochs;
+
+
+    //
     // Typedefs & method used to identify if current wallet is admin.
     //
     struct isAdmin_input {
