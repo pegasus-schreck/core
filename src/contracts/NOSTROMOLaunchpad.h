@@ -145,7 +145,7 @@ private:
     //
     // State hash map to manage tier information
     //
-    QPI::HashMap<tierLevel, NOSTROMOTier, NOSTROMO_MAX_LEVELS> tiers;
+    QPI::HashMap<tierLevel, nostromoTier, NOSTROMO_MAX_LEVELS> tiers;
 
     //
     // State hash map to manage user to tier mapping
