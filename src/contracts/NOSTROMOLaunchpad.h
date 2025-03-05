@@ -165,7 +165,7 @@ private:
     //
     // Fee associated with creating a project
     //
-    uint64 projectFee;    
+    sint64 projectFee;    
 
     //
     // Counter/ID used to track projects
@@ -519,9 +519,9 @@ protected:
         locals.metadata.projectSt = projectState::NOST_DRAFT;
         locals.metadata.yesvotes = 0;
         locals.metadata.novotes = 0;
-        locals.metadata.investPhaseOne = 0;
-        locals.metadata.investPhaseTwo = 0;
-        locals.metadata.investPhaseThree = 0;
+        locals.metadata.investPOne = 0;
+        locals.metadata.investTwo = 0;
+        locals.metadata.investThree = 0;
 
         locals.financials.totalAmount = input.financeInput.totalAmount;
         locals.financials.threshold = input.financeInput.threshold;
@@ -580,6 +580,7 @@ protected:
     struct changeProjectState_input {
         uint64 projectIdentity;
         projectState newProjectState;
+        projectMeta localMeta;
     };
 
     struct changeProjectState_output {
@@ -615,8 +616,8 @@ protected:
         // we update the project metadata and exit method, else this is an invalid state transition.
         if (input.newProjectState == projectState::NOST_PREPARE_VOTE) {
             locals.projectMeta = projectMetadataList.get(input.projectIdentity)
-            if (locals.projectMeta.projectSt == projectState::NOST_DRAFT || locals.projectMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
-                locals.projectMeta.projectSt = projectState::NOST_PREPARE_VOTE;
+            if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
+                locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
                 projectMetadataList.set(input.projectIdentity, locals.projectMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;
@@ -634,8 +635,8 @@ protected:
         //
         if (input.newProjectState == projectState::NOST_ASK_MORE_INFORMATION) {
             locals.projectMeta = projectMetadataList.get(input.projectIdentity)
-            if (locals.projectMeta.projectSt == projectState::NOST_DRAFT || locals.projectMeta.projectSt == projectState::NOST_BLOCKED) {
-                locals.projectMeta.projectSt = projectState::NOST_NOST_DRAFT;
+            if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_BLOCKED) {
+                locals.localMeta.projectSt = projectState::NOST_NOST_DRAFT;
                 projectMetadataList.set(input.projectIdentity, locals.projectMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;                
