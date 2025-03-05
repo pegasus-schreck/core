@@ -609,7 +609,7 @@ protected:
             locals.localMeta = state.projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
                 locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
-                projectMetadataList.set(input.projectIdentity, locals.localMeta);
+                state.projectMetadataList.set(input.projectIdentity, locals.localMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;
             }
@@ -628,7 +628,7 @@ protected:
             locals.localMeta = state.projectMetadataList.get(input.projectIdentity);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_BLOCKED) {
                 locals.localMeta.projectSt = projectState::NOST_DRAFT;
-                projectMetadataList.set(input.projectIdentity, locals.localMeta);
+                state.projectMetadataList.set(input.projectIdentity, locals.localMeta);
                 output.status = returnCodeNost::NOST_SUCCESS;
                 return;                
             } 
