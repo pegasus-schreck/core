@@ -606,7 +606,7 @@ protected:
         // We should allow the state change if are in Draft or Ask for more information as the project is being promoted to next step,
         // we update the project metadata and exit method, else this is an invalid state transition.
         if (input.newProjectState == projectState::NOST_PREPARE_VOTE) {
-            locals.localMeta = projectMetadataList.get(input.projectIdentity);
+            projectMetadataList.get(input.projectIdentity, locals.localMeta);
             if (locals.localMeta.projectSt == projectState::NOST_DRAFT || locals.localMeta.projectSt == projectState::NOST_ASK_MORE_INFORMATION) {
                 locals.localMeta.projectSt = projectState::NOST_PREPARE_VOTE;
                 projectMetadataList.set(input.projectIdentity, locals.localMeta);
@@ -762,9 +762,9 @@ protected:
         //
         // Make sure we are in the correct state
         //
-        locals.projectMeta = state.projectMetadataList.get(input.projectIdentity);
+        locals.metadata = state.projectMetadataList.get(input.projectIdentity);
     
-        if (locals.projectMeta.projectSt == projectState::NOST_REGISTER_STATE) {
+        if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
             //
             // Check to see if user is in the registration list, if so are they
             // registered yet?  If they aren't indicate operation is not necessary
@@ -962,9 +962,10 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseOneEpochs)
 
-        isAdmin(qpi.invocator(), locals.result);
-
-        if (locals.result == 0) {
+        //
+        // Perform admin check
+        //
+        if (qpi.invocator() != state.admin) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
@@ -988,7 +989,10 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseTwoEpochs)
 
-        if (qpi.invocator() == state.admin) {
+        //
+        // Perform admin check
+        //
+        if (qpi.invocator() != state.admin) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
@@ -1012,13 +1016,14 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(setPhaseThreeEpochs)
 
-        isAdmin(qpi.invocator(), locals.result);
-
-        if (locals.result == 0) {
+        //
+        // Perform admin check
+        //
+        if (qpi.invocator() != state.admin) {
             output.status = returnCodeNost::NOST_REQUIRES_ADMIN;
             return;
         }
-
+        
         state.investPhaseThreeEpochs = input.epochs;
         output.status = returnCodeNost::NOST_SUCCESS;
         return;
