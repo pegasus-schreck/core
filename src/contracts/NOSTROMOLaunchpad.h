@@ -249,7 +249,13 @@ private:
     };
 
     PRIVATE_FUNCTION(isAdmin)
-        output.status = (input.passedId == state.admin);
+        
+        if(input.passedId == state.admin) {
+            output.status = 1;
+        }
+        else {
+            output.status = 0;
+        }
         return;
     _
 
