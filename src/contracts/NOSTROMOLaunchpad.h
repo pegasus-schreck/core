@@ -245,7 +245,7 @@ private:
     };
 
     struct isAdmin_output {
-        bit status;
+        uint8 status;
     };
 
     PRIVATE_FUNCTION(isAdmin)
@@ -603,7 +603,7 @@ protected:
 
     struct changeProjectState_locals {
         projectMeta localMeta;
-        bit result;
+        uint8 result;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(changeProjectState)
