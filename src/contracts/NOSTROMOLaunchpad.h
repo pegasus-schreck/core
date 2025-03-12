@@ -178,6 +178,34 @@ private:
     id admin;
 
     //
+    // HashMap to manage investment caps for each tier.  This will be mapped into an 
+    // array with the projectId as an index.
+    //
+    typedef QPI::HashMap<tierLevel, double, NOSTROMO_MAX_LEVELS> tierCaps;
+
+    //
+    // Array that contains the investment caps for each tiers mapped to a project based on ID.
+    // For example:
+    //
+    // A project with ID 7 has the following caps:
+    // DOG - 72 
+    // EGG - 397
+    // ALIEN - 994
+    // WARRIOR - 4044 
+    // QUEEN - 18231
+    //
+    // Those are the maximum allowable investments based on tier.  Caps are maintained
+    // in the array of HashMaps to ensure investment amounts are not exceeded.
+    //
+    array<tierCaps,NOSTROMO_MAX_PROJECTS> projectCapsList;
+    
+    //
+    // A similar structure to the one above, this one however is used to keep track of aggregate
+    // investment by tier to determine proper phase exits.
+    //
+    array<tierCaps,NOSTROMO_MAX_PROJECTS> aggregateInvestmentList;
+
+    //
     // Array used to hold the metadata of all projects array index corresponds to projectId
     //
     array<projectMeta,NOSTROMO_MAX_PROJECTS> projectMetadataList;
@@ -291,7 +319,7 @@ private:
                 locals.wallet = state.regTracking.key(locals.index);
                 state.userTiers.get(locals.wallet, locals.tier);
                 state.tiers.get(locals.tier, locals.usersTier);
-                locals.perUse += locals.usersTier.stakeAmount;
+                locals.perUse += locals.usersTier.poolWeight;
             }
         }
 
@@ -1047,6 +1075,130 @@ protected:
 
     PUBLIC_PROCEDURE_WITH_LOCALS(investInProject)
 
+
+    _
+
+    struct BEGIN_EPOCH_locals {
+        uint64 index;
+        projectMeta metadata;
+        projectFinance finance;
+    };
+
+    BEGIN_EPOCH_WITH_LOCALS
+
+        //
+        // Check the project states and handle them accordingly.
+        //
+        // - If in pre invest we wish to start the epoch by pushing it to invest
+        //   phase 1.
+        // - If in investment phase 1 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and either advance to phase 2 if count met or
+        //   increment count and allow phase to continue.
+        // - If in investment phase 2 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and either advance to phase 3 if count met or
+        //   increment count and allow phase to continue.
+        // - If in investment phase 1 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and see if we exceed the minimum.  If minimum
+        //   cap met its a success, if not we have failed to raise the necessary amount.
+        //
+        // - If in pre vote we move to voting phase and keep voting open for 1 epoch.
+        //
+        for (locals.index = 0; locals.index < state.projectNextId; locals.index++) {
+
+            locals.metadata = state.projectMetadataList.get(locals.index);
+            locals.finance = state.projectFinanceList.get(locals.index);
+            
+            if (locals.metadata.projectSt == projectState::NOST_PREINVEST_STATE) {
+                locals.metadata = projectState::NOST_INVESTMENT_PHASE_1;
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
+                //
+                // If we reached the appropriate funding we are good.  Either way ensure
+                // we are not exceeding epoch windows or advance state.
+                //
+                if (locals.metadate.investOne < state.investPhaseOneEpochs) {
+                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
+                        locals.metadata.projectSt = projectState::NOST_FUNDED;
+                    }
+                }
+                else {
+                    locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_2;
+                }
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
+                //
+                // If we reached the appropriate funding we are good.  Either way ensure
+                // we are not exceeding epoch windows or advance state.
+                //
+                if (locals.metadate.investTwo < state.investPhaseTwpEpochs) {
+                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
+                        locals.metadata.projectSt = projectState::NOST_FUNDED;
+                    }
+                }
+                else {
+                    locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_3;
+                }
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
+                //
+                // If we reached the appropriate funding we are good.  Either way ensure
+                // we are not exceeding epoch windows or advance state.
+                //
+                if (locals.metadate.investThree < state.investPhaseThreeEpochs) {
+                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
+                        locals.metadata.projectSt = projectState::NOST_FUNDED;
+                    }
+                }
+                else {
+                    locals.metadata.projectSt = projectState::NOST_CLOSED_FAILED;
+                }
+
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_PREPARE_VOTE) {
+                locals.metadata = projectState::NOST_VOTE_STATE;
+            }
+            else {
+
+            }
+        }        
+    _
+
+    struct END_EPOCH_locals {
+        uint64 index;
+        projectMeta metadata;
+        projectFinance finance;
+    };
+
+    END_EPOCH_WITH_LOCALS
+
+        //
+        // Check the project states and handle them accordingly.
+        //
+        // - If in pre invest we wish to start the epoch by pushing it to invest
+        //   phase 1.
+        // - If in investment phase 1 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and either advance to phase 2 if count met or
+        //   increment count and allow phase to continue.
+        // - If in investment phase 2 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and either advance to phase 3 if count met or
+        //   increment count and allow phase to continue.
+        // - If in investment phase 1 see if we are through the desired epoch counts
+        //   or if we hit the investment cap.  If we hit the cap we are done, if not
+        //   check desired epoch count and see if we exceed the minimum.  If minimum
+        //   cap met its a success, if not we have failed to raise the necessary amount.
+        //
+        // - If in pre vote we move to voting phase and keep voting open for 1 epoch.
+        //
+        for (locals.index = 0; locals.index < state.projectNextId; locals.index++) {
+            locals.metadata = state.projectMetadataList.get(locals.index);
+            
+
+        }
 
     _
 
