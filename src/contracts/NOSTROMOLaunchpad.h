@@ -1082,6 +1082,7 @@ protected:
         uint64 index;
         projectMeta metadata;
         projectFinance finance;
+        uint8 altered;
     };
 
     BEGIN_EPOCH_WITH_LOCALS
@@ -1116,14 +1117,14 @@ protected:
             locals.finance = state.projectFinanceList.get(locals.index);
             
             if (locals.metadata.projectSt == projectState::NOST_PREINVEST_STATE) {
-                locals.metadata = projectState::NOST_INVESTMENT_PHASE_1;
+                locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_1;
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
                 //
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investOne < state.investPhaseOneEpochs) {
+                if (locals.metadata.investOne < state.investPhaseOneEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1137,7 +1138,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investTwo < state.investPhaseTwpEpochs) {
+                if (locals.metadata.investTwo < state.investPhaseTwpEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1151,7 +1152,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investThree < state.investPhaseThreeEpochs) {
+                if (locals.metadata.investThree < state.investPhaseThreeEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1176,7 +1177,7 @@ protected:
                 locals.altered = 0;
             }
 
-            if (loccals.altered == 1) {
+            if (locals.altered == 1) {
                 state.projectMetadataList.set(locals.index, locals.metadata);
                 state.projectFinanceList.set(locals.index, locals.finance);
             }
@@ -1226,14 +1227,14 @@ protected:
             locals.finance = state.projectFinanceList.get(locals.index);
             
             if (locals.metadata.projectSt == projectState::NOST_PREINVEST_STATE) {
-                locals.metadata = projectState::NOST_INVESTMENT_PHASE_1;
+                locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_1;
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
                 //
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investOne < state.investPhaseOneEpochs) {
+                if (locals.metadata.investOne < state.investPhaseOneEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1247,7 +1248,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investTwo < state.investPhaseTwpEpochs) {
+                if (locals.metadata.investTwo < state.investPhaseTwpEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
