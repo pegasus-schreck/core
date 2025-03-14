@@ -264,37 +264,6 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
-    struct returnProjectFunds_input {
-        uint64 projectId;
-    };
-
-    struct returnProjectFunds_output {
-        returnCodeNost status;
-    };
-
-    struct returnProjectFunds_locals {
-        uint64 userCount;
-        uint64 index;
-        investments userInvestments;
-        id userWallet;
-        projectMeta metadata;
-    };
-
-    PRIVATE_PROCEDURE_WITH_LOCALS(returnProjectFunds)
-
-        locals.userCount = state.investTracking.population();
-        locals.metadata = state.projectMetadataList.get(input.projectId);
-
-        for(locals.index = 0; locals.index < locals.userCount; locals.index++) {
-            locals.userInvestments = state.investTracking.value(locals.index);
-            locals.userWallet = state.investTracking.key(locals.index);
-
-            if (locals.userInvestments.get(input.projectId) > 0.0) {
-            
-            }
-        }
-    _
-
     //
     // Structures and method for calculating perUse.
     //
@@ -1136,11 +1105,9 @@ protected:
         //   check desired epoch count and see if we exceed the minimum.  If minimum
         //   cap met its a success, if not we have failed to raise the necessary amount.
         // - If in pre vote we move to voting phase and keep voting open for 1 epoch.  
-        // - If in voting stage we check the vote, if the vote is in favor of yes we
-        //   move to a registration state.  If vote is for no we close out project with
-        //   a failed status.
-        // - If at any time we fail a project we must return the assets to the investors.
         //
+        // - We do check to see if we met the goal here because we can go over due to
+        //   threshold.  We also check this in investInProject method as well.
         //
         for (locals.index = 0; locals.index < state.projectNextId; locals.index++) {
 
@@ -1196,14 +1163,6 @@ protected:
             else if (locals.metadata.projectSt == projectState::NOST_PREPARE_VOTE) {
                 locals.metadata.projectSt = projectState::NOST_VOTE_STATE;
             }
-            else if (locals.metadata.projectSt == projectState::NOST_VOTE_STATE) {
-                if (locals.metadata.yesvotes > locals.metadata.novotes) {
-                    locals.metadata.projectSt = projectState::NOST_REGISTER_STATE;
-                }
-                else {
-                    locals.metadata.projectSt = projectState::NOST_CLOSED_FAILED;
-                }
-            }
             else {
                 locals.altered = 0;
             }
@@ -1217,7 +1176,6 @@ protected:
     struct END_EPOCH_locals {
         uint64 index;
         projectMeta metadata;
-        projectFinance finance;
         uint8 altered;
     };
 
@@ -1227,21 +1185,18 @@ protected:
         // Check the project states and handle them accordingly.
         //
         // - If in vote state the epoch is now over and we move to a registration state.
-
-        // - If in investment phase 1 see if we are through the desired epoch counts
-        //   or if we hit the investment cap.  If we hit the cap we are done, if not
-        //   check desired epoch count and either advance to phase 2 if count met or
-        //   increment count and allow phase to continue.
-        // - If in investment phase 2 see if we are through the desired epoch counts
-        //   or if we hit the investment cap.  If we hit the cap we are done, if not
-        //   check desired epoch count and either advance to phase 3 if count met or
-        //   increment count and allow phase to continue.
-        // - If in investment phase 1 see if we are through the desired epoch counts
-        //   or if we hit the investment cap.  If we hit the cap we are done, if not
-        //   check desired epoch count and see if we exceed the minimum.  If minimum
-        //   cap met its a success, if not we have failed to raise the necessary amount.
-        //
-        // - If in pre vote we move to voting phase and keep voting open for 1 epoch.
+        // - If in investment phase 1 increment the counter and we check at start of
+        //   next epoch.
+        // - If in investment phase 2 increment the counter and we check at start of
+        //   next epoch.
+        // - If in investment phase 3 increment the counter and we check at start of
+        //   next epoch.
+        // - If we are in the register state we have been in this state for a week.  
+        //   We move it to the start of the investment phase so registered users
+        //   can invest.  Start of next epoch we kick off phase 1.
+        // - If in voting stage we check the vote, if the vote is in favor of yes we
+        //   move to a registration state.  If vote is for no we close out project with
+        //   a failed status.
         //
         for (locals.index = 0; locals.index < state.projectNextId; locals.index++) {
 
@@ -1253,59 +1208,33 @@ protected:
             locals.altered = 1;
 
             locals.metadata = state.projectMetadataList.get(locals.index);
-            locals.finance = state.projectFinanceList.get(locals.index);
             
-            if (locals.metadata.projectSt == projectState::NOST_PREINVEST_STATE) {
-                locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_1;
-            }
-            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
-                //
-                // If we reached the appropriate funding we are good.  Either way ensure
-                // we are not exceeding epoch windows or advance state.
-                //
-                if (locals.metadata.investOne < state.investPhaseOneEpochs) {
-                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
-                        locals.metadata.projectSt = projectState::NOST_FUNDED;
-                    }
-                }
-                else {
-                    locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_2;
-                }
+            if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
+                locals.metadata.investOne += 1;
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
-                //
-                // If we reached the appropriate funding we are good.  Either way ensure
-                // we are not exceeding epoch windows or advance state.
-                //
-                if (locals.metadata.investTwo < state.investPhaseTwoEpochs) {
-                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
-                        locals.metadata.projectSt = projectState::NOST_FUNDED;
-                    }
-                }
-                else {
-                    locals.metadata.projectSt = projectState::NOST_INVESTMENT_PHASE_3;
-                }
+                locals.metadata.investTwo += 1;
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
-                //
-                // If we reached the appropriate funding we are good.  Either way ensure
-                // we are not exceeding epoch windows or advance state.
-                //
-                if (locals.metadata.investThree < state.investPhaseThreeEpochs) {
-                    if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
-                        locals.metadata.projectSt = projectState::NOST_FUNDED;
-                    }
+                locals.metadata.investThree += 1;
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
+                locals.metadata.projectSt = projectState::NOST_PREINVEST_STATE;
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_VOTE_STATE) {
+                if (locals.metadata.yesvotes > locals.metadata.novotes) {
+                    locals.metadata.projectSt = projectState::NOST_REGISTER_STATE;
                 }
                 else {
                     locals.metadata.projectSt = projectState::NOST_CLOSED_FAILED;
                 }
-
-            }
-            else if (locals.metadata.projectSt == projectState::NOST_PREPARE_VOTE) {
-                locals.metadata.projectSt = projectState::NOST_VOTE_STATE;
             }
             else {
                 locals.altered = 0;
+            }            
+
+            if (locals.altered == 1) {
+                state.projectMetadataList.set(locals.index, locals.metadata);
             }            
 
         }
