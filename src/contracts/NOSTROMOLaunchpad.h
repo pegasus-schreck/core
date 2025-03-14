@@ -279,8 +279,6 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
-
-
     static returnProjectFunds_input {
         uint64 projectId;
     };
