@@ -1102,13 +1102,13 @@ protected:
         // caps.
         //
         if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
-            locals.caps = state.projectCapsList.get(locals.projectId);
+            locals.caps = state.projectCapsList.get(input.projectId);
 
             //
             // Check and see if user has invested already, if not the answer is 0.
             //
             if (state.investTracking.get(qpi.invocator(), locals.userInvest)) {
-                locals.userValue = locals.userInvest.get(projectId);
+                locals.userValue = locals.userInvest.get(input.projectId);
             }
             else {
                 locals.userValue = 0.0;
@@ -1122,7 +1122,7 @@ protected:
 
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
-                if (locals.localTier == tierLevel::WARRIOR && locals.localTier == tierLevel::QUEEN) {
+                if (locals.localTier == tierLevel::NOST_WARRIOR && locals.localTier == tierLevel::NOST_QUEEN) {
 
                 }
                 else {
