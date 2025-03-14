@@ -256,6 +256,17 @@ private:
     //
     QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
 
+    typedef QPI::Hashmap<id, float, NOSTROMO_MAX_USERS> investMap;
+
+    typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> registerMap;
+
+    //
+    //
+    //
+    QPI::HashMap<uint64, investMap, NOSTROMO_MAX_PROJECTS> masterInvestorMap;
+
+    QPI::HashMap<uint64, registerMap, NOSTROMO_MAX_PROJECTS> masterRegisterMap;
+
     //
     // Epoch state variables for tracking, this will be used to determine how many epochs each
     // phase will last, can be modified by admin only.
@@ -292,6 +303,38 @@ private:
         double perUse;
         nostromoTier usersTier;
     };
+
+    static returnProjectFunds_input {
+        uint64 projectId;
+    };
+
+    static returnProjectFunds_output {
+        returnCodeNost status;
+    };
+
+    static returnProjectFunds_locals {
+        uint64 userCount;
+        uint64 index;
+        investments userInvestments;
+        id userWallet;
+        projectMeta metadata;
+    };
+
+    PRIVATE_PROCEDURE_WITH_LOCALS(returnProjectFunds)
+
+        locals.userCount = state.investTracking.population();
+        locals.metadata = state.projectMetadataList.get(input.projectId);
+
+        for(locals.index = 0; locals.index < locals.userCount; locals.index++) {
+            locals.userInvestments = state.investTracking.value(locals.index);
+            locals.userWallet = state.investTracking.key(locals.index);
+
+            if (locals.userInvestments.get(input.projectId) > 0.0) {
+            
+            }
+        }
+    _
+
 
     PRIVATE_PROCEDURE_WITH_LOCALS(calculatePerUse)
 
@@ -1221,7 +1264,6 @@ protected:
             //
             locals.altered = 1;
 
-            locals.metadata = state.projectMetadataList.get(locals.index);
             locals.metadata = state.projectMetadataList.get(locals.index);
             locals.finance = state.projectFinanceList.get(locals.index);
             
