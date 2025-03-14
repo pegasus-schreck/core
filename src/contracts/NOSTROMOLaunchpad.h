@@ -256,21 +256,6 @@ private:
     //
     QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
 
-    //typedef QPI::HashMap<id, float, NOSTROMO_MAX_USERS> investMap;
-
-    //typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> voteMap;
-
-    //typedef QPI::HashMap<id, tierLevel, NOSTROMO_MAX_USERS> registerMap;
-    QPI::HashMap<uint64, QPI::HashMap<id, float, NOSTROMO_MAX_USERS>, NOSTROMO_MAX_PROJECTS> investorMap;
-    //
-    //
-    //
-    // QPI::HashMap<uint64, investMap, NOSTROMO_MAX_PROJECTS> masterInvestorMap;
-
-    // QPI::HashMap<uint64, registerMap, NOSTROMO_MAX_PROJECTS> masterRegisterMap;
-
-    // QPI::HashMap<uint64, voteMap, NOSTROMO_MAX_PROJECTS> masterVoteMap;
-
     //
     // Epoch state variables for tracking, this will be used to determine how many epochs each
     // phase will last, can be modified by admin only.
