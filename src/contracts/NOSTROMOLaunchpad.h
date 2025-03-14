@@ -1062,7 +1062,7 @@ protected:
     //
     struct investInProject_input {
         uint64 projectId;
-        uint64 investmentAmount;
+        float investmentAmount;
     };
 
     struct investInProject_output {
@@ -1070,10 +1070,83 @@ protected:
     };
 
     struct investInProject_locals {
-
+        projectMeta metadata;
+        projectFinance finance;
+        tierLevel localTier;
+        tierCaps caps; // extract from here the max for a tier 
+        investments userInvest;
+        float userValue;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(investInProject)
+
+        //
+        // Make sure its a valid project
+        //
+        if (input.projectId >= state.projectNextId) {
+            output.status = returnCodeNost::NOST_INVALID_PROJECT_ID;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        } 
+
+        //
+        // Pull required project data.
+        //
+        locals.metadata = state.projectMetadataList.get(input.projectId); 
+        locals.finance = state.projectFinanceList.get(input.projectId);
+
+        //
+        // Check first to see if user has a tier and if so get the necessary
+        // facts like are they registered, how much might they have already 
+        // invested and also grab the tier caps along with overall project
+        // caps.
+        //
+        if (state.userTiers.get(qpi.invocator(), locals.localTier)) {
+            locals.caps = state.projectCapsList.get(locals.projectId);
+
+            //
+            // Check and see if user has invested already, if not the answer is 0.
+            //
+            if (state.investTracking.get(qpi.invocator(), locals.userInvest)) {
+                locals.userValue = locals.userInvest.get(projectId);
+            }
+            else {
+                locals.userValue = 0.0;
+            }
+
+            //
+            // Determine if we are in an investible state and evaluate criteria
+            // around each state along with user investment with respect to caps.
+            //
+            if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
+
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
+                if (locals.localTier == tierLevel::WARRIOR && locals.localTier == tierLevel::QUEEN) {
+
+                }
+                else {
+                    output.status = returnCodeNost::NOST_INVALID_TIER;
+                    return;
+                }
+            }
+            else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
+
+            }
+            else {
+                output.status = returnCodeNost::NOST_INVALID_STATE;
+                return;
+            }
+
+
+
+        }
+        else {
+            output.status = returnCodeNost::NOST_INVALID_TIER;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;            
+        }
+
 
 
     _
