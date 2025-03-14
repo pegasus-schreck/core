@@ -258,7 +258,9 @@ private:
 
     typedef QPI::Hashmap<id, float, NOSTROMO_MAX_USERS> investMap;
 
-    typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> registerMap;
+    typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> voteMap;
+
+    typedef QPI::HashMap<id, tierLevel, NOSTROMO_MAX_USERS> registerMap
 
     //
     //
@@ -266,6 +268,8 @@ private:
     QPI::HashMap<uint64, investMap, NOSTROMO_MAX_PROJECTS> masterInvestorMap;
 
     QPI::HashMap<uint64, registerMap, NOSTROMO_MAX_PROJECTS> masterRegisterMap;
+
+    QPI::HashMap<uint64, voteMap, NOSTROMO_MAX_PROJECTS> masterVoteMap;
 
     //
     // Epoch state variables for tracking, this will be used to determine how many epochs each
@@ -275,34 +279,7 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
-    //
-    // Structures and method for calculating perUse.
-    //
-    // This method will walk through the registration list and for any user
-    // registered the following will occur:
-    //
-    // 1. User's tier is extracted
-    // 2. The pool weight is determined for each and a running total is created
-    //
-    // The output of the procedure will be used to calculate investment per tier.
-    //
-    struct calculatePerUse_input {
-        uint64 projectId;
-    };
 
-    struct calculatePerUse_output {
-        returnCodeNost status;
-        double totalPerUse;
-    };
-
-    struct calculatePerUse_locals {
-        uint64 index;
-        flags userReg;
-        id wallet;
-        tierLevel tier;
-        double perUse;
-        nostromoTier usersTier;
-    };
 
     static returnProjectFunds_input {
         uint64 projectId;
@@ -335,6 +312,34 @@ private:
         }
     _
 
+    //
+    // Structures and method for calculating perUse.
+    //
+    // This method will walk through the registration list and for any user
+    // registered the following will occur:
+    //
+    // 1. User's tier is extracted
+    // 2. The pool weight is determined for each and a running total is created
+    //
+    // The output of the procedure will be used to calculate investment per tier.
+    //
+    struct calculatePerUse_input {
+        uint64 projectId;
+    };
+
+    struct calculatePerUse_output {
+        returnCodeNost status;
+        double totalPerUse;
+    };
+
+    struct calculatePerUse_locals {
+        uint64 index;
+        flags userReg;
+        id wallet;
+        tierLevel tier;
+        double perUse;
+        nostromoTier usersTier;
+    };    
 
     PRIVATE_PROCEDURE_WITH_LOCALS(calculatePerUse)
 
