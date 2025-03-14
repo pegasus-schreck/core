@@ -279,15 +279,15 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
-    static returnProjectFunds_input {
+    struct returnProjectFunds_input {
         uint64 projectId;
     };
 
-    static returnProjectFunds_output {
+    struct returnProjectFunds_output {
         returnCodeNost status;
     };
 
-    static returnProjectFunds_locals {
+    struct returnProjectFunds_locals {
         uint64 userCount;
         uint64 index;
         investments userInvestments;
