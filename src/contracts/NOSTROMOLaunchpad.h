@@ -1138,7 +1138,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadata.investTwo < state.investPhaseTwpEpochs) {
+                if (locals.metadata.investTwo < state.investPhaseTwoEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1179,7 +1179,6 @@ protected:
 
             if (locals.altered == 1) {
                 state.projectMetadataList.set(locals.index, locals.metadata);
-                state.projectFinanceList.set(locals.index, locals.finance);
             }
         }        
     _
@@ -1248,7 +1247,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadata.investTwo < state.investPhaseTwpEpochs) {
+                if (locals.metadata.investTwo < state.investPhaseTwoEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
@@ -1262,7 +1261,7 @@ protected:
                 // If we reached the appropriate funding we are good.  Either way ensure
                 // we are not exceeding epoch windows or advance state.
                 //
-                if (locals.metadate.investThree < state.investPhaseThreeEpochs) {
+                if (locals.metadata.investThree < state.investPhaseThreeEpochs) {
                     if (locals.finance.totalAmount <= locals.finance.raisedAmount) {
                         locals.metadata.projectSt = projectState::NOST_FUNDED;
                     }
