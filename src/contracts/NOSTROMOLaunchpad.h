@@ -256,7 +256,7 @@ private:
     //
     QPI::HashMap<id, investments, NOSTROMO_MAX_USERS> investTracking;
 
-    typedef QPI::Hashmap<id, float, NOSTROMO_MAX_USERS> investMap;
+    typedef QPI::HashMap<id, float, NOSTROMO_MAX_USERS> investMap;
 
     typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> voteMap;
 
