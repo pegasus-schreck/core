@@ -261,7 +261,7 @@ private:
     //typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> voteMap;
 
     //typedef QPI::HashMap<id, tierLevel, NOSTROMO_MAX_USERS> registerMap;
-
+    QPI::HashMap<uint64, QPI::HashMap<id, float, NOSTROMO_MAX_USERS>, NOSTROMO_MAX_PROJECTS> investorMap;
     //
     //
     //
@@ -1317,7 +1317,7 @@ protected:
 
             }
             else if (locals.metadata.projectSt == projectState::NOST_PREPARE_VOTE) {
-                locals.metadata = projectState::NOST_VOTE_STATE;
+                locals.metadata.projectSt = projectState::NOST_VOTE_STATE;
             }
             else {
                 locals.altered = 0;
