@@ -265,7 +265,7 @@ private:
     //
     //
     //
-    QPI::HashMap<uint64, investMap, NOSTROMO_MAX_PROJECTS> masterInvestorMap;
+    // QPI::HashMap<uint64, investMap, NOSTROMO_MAX_PROJECTS> masterInvestorMap;
 
     QPI::HashMap<uint64, registerMap, NOSTROMO_MAX_PROJECTS> masterRegisterMap;
 
