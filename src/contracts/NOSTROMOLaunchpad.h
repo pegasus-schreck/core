@@ -1066,7 +1066,7 @@ protected:
     };
 
     struct investInProject_output {
-
+        returnCodeNost status;
     };
 
     struct investInProject_locals {
