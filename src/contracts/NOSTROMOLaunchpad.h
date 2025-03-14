@@ -260,7 +260,7 @@ private:
 
     typedef QPI::HashMap<id, voteValue, NOSTROMO_MAX_USERS> voteMap;
 
-    typedef QPI::HashMap<id, tierLevel, NOSTROMO_MAX_USERS> registerMap
+    typedef QPI::HashMap<id, tierLevel, NOSTROMO_MAX_USERS> registerMap;
 
     //
     //
