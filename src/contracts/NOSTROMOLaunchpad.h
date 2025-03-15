@@ -1077,7 +1077,7 @@ protected:
         tierCaps caps; 
         investments userInvest;
         float userValue;
-        float userMax;
+        double userMax;
         flags regList;
         projectCapPairs capPairs;
     };
@@ -1150,7 +1150,7 @@ protected:
             //
             // Need to know absolute project max cap.
             //
-            locals.capPairs = state.capTracker(input.projectId);
+            locals.capPairs = state.capTracker.get(input.projectId);
 
             //
             // Determine if we are in an investible state and evaluate criteria
