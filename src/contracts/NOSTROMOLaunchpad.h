@@ -1150,7 +1150,7 @@ protected:
             //
             // Need to know absolute project max cap.
             //
-            locals.projectCaps = state.capTracker(input.projectId);
+            locals.capPairs = state.capTracker(input.projectId);
 
             //
             // Determine if we are in an investible state and evaluate criteria
@@ -1211,7 +1211,7 @@ protected:
         //
         state.projectFinanceList.set(input.projectId, locals.finance);
         locals.userInvest.set(input.projectId, locals.userValue);
-        state.investTracking(qpi.invocator(), locals.userInvest);
+        state.investTracking.set(qpi.invocator(), locals.userInvest);
         output.status = returnCodeNost::NOST_SUCCESS;
     _
 
