@@ -1203,8 +1203,8 @@ protected:
         // If we made it this far the investment cleared, update state data.
         //
         state.projectFinanceList.set(input.projectId, locals.finance);
-        locals.userInvest.set(projectId, locals.userValue);
-        state.investTracking(qpi.indicator(), locals.userInvest);
+        locals.userInvest.set(input.projectId, locals.userValue);
+        state.investTracking(qpi.invocator(), locals.userInvest);
         output.status = returnCodeNost::NOST_SUCCESS;
     _
 
