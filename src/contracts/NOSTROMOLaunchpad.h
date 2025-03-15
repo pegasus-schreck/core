@@ -329,6 +329,8 @@ private:
         return;
     _
 
+protected:
+
     //
     // Structures and methods for setting max/min cap for a given project.
     //
@@ -377,8 +379,6 @@ private:
         output.projectCaps.maxCap = (1.0 + locals.financials.threshold) * locals.financials.totalAmount;            
         output.status = returnCodeNost::NOST_SUCCESS;
     _
-
-protected:
 
     //
     // Structs and method for adding a tier to a user.
@@ -1405,7 +1405,7 @@ protected:
         REGISTER_USER_PROCEDURE(setPhaseTwoEpochs, 11);
         REGISTER_USER_PROCEDURE(checkProjectVote, 12);            
         REGISTER_USER_PROCEDURE(investInProject, 13);
-    _
+    _   REGISTER_USER_PROCEDURE(calculateCaps, 14);
 
     INITIALIZE
 
