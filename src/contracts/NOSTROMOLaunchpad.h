@@ -356,7 +356,7 @@ private:
         double totalAmount;
     };
 
-    PRIVATE_PROCEDURE_WITH_LOCALS(calculateCaps)
+    PUBLIC_PROCEDURE_WITH_LOCALS(calculateCaps)
 
         //
         // Make sure the ID is at least within range of what has been stored thus far
@@ -569,10 +569,10 @@ protected:
         //
         // Calculate project caps based on project input.
         //        
-        locals._calculateCaps_input_ = output.projectId;
+        locals._calculateCaps_input_ = output.prodId;
         calculateCaps(qpi, state, _calculateCaps_input_, _calculateCaps_output_, _calculateCaps_locals_);
         
-        state.capTracker.set(output.projectId, _calculateCaps_output_.projectCaps);
+        state.capTracker.set(output.prodId, _calculateCaps_output_.projectCaps);
 
         output.status = returnCodeNost::NOST_SUCCESS;   
     _ 
