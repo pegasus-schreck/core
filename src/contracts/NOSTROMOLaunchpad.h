@@ -1137,8 +1137,8 @@ protected:
             //
             // Get the max this particular user can invest.
             //
-            locals.caps = projectCapsList.get(input.projectId);
-            //locals.caps.get(locals.localTier, locals.userMax);
+            locals.caps = state.projectCapsList.get(input.projectId);
+            locals.caps.get(locals.localTier, locals.userMax);
 
             //
             // Determine the actual max by ensuring we account for what has already
