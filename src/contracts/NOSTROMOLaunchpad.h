@@ -28,7 +28,7 @@ enum projectState {
     NOST_PREINVEST_STATE = 9,
     NOST_PREPARE_VOTE = 10,
     NOST_FUNDED = 11,
-    NOST_DRAFT = 12,
+    NOST_DRAFT = 12
 };
 
 //
@@ -57,7 +57,8 @@ enum returnCodeNost {
     NOST_ALREADY_REGISTERED = 12,
     NOST_NOT_REGISTERED = 13,
     NOST_ALREADY_VOTED = 14,
-    NOST_REQUIRES_ADMIN = 15
+    NOST_REQUIRES_ADMIN = 15,
+    NOST_MAX_INVESTED = 16
 };
 
 //
@@ -1073,9 +1074,11 @@ protected:
         projectMeta metadata;
         projectFinance finance;
         tierLevel localTier;
-        tierCaps caps; // extract from here the max for a tier 
+        tierCaps caps; 
         investments userInvest;
         float userValue;
+        float userMax;
+        flags regList;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(investInProject)
@@ -1094,6 +1097,23 @@ protected:
         //
         locals.metadata = state.projectMetadataList.get(input.projectId); 
         locals.finance = state.projectFinanceList.get(input.projectId);
+
+        //
+        // Is user registered to invest in this project, if not bailout
+        // if user is registered move to evaluate the project state. 
+        //
+        if (state.regTracking.get(qpi.invocator(), locals.regList)) {
+            if (locals.regList.get(input.projectId) == 0) {
+                status.output = returnCodeNost::NOST_NOT_REGISTERED;
+                qpi.transfer(qpi.invocator(), qpi.invocationReward());
+                return;                
+            }
+        }
+        else {
+            status.output = returnCodeNost::NOST_NOT_REGISTERED;
+            qpi.transfer(qpi.invocator(), qpi.invocationReward());
+            return;
+        }
 
         //
         // Check first to see if user has a tier and if so get the necessary
@@ -1115,15 +1135,43 @@ protected:
             }
 
             //
+            // Get the max this particular user can invest.
+            //
+            locals.caps = projectCapsList.get(input.projectId);
+            locals.caps.get(locals.localTier, locals.userMax);
+
+            //
+            // Determine the actual max by ensuring we account for what has already
+            // potentially been invested.
+            //
+            locals.userMax = locals.userMax - locals.userValue;
+
+            //
             // Determine if we are in an investible state and evaluate criteria
             // around each state along with user investment with respect to caps.
             //
             if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
-
+                if (input.investmentAmount <= locals.userMax && 
+                    (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                        locals.userValue = locals.userValue + input.investmentAmount;
+                        locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
+                }
+                else {
+                    output.status = returnCodeNost::NOST_MAX_INVESTED;
+                    return;
+                }
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
                 if (locals.localTier == tierLevel::NOST_WARRIOR && locals.localTier == tierLevel::NOST_QUEEN) {
-
+                    if (input.investmentAmount <= locals.userMax && 
+                        (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                            locals.userValue = locals.userValue + input.investmentAmount;
+                            locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
+                    }
+                    else {
+                        output.status = returnCodeNost::NOST_MAX_INVESTED;
+                        return;
+                    }
                 }
                 else {
                     output.status = returnCodeNost::NOST_INVALID_TIER;
@@ -1131,15 +1179,20 @@ protected:
                 }
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
-
+                if (input.investmentAmount <= locals.userMax && 
+                    (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                        locals.userValue = locals.userValue + input.investmentAmount;
+                        locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
+                }
+                else {
+                    output.status = returnCodeNost::NOST_MAX_INVESTED;
+                    return;
+                }
             }
             else {
                 output.status = returnCodeNost::NOST_INVALID_STATE;
                 return;
             }
-
-
-
         }
         else {
             output.status = returnCodeNost::NOST_INVALID_TIER;
@@ -1147,8 +1200,13 @@ protected:
             return;            
         }
 
-
-
+        //
+        // If we made it this far the investment cleared, update state data.
+        //
+        state.projectFinanceList.set(input.projectId, locals.finance);
+        locals.userInvest.set(projectId, locals.userValue);
+        state.investTracking(qpi.indicator(), locals.userInvest);
+        output.status = returnCodeNost::NOST_SUCCESS;
     _
 
     struct BEGIN_EPOCH_locals {
