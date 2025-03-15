@@ -520,9 +520,9 @@ protected:
     struct createProject_locals {
         projectMeta metadata;
         projectFinance financials;
-        calculateCaps_input _calculateCaps_input_;
-        calculateCaps_output _calculateCaps_output_;
-        calculateCaps_locals _calculateCaps_locals_;
+        NOST::calculateCaps_input _calculateCaps_input_;
+        NOST::calculateCaps_output _calculateCaps_output_;
+        NOST::calculateCaps_locals _calculateCaps_locals_;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -1405,7 +1405,8 @@ protected:
         REGISTER_USER_PROCEDURE(setPhaseTwoEpochs, 11);
         REGISTER_USER_PROCEDURE(checkProjectVote, 12);            
         REGISTER_USER_PROCEDURE(investInProject, 13);
-    _   REGISTER_USER_PROCEDURE(calculateCaps, 14);
+        REGISTER_USER_PROCEDURE(calculateCaps, 14);
+    _
 
     INITIALIZE
 
