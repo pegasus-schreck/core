@@ -1381,7 +1381,7 @@ protected:
             else if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
                 locals.metadata.projectSt = projectState::NOST_PREINVEST_STATE;
                 locals.projectCaps.reset();
-                
+
                 //
                 // We are done with registration do a quick per use calculation and 
                 // establish the caps for each investment tier.
@@ -1389,8 +1389,8 @@ protected:
                 calculatePerUse(qpi, state, locals._calculatePerUse_input_, locals._calculatePerUse_output_, locals._calculatePerUse_locals_);
 
                 for (locals.subindex = 0; locals.subindex < state.tiers.population(); locals.subindex++) {
-                    locals.localLevel = state.tiers.value(locals.subindex);
-                    locals.localTier = state.tiers.key(locals.subindex);
+                    locals.localTier = state.tiers.value(locals.subindex);
+                    locals.localLevel = state.tiers.key(locals.subindex);
 
                     locals.tierPerUse = (locals.capPairs.maxCap * locals.localTier.poolWeight) / locals._calculatePerUse_output_.totalPerUse;
 
