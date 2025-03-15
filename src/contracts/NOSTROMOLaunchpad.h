@@ -520,6 +520,9 @@ protected:
     struct createProject_locals {
         projectMeta metadata;
         projectFinance financials;
+        calculateCaps_input _calculateCaps_input_;
+        calculateCaps_output _calculateCaps_output_;
+        calculateCaps_locals _calculateCaps_locals_;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(createProject)
@@ -562,6 +565,15 @@ protected:
         //
         output.prodId = state.projectNextId;
         state.projectNextId += 1;
+        
+        //
+        // Calculate project caps based on project input.
+        //        
+        locals._calculateCaps_input_ = output.projectId;
+        calculateCaps(qpi, state, _calculateCaps_input_, _calculateCaps_output_, _calculateCaps_locals_);
+        
+        state.capTracker.set(output.projectId, _calculateCaps_output_.projectCaps);
+
         output.status = returnCodeNost::NOST_SUCCESS;   
     _ 
 
@@ -1392,7 +1404,7 @@ protected:
         REGISTER_USER_PROCEDURE(setPhaseOneEpochs, 10);
         REGISTER_USER_PROCEDURE(setPhaseTwoEpochs, 11);
         REGISTER_USER_PROCEDURE(checkProjectVote, 12);            
-
+        REGISTER_USER_PROCEDURE(investInProject, 13);
     _
 
     INITIALIZE
