@@ -1104,13 +1104,13 @@ protected:
         //
         if (state.regTracking.get(qpi.invocator(), locals.regList)) {
             if (locals.regList.get(input.projectId) == 0) {
-                status.output = returnCodeNost::NOST_NOT_REGISTERED;
+                output.status = returnCodeNost::NOST_NOT_REGISTERED;
                 qpi.transfer(qpi.invocator(), qpi.invocationReward());
                 return;                
             }
         }
         else {
-            status.output = returnCodeNost::NOST_NOT_REGISTERED;
+            output.status = returnCodeNost::NOST_NOT_REGISTERED;
             qpi.transfer(qpi.invocator(), qpi.invocationReward());
             return;
         }
