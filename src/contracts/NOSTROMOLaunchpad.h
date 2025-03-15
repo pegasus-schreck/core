@@ -569,7 +569,7 @@ protected:
         //
         // Calculate project caps based on project input.
         //        
-        locals._calculateCaps_input_ = output.prodId;
+        locals._calculateCaps_input_.projectId = output.prodId;
         calculateCaps(qpi, state, locals._calculateCaps_input_, locals._calculateCaps_output_, locals._calculateCaps_locals_);
         
         state.capTracker.set(output.prodId, locals._calculateCaps_output_.projectCaps);
