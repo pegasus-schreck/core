@@ -1137,7 +1137,7 @@ protected:
             //
             // Get the max this particular user can invest.
             //
-            projectCapsList.get(input.projectId, locals.caps);
+            locals.caps = projectCapsList.get(input.projectId);
             //locals.caps.get(locals.localTier, locals.userMax);
 
             //
@@ -1151,8 +1151,7 @@ protected:
             // around each state along with user investment with respect to caps.
             //
             if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
-                if (input.investmentAmount <= locals.userMax && 
-                    (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                if (input.investmentAmount <= locals.userMax && (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
@@ -1164,7 +1163,7 @@ protected:
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
                 if (locals.localTier == tierLevel::NOST_WARRIOR && locals.localTier == tierLevel::NOST_QUEEN) {
                     if (input.investmentAmount <= locals.userMax && 
-                        (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                        (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
                             locals.userValue = locals.userValue + input.investmentAmount;
                             locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                     }
@@ -1180,7 +1179,7 @@ protected:
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
                 if (input.investmentAmount <= locals.userMax && 
-                    (input.investmentAmount + locals.finance.) <= locals.caps.maxCap) {
+                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
