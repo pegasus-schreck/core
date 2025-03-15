@@ -1158,7 +1158,7 @@ protected:
             //
             if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
                 if (input.investmentAmount <= locals.userMax && 
-                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
+                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.capPairs.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
@@ -1170,7 +1170,7 @@ protected:
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
                 if (locals.localTier == tierLevel::NOST_WARRIOR && locals.localTier == tierLevel::NOST_QUEEN) {
                     if (input.investmentAmount <= locals.userMax && 
-                        (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
+                        (input.investmentAmount + locals.finance.raisedAmount) <= locals.capPairs.maxCap) {
                             locals.userValue = locals.userValue + input.investmentAmount;
                             locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                     }
@@ -1186,7 +1186,7 @@ protected:
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
                 if (input.investmentAmount <= locals.userMax && 
-                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
+                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.capPairs.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
