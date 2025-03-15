@@ -265,6 +265,8 @@ private:
     uint8 investPhaseTwoEpochs;
     uint8 investPhaseThreeEpochs;
 
+protected:
+
     //
     // Structures and method for calculating perUse.
     //
@@ -294,7 +296,7 @@ private:
         nostromoTier usersTier;
     };    
 
-    PRIVATE_PROCEDURE_WITH_LOCALS(calculatePerUse)
+    PUBLIC_PROCEDURE_WITH_LOCALS(calculatePerUse)
 
         //
         // Make sure the ID is at least within range of what has been stored thus far
@@ -328,8 +330,6 @@ private:
         output.status = returnCodeNost::NOST_SUCCESS;
         return;
     _
-
-protected:
 
     //
     // Structures and methods for setting max/min cap for a given project.
@@ -1325,7 +1325,17 @@ protected:
     struct END_EPOCH_locals {
         uint64 index;
         projectMeta metadata;
+        projectCapPairs capPairs;
         uint8 altered;
+        NOST::calculatePerUse_input _calculatePerUse_input_;
+        NOST::calculatePerUse_output _calculatePerUse_output_;
+        NOST::calculatePerUse_locals _calculatePerUse_locals_;
+        tierCaps caps;
+        uint8 subindex;
+        tierLevel localLevel;
+        nostromoTier localTier;
+        float tierPerUse;
+        tierCaps projectCaps;
     };
 
     END_EPOCH_WITH_LOCALS
@@ -1357,6 +1367,7 @@ protected:
             locals.altered = 1;
 
             locals.metadata = state.projectMetadataList.get(locals.index);
+            locals.capPairs = state.capTracker.get(locals.index);
             
             if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
                 locals.metadata.investOne += 1;
@@ -1369,6 +1380,24 @@ protected:
             }
             else if (locals.metadata.projectSt == projectState::NOST_REGISTER_STATE) {
                 locals.metadata.projectSt = projectState::NOST_PREINVEST_STATE;
+                locals.projectCaps.reset();
+                
+                //
+                // We are done with registration do a quick per use calculation and 
+                // establish the caps for each investment tier.
+                //
+                calculatePerUse(qpi, state, locals._calculatePerUse_input_, locals._calculatePerUse_output_, locals._calculatePerUse_locals_);
+
+                for (locals.subindex = 0; locals.subindex < state.tiers.population(); locals.subindex++) {
+                    locals.localLevel = state.tiers.value(locals.subindex);
+                    locals.localTier = state.tiers.key(locals.subindex);
+
+                    locals.tierPerUse = (locals.capPairs.maxCap * locals.localTier.poolWeight) / locals._calculatePerUse_output_.totalPerUse;
+
+                    locals.projectCaps.set(locals.localLevel, locals.tierPerUse);
+                }
+
+                state.projectCapsList.set(locals.index, locals.projectCaps);
             }
             else if (locals.metadata.projectSt == projectState::NOST_VOTE_STATE) {
                 if (locals.metadata.yesvotes > locals.metadata.novotes) {
@@ -1406,6 +1435,7 @@ protected:
         REGISTER_USER_PROCEDURE(checkProjectVote, 12);            
         REGISTER_USER_PROCEDURE(investInProject, 13);
         REGISTER_USER_PROCEDURE(calculateCaps, 14);
+        REGISTER_USER_PROCEDURE(calculatePerUse, 15);
     _
 
     INITIALIZE
