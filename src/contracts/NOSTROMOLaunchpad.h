@@ -570,9 +570,9 @@ protected:
         // Calculate project caps based on project input.
         //        
         locals._calculateCaps_input_ = output.prodId;
-        calculateCaps(qpi, state, _calculateCaps_input_, _calculateCaps_output_, _calculateCaps_locals_);
+        calculateCaps(qpi, state, locals._calculateCaps_input_, locals._calculateCaps_output_, locals._calculateCaps_locals_);
         
-        state.capTracker.set(output.prodId, _calculateCaps_output_.projectCaps);
+        state.capTracker.set(output.prodId, locals._calculateCaps_output_.projectCaps);
 
         output.status = returnCodeNost::NOST_SUCCESS;   
     _ 
