@@ -1334,7 +1334,7 @@ protected:
         uint8 subindex;
         tierLevel localLevel;
         nostromoTier localTier;
-        float tierPerUse;
+        double tierPerUse;
         tierCaps projectCaps;
     };
 
