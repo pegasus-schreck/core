@@ -121,7 +121,7 @@ public:
         double totalAmount;
         float threshold;
         uint64 tokenPrice;
-        uint64 raisedAmount;
+        double raisedAmount;
         uint64 raiseInQubics;
         uint64 tokensInSale;
     };
@@ -1079,6 +1079,7 @@ protected:
         float userValue;
         float userMax;
         flags regList;
+        projectCapPairs capPairs;
     };
 
     PUBLIC_PROCEDURE_WITH_LOCALS(investInProject)
@@ -1147,11 +1148,17 @@ protected:
             locals.userMax = locals.userMax - locals.userValue;
 
             //
+            // Need to know absolute project max cap.
+            //
+            locals.projectCaps = state.capTracker(input.projectId);
+
+            //
             // Determine if we are in an investible state and evaluate criteria
             // around each state along with user investment with respect to caps.
             //
             if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_1) {
-                if (input.investmentAmount <= locals.userMax && (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
+                if (input.investmentAmount <= locals.userMax && 
+                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
@@ -1163,7 +1170,7 @@ protected:
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_2) {
                 if (locals.localTier == tierLevel::NOST_WARRIOR && locals.localTier == tierLevel::NOST_QUEEN) {
                     if (input.investmentAmount <= locals.userMax && 
-                        (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
+                        (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
                             locals.userValue = locals.userValue + input.investmentAmount;
                             locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                     }
@@ -1179,7 +1186,7 @@ protected:
             }
             else if (locals.metadata.projectSt == projectState::NOST_INVESTMENT_PHASE_3) {
                 if (input.investmentAmount <= locals.userMax && 
-                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.caps.maxCap) {
+                    (input.investmentAmount + locals.finance.raisedAmount) <= locals.projectCaps.maxCap) {
                         locals.userValue = locals.userValue + input.investmentAmount;
                         locals.finance.raisedAmount = locals.finance.raisedAmount + input.investmentAmount;
                 }
